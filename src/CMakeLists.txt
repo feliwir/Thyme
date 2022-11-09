@@ -463,7 +463,8 @@ if(WIN32 OR "${CMAKE_SYSTEM}" MATCHES "Windows")
 endif()
 
 if(USE_FFMPEG)
-    list(APPEND GAMEENGINE_SRC 
+    list(APPEND GAMEENGINE_SRC
+        platform/ffmpegfile.cpp
         platform/audio/ffmpegaudiofilecache.cpp
         platform/video/ffmpegvideoplayer.cpp
         platform/video/ffmpegvideostream.cpp)

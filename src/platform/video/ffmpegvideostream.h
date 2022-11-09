@@ -17,6 +17,9 @@
 #include "always.h"
 #include "videostream.h"
 
+namespace Thyme
+{
+
 class FFmpegVideoStream final : public VideoStream
 {
     friend class FFmpegVideoPlayer;
@@ -39,3 +42,5 @@ public:
 
 private:
 };
+
+}

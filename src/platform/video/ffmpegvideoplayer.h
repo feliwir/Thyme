@@ -17,6 +17,8 @@
 #include "always.h"
 #include "videoplayer.h"
 
+namespace Thyme
+{
 class FFmpegVideoPlayer final : public VideoPlayer
 {
 public:
@@ -35,5 +37,6 @@ public:
     virtual void Notify_Player_Of_New_Provider(bool unk) override;
 
 private:
-    VideoStream *Create_Stream();
+    VideoStream *Create_Stream(File *file);
 };
+} // namespace Thyme

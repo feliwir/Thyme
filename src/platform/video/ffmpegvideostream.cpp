@@ -14,3 +14,8 @@
  */
 #include "ffmpegvideostream.h"
 #include "videobuffer.h"
+
+namespace Thyme
+{
+
+}

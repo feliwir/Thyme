@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1676981883510,
+  "lastUpdate": 1676982655274,
   "repoUrl": "https://github.com/feliwir/Thyme",
   "entries": {
     "Thyme Benchmarks": [
@@ -120,6 +120,126 @@ window.BENCHMARK_DATA = {
             "value": 717.870184506491,
             "unit": "ns/iter",
             "extra": "iterations: 973990\ncpu: 719.5121099775911 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "vedder@mbits.info",
+            "name": "Stephan Vedder",
+            "username": "feliwir"
+          },
+          "committer": {
+            "email": "vedder@mbits.info",
+            "name": "Stephan Vedder",
+            "username": "feliwir"
+          },
+          "distinct": true,
+          "id": "a73ab77e3b777b85623a4b4b3512ec20a178cab0",
+          "message": "Remove release step from CI",
+          "timestamp": "2023-02-21T13:22:18+01:00",
+          "tree_id": "cd83a94e16ee61b836b4bfa4fd612a67baeb60ef",
+          "url": "https://github.com/feliwir/Thyme/commit/a73ab77e3b777b85623a4b4b3512ec20a178cab0"
+        },
+        "date": 1676982654128,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "RefPack_Compress",
+            "value": 40353395.235292606,
+            "unit": "ns/iter",
+            "extra": "iterations: 17\ncpu: 40291458.8235294 ns\nthreads: 1"
+          },
+          {
+            "name": "RefPack_Uncompress",
+            "value": 104888.65169989826,
+            "unit": "ns/iter",
+            "extra": "iterations: 6971\ncpu: 104872.25649117773 ns\nthreads: 1"
+          },
+          {
+            "name": "GameMath_CM_Fast_To_Int_Floor",
+            "value": 798.9316458849929,
+            "unit": "ns/iter",
+            "extra": "iterations: 847088\ncpu: 799.8676642804927 ns\nthreads: 1"
+          },
+          {
+            "name": "GameMath_CM_Fast_To_Int_Ceil",
+            "value": 788.4210405677741,
+            "unit": "ns/iter",
+            "extra": "iterations: 881352\ncpu: 790.1834908177643 ns\nthreads: 1"
+          },
+          {
+            "name": "GameMath_CM_Fast_To_Int_Truncate",
+            "value": 767.5621867136131,
+            "unit": "ns/iter",
+            "extra": "iterations: 863110\ncpu: 769.1696307542932 ns\nthreads: 1"
+          },
+          {
+            "name": "GameMath_CM_Floor",
+            "value": 756.0714518744373,
+            "unit": "ns/iter",
+            "extra": "iterations: 946007\ncpu: 756.0045538773147 ns\nthreads: 1"
+          },
+          {
+            "name": "GameMath_CM_Ceil",
+            "value": 759.5084297235611,
+            "unit": "ns/iter",
+            "extra": "iterations: 922804\ncpu: 758.186028669855 ns\nthreads: 1"
+          },
+          {
+            "name": "GameMath_CM_Cos",
+            "value": 760.632695900928,
+            "unit": "ns/iter",
+            "extra": "iterations: 922244\ncpu: 759.3501285988747 ns\nthreads: 1"
+          },
+          {
+            "name": "GameMath_CM_Sin",
+            "value": 777.2043784300034,
+            "unit": "ns/iter",
+            "extra": "iterations: 939356\ncpu: 775.6856825326129 ns\nthreads: 1"
+          },
+          {
+            "name": "GameMath_GM_Fast_To_Int_Floor",
+            "value": 995.772644780636,
+            "unit": "ns/iter",
+            "extra": "iterations: 738426\ncpu: 994.2346287917868 ns\nthreads: 1"
+          },
+          {
+            "name": "GameMath_GM_Fast_To_Int_Ceil",
+            "value": 956.6080096390017,
+            "unit": "ns/iter",
+            "extra": "iterations: 705451\ncpu: 959.8909066695059 ns\nthreads: 1"
+          },
+          {
+            "name": "GameMath_GM_Fast_To_Int_Truncate",
+            "value": 988.9243312490141,
+            "unit": "ns/iter",
+            "extra": "iterations: 733988\ncpu: 990.8224657636481 ns\nthreads: 1"
+          },
+          {
+            "name": "GameMath_GM_Floor",
+            "value": 765.782378856982,
+            "unit": "ns/iter",
+            "extra": "iterations: 939104\ncpu: 758.3750042590833 ns\nthreads: 1"
+          },
+          {
+            "name": "GameMath_GM_Ceil",
+            "value": 791.231742945706,
+            "unit": "ns/iter",
+            "extra": "iterations: 919368\ncpu: 785.9727551954643 ns\nthreads: 1"
+          },
+          {
+            "name": "GameMath_GM_Cos",
+            "value": 785.2677505586026,
+            "unit": "ns/iter",
+            "extra": "iterations: 921996\ncpu: 787.2064520894453 ns\nthreads: 1"
+          },
+          {
+            "name": "GameMath_GM_Sin",
+            "value": 792.3089354668242,
+            "unit": "ns/iter",
+            "extra": "iterations: 906581\ncpu: 787.9920271883918 ns\nthreads: 1"
           }
         ]
       }

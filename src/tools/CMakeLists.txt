@@ -13,3 +13,4 @@ endif()
 
 # These tools are generic and API independent
 add_subdirectory(compressor)
+add_subdirectory(imagepacker)

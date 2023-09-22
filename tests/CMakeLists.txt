@@ -18,6 +18,7 @@ set(TEST_SRCS
   test_videoplayer.cpp
   test_w3d_load.cpp
   test_w3d_math.cpp
+  test_w3d_render.cpp
 )
 
 add_executable(thyme_tests ${TEST_SRCS})

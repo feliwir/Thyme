@@ -32,6 +32,10 @@
 #include "hooker.h"
 #endif
 
+#ifdef BUILD_WITH_X3D
+#include "x3d.h"
+#endif
+
 #ifdef PLATFORM_WINDOWS
 #include <mmsystem.h>
 #endif
@@ -188,7 +192,7 @@ void W3D::Add_To_Static_Sort_List(RenderObjClass *robj, unsigned int sort_level)
 
 W3DErrorType W3D::Init(void *hwnd, char *defaultpal, bool lite)
 {
-#ifdef PLATFORM_WINDOWS
+#if defined BUILD_WITH_D3D8
     s_hwnd = (HWND)hwnd;
     s_lite = lite;
     Init_D3D_To_WW3_Conversion();
@@ -209,6 +213,11 @@ W3DErrorType W3D::Init(void *hwnd, char *defaultpal, bool lite)
 
     captainslog_debug("WW3D Init completed");
 
+    return W3D_ERROR_OK;
+#elif defined BUILD_WITH_X3D
+    if (X3D::Init() != X3D::X3D_OK) {
+        return W3D_ERROR_INITIALIZATION_FAILED;
+    }
     return W3D_ERROR_OK;
 #else
     return W3D_ERROR_INITIALIZATION_FAILED;

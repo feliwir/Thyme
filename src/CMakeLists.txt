@@ -1,3 +1,7 @@
+if(USE_X3D)
+    add_subdirectory(x3d)
+endif()
+
 # Build and link the DLL.
 set(GAMEENGINE_INCLUDES
     editor
@@ -752,7 +756,7 @@ if(ICU_FOUND)
     list(APPEND GAME_COMPILE_OPTIONS -DBUILD_WITH_ICU)
 endif()
 
-if(D3D8_FOUND)
+if(D3D8_FOUND AND NOT USE_X3D)
     list(APPEND GAME_LINK_LIBRARIES d3d8)
 endif()
 

@@ -58,6 +58,9 @@ using std::rename;
 
 #ifdef BUILD_WITH_SDL2
 #include <SDL.h>
+#ifdef PLATFORM_WINDOWS
+#include <SDL_syswm.h>
+#endif
 #endif
 
 #ifdef PLATFORM_WINDOWS

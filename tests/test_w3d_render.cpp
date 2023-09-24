@@ -3,7 +3,7 @@
  *
  * @author feliwir
  *
- * @brief Set of tests to validate the CRC32 implementation
+ * @brief Set of tests to validate the W3D rendering implementation
  *
  * @copyright Thyme is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
@@ -27,7 +27,7 @@ TEST(w3d_render, init)
 #endif
     EXPECT_EQ(W3D::Init(nullptr, nullptr, false), W3D_ERROR_OK);
 
-    W3D::Set_Render_Device(0, 400, 300, 32, 1, true, false, true);
+    EXPECT_EQ(W3D::Set_Render_Device(0, 400, 300, 32, 1, true, false, true), W3D_ERROR_OK);
 
     int frames = 1000;
     while (frames > 0) {
@@ -45,9 +45,9 @@ TEST(w3d_render, init)
         }
 #endif
 
-        W3D::Begin_Render(true);
+        EXPECT_EQ(W3D::Begin_Render(true), W3D_ERROR_OK);
 
-        W3D::End_Render(true);
+        EXPECT_EQ(W3D::End_Render(true), W3D_ERROR_OK);
 #ifdef BUILD_WITH_SDL2
         SDL_GL_SwapWindow(app_window);
 #endif

@@ -5,9 +5,11 @@ namespace X3D
 {
 enum X3DError
 {
-    X3D_OK = 0,
-    X3D_UNSUPPORTED,
-    X3D_ALREADY_INITIALIZED,
+    X3D_ERR_OK = 0,
+    X3D_ERR_UNSUPPORTED,
+    X3D_ERR_ALREADY_INITIALIZED,
+    X3D_ERR_FAILED_LOAD,
+    X3D_ERR_FAILED_DEVICE_INIT,
 };
 
 enum X3DBackend
@@ -19,12 +21,55 @@ enum X3DBackend
     X3D_VULKAN,
 };
 
-// This function assumes the context underlying context is already created (E.g. by SDL2)
+struct X3DDeviceDescr
+{
+    char name[256];
+    char vendor[256];
+};
+
+/// <summary>
+/// This function assumes the context underlying context is already created (E.g. by SDL2)
+/// </summary>
+/// <param name="backend"></param>
+/// <returns></returns>
 int Init(X3DBackend backend = X3D_AUTO);
 #ifdef _WIN32
-// This function creates the context from the HWND
+/// <summary>
+/// This function creates the context from the HWND
+/// </summary>
+/// <param name="backend"></param>
+/// <param name="hwnd"></param>
+/// <returns></returns>
 int Init_From_Hwnd(X3DBackend backend, HWND hwnd);
 #endif
-
+/// <summary>
+/// Shutdown all internal variables & devices
+/// </summary>
 void Shutdown();
+
+const std::vector<X3DDevice> &Get_Device_List();
+int Set_Device(
+    int dev, int resx, int resy, int bits, int windowed, bool resize_window, bool reset_device, bool restore_assets);
+
+/// <summary>
+/// Clear the framebuffer with the specified parameters
+/// </summary>
+/// <param name="clear_color"></param>
+/// <param name="clear_depth"></param>
+void Clear(bool clear_color, bool clear_depth);
+
+/// <summary>
+/// Set the clear color
+/// </summary>
+/// <param name="r"></param>
+/// <param name="g"></param>
+/// <param name="b"></param>
+/// <param name="a"></param>
+void Set_Clear_Color(float r, float g, float b, float a);
+
+/// <summary>
+/// Swap the backbuffer to the front
+/// </summary>
+void Present();
+
 } // namespace X3D

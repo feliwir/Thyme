@@ -56,6 +56,7 @@ private:
 class RenderDeviceDescClass
 {
     friend class DX8Wrapper;
+    friend class W3D;
 
 public:
     RenderDeviceDescClass() {}

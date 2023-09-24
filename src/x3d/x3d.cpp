@@ -1,6 +1,10 @@
 #include "x3d.h"
+#ifdef X3D_HAS_D3D9
 #include "d3d9/x3d_context_d3d9.h"
+#endif
+#ifdef X3D_HAS_OPENGL
 #include "gl/x3d_context_gl.h"
+#endif
 
 #include <cassert>
 
@@ -10,7 +14,7 @@ static X3DContext *s_context = nullptr;
 
 static X3DBackend GetPreferredBackend()
 {
-#if 0//defined X3D_HAS_D3D9
+#if defined X3D_HAS_D3D9
     return X3D_D3D9;
 #elif defined X3D_HAS_OPENGL
     return X3D_OPENGL;

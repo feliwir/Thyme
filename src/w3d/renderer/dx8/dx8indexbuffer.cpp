@@ -17,156 +17,18 @@
 #include "dx8wrapper.h"
 #include "w3d.h"
 
-unsigned int g_indexBufferCount;
-unsigned int g_indexBufferTotalIndices;
-unsigned int g_indexBufferTotalSize;
-bool g_dynamicSortingIndexArrayInUse;
-SortingIndexBufferClass *g_dynamicSortingIndexArray;
-unsigned short g_dynamicSortingIndexArraySize;
-unsigned short g_dynamicSortingIndexArrayOffset;
 bool g_dynamicDX8IndexBufferInUse;
 DX8IndexBufferClass *g_dynamicDX8IndexBuffer;
 unsigned short g_dynamicDX8IndexBufferSize = 5000;
 unsigned short g_dynamicDX8IndexBufferOffset;
 
-IndexBufferClass::IndexBufferClass(unsigned int type_, unsigned short index_count_) :
-    m_engineRefs(0), m_indexCount(index_count_), m_type(type_)
-{
-    captainslog_assert(m_type == BUFFER_TYPE_DX8 || m_type == BUFFER_TYPE_SORTING);
-    captainslog_assert(m_indexCount);
-    g_indexBufferCount++;
-    g_indexBufferTotalIndices += m_indexCount;
-    g_indexBufferTotalSize += 2 * m_indexCount;
-}
-
-IndexBufferClass::~IndexBufferClass()
-{
-    g_indexBufferCount--;
-    g_indexBufferTotalIndices -= m_indexCount;
-    g_indexBufferTotalSize -= 2 * m_indexCount;
-}
-
-void IndexBufferClass::Add_Engine_Ref() const
-{
-    m_engineRefs++;
-}
-
-void IndexBufferClass::Release_Engine_Ref()
-{
-    m_engineRefs--;
-    captainslog_assert(m_engineRefs >= 0);
-}
-
-unsigned int IndexBufferClass::Get_Total_Buffer_Count()
-{
-    return g_indexBufferCount;
-}
-
-unsigned int IndexBufferClass::Get_Total_Allocated_Indices()
-{
-    return g_indexBufferTotalIndices;
-}
-
-unsigned int IndexBufferClass::Get_Total_Allocated_Memory()
-{
-    return g_indexBufferTotalSize;
-}
-
-IndexBufferClass::WriteLockClass::WriteLockClass(IndexBufferClass *index_buffer_, unsigned int flags) :
-    m_indexBuffer(index_buffer_)
-{
-    captainslog_assert(m_indexBuffer);
-    captainslog_assert(!m_indexBuffer->Engine_Refs());
-    m_indexBuffer->Add_Ref();
-
-    switch (m_indexBuffer->Type()) {
-        case BUFFER_TYPE_DX8: {
-            m_indices = nullptr;
-#ifdef BUILD_WITH_D3D8
-            static_cast<DX8IndexBufferClass *>(m_indexBuffer)
-                ->Get_DX8_Index_Buffer()
-                ->Lock(0, 0, reinterpret_cast<BYTE **>(&m_indices), flags);
-#endif
-            break;
-        }
-        case BUFFER_TYPE_SORTING: {
-            m_indices = static_cast<SortingIndexBufferClass *>(m_indexBuffer)->Get_Sorting_Index_Buffer();
-            break;
-        }
-        default:
-            captainslog_assert(0);
-            m_indices = nullptr;
-            break;
-    }
-}
-
-IndexBufferClass::WriteLockClass::~WriteLockClass()
-{
-    switch (m_indexBuffer->Type()) {
-        case BUFFER_TYPE_DX8: {
-#ifdef BUILD_WITH_D3D8
-            static_cast<DX8IndexBufferClass *>(m_indexBuffer)->Get_DX8_Index_Buffer()->Unlock();
-#endif
-            break;
-        }
-        case BUFFER_TYPE_SORTING:
-            break;
-        default:
-            captainslog_assert(0);
-            break;
-    }
-
-    m_indexBuffer->Release_Ref();
-}
-
-IndexBufferClass::AppendLockClass::AppendLockClass(
-    IndexBufferClass *index_buffer_, unsigned int start_index, unsigned int index_range) :
-    m_indexBuffer(index_buffer_)
-{
-    captainslog_assert(start_index + index_range <= m_indexBuffer->Get_Index_Count());
-    captainslog_assert(m_indexBuffer);
-    captainslog_assert(!m_indexBuffer->Engine_Refs());
-    m_indexBuffer->Add_Ref();
-
-    switch (m_indexBuffer->Type()) {
-        case BUFFER_TYPE_DX8: {
-            m_indices = nullptr;
-#ifdef BUILD_WITH_D3D8
-            static_cast<DX8IndexBufferClass *>(m_indexBuffer)
-                ->Get_DX8_Index_Buffer()
-                ->Lock(2 * start_index, 2 * index_range, (BYTE **)&m_indices, 0);
-#endif
-            break;
-        }
-        case BUFFER_TYPE_SORTING: {
-            m_indices = static_cast<SortingIndexBufferClass *>(m_indexBuffer)->Get_Sorting_Index_Buffer() + start_index;
-            break;
-        }
-        default:
-            captainslog_assert(0);
-            m_indices = nullptr;
-            break;
-    }
-}
-
-IndexBufferClass::AppendLockClass::~AppendLockClass()
-{
-    switch (m_indexBuffer->Type()) {
-        case BUFFER_TYPE_DX8: {
-#ifdef BUILD_WITH_D3D8
-            static_cast<DX8IndexBufferClass *>(m_indexBuffer)->Get_DX8_Index_Buffer()->Unlock();
-#endif
-            break;
-        }
-        case BUFFER_TYPE_SORTING:
-            break;
-        default:
-            captainslog_assert(0);
-            break;
-    }
-
-    m_indexBuffer->Release_Ref();
-}
+extern unsigned int g_indexBufferCount;
+extern unsigned int g_indexBufferTotalIndices;
+extern unsigned int g_indexBufferTotalSize;
+extern bool g_dynamicSortingIndexArrayInUse;
+extern SortingIndexBufferClass *g_dynamicSortingIndexArray;
+extern unsigned short g_dynamicSortingIndexArraySize;
+extern unsigned short g_dynamicSortingIndexArrayOffset;
 
 DX8IndexBufferClass::DX8IndexBufferClass(unsigned short index_count_, UsageType usage) :
     IndexBufferClass(BUFFER_TYPE_DX8, index_count_)
@@ -204,18 +66,6 @@ DX8IndexBufferClass::~DX8IndexBufferClass()
 #ifdef BUILD_WITH_D3D8
     m_indexBuffer->Release();
 #endif
-}
-
-SortingIndexBufferClass::SortingIndexBufferClass(unsigned short index_count_) :
-    IndexBufferClass(BUFFER_TYPE_SORTING, index_count_)
-{
-    captainslog_assert(m_indexCount);
-    m_indexBuffer = new unsigned short[m_indexCount];
-}
-
-SortingIndexBufferClass::~SortingIndexBufferClass()
-{
-    delete[] m_indexBuffer;
 }
 
 DynamicIBAccessClass::DynamicIBAccessClass(unsigned short type_, unsigned short index_count_) :

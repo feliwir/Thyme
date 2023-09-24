@@ -1,6 +1,6 @@
 ﻿#include "x3d_context_gl.h"
 #include "x3d.h"
-#include <GL/GL.h>
+#include <GL/gl.h>
 
 // typedef GLubyte (*PFNGETSTRING)(GLuint);
 //

@@ -218,7 +218,9 @@ void W3D::Add_To_Static_Sort_List(RenderObjClass *robj, unsigned int sort_level)
 
 W3DErrorType W3D::Init(void *hwnd, char *defaultpal, bool lite)
 {
+#ifdef PLATFORM_WINDOWS
     s_hwnd = (HWND)hwnd;
+#endif
     s_lite = lite;
 #if defined BUILD_WITH_D3D8
     Init_D3D_To_WW3_Conversion();
@@ -241,9 +243,15 @@ W3DErrorType W3D::Init(void *hwnd, char *defaultpal, bool lite)
 
     return W3D_ERROR_OK;
 #elif defined BUILD_WITH_X3D
+#ifdef PLATFORM_WINDOWS
     if (X3D::Init_From_Hwnd(X3D::X3D_AUTO, s_hwnd) != X3D::X3D_ERR_OK) {
         return W3D_ERROR_INITIALIZATION_FAILED;
     }
+#else
+    if (X3D::Init(X3D::X3D_AUTO) != X3D::X3D_ERR_OK) {
+        return W3D_ERROR_INITIALIZATION_FAILED;
+    }
+#endif
 
     s_defaultStaticSortLists = new DefaultStaticSortListClass();
     Reset_Current_Static_Sort_Lists_To_Default();
@@ -382,7 +390,7 @@ W3DErrorType W3D::Render(SceneClass *scene, CameraClass *cam, bool clear, bool c
         DX8Wrapper::Clear(clear, clearz, color, 0.0f);
     }
 
- #ifdef BUILD_WITH_D3D8
+#ifdef BUILD_WITH_D3D8
     switch (scene->Get_Polygon_Mode()) {
         case SceneClass::POINT:
             DX8Wrapper::Set_DX8_Render_State(D3DRS_FILLMODE, D3DFILL_POINT);

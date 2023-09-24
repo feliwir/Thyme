@@ -67,6 +67,7 @@ set(GAMEENGINE_INCLUDES
     w3d/lib
     w3d/math
     w3d/renderer
+    w3d/renderer/dx8
     w3d/saveload
 )
 
@@ -531,14 +532,14 @@ set(GAMEENGINE_SRC
     w3d/renderer/composite.cpp
     w3d/renderer/dazzle.cpp
     w3d/renderer/ddsfile.cpp
-    w3d/renderer/dx8caps.cpp
-    w3d/renderer/dx8fvf.cpp
-    w3d/renderer/dx8indexbuffer.cpp
-    w3d/renderer/dx8polygonrenderer.cpp
-    w3d/renderer/dx8renderer.cpp
-    w3d/renderer/dx8texman.cpp
-    w3d/renderer/dx8vertexbuffer.cpp
-    w3d/renderer/dx8wrapper.cpp
+    w3d/renderer/dx8/dx8caps.cpp
+    w3d/renderer/dx8/dx8fvf.cpp
+    w3d/renderer/dx8/dx8indexbuffer.cpp
+    w3d/renderer/dx8/dx8polygonrenderer.cpp
+    w3d/renderer/dx8/dx8renderer.cpp
+    w3d/renderer/dx8/dx8texman.cpp
+    w3d/renderer/dx8/dx8vertexbuffer.cpp
+    w3d/renderer/dx8/dx8wrapper.cpp
     w3d/renderer/dynamesh.cpp
     w3d/renderer/hanimmgr.cpp
     w3d/renderer/hcanim.cpp
@@ -546,6 +547,7 @@ set(GAMEENGINE_SRC
     w3d/renderer/hrawanim.cpp
     w3d/renderer/htree.cpp
     w3d/renderer/htreemgr.cpp
+    w3d/renderer/indexbuffer.cpp
     w3d/renderer/intersec.cpp
     w3d/renderer/light.cpp
     w3d/renderer/lightenv.cpp
@@ -591,6 +593,7 @@ set(GAMEENGINE_SRC
     w3d/renderer/textureloadtasklist.cpp
     w3d/renderer/thumbnail.cpp
     w3d/renderer/thumbnailmanager.cpp
+    w3d/renderer/vertexbuffer.cpp
     w3d/renderer/vertmaterial.cpp
     w3d/renderer/w3d.cpp
     w3d/renderer/w3d_util.cpp

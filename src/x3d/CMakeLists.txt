@@ -13,8 +13,7 @@ if(X3D_ENABLE_OPENGL)
     endif()
 endif()
 
-if(X3D_ENABLE_D3D9)
-    
+if(X3D_ENABLE_D3D9 AND WIN32)
     target_sources(x3d PRIVATE d3d9/x3d_context_d3d9.cpp)
     target_compile_definitions(x3d PRIVATE X3D_HAS_D3D9)
 endif()

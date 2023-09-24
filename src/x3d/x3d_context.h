@@ -21,8 +21,8 @@ class X3DContext
 public:
 #ifdef _WIN32
     virtual int Init_From_Hwnd(HWND hwnd) = 0;
-    const std::vector<X3DDevice> &Get_Device_List() const { return m_devices; }
 #endif
+    const std::vector<X3DDevice> &Get_Device_List() const { return m_devices; }
     virtual int Set_Device(
         int dev, int resx, int resy, int bits, int windowed, bool resize_window, bool reset_device, bool restore_assets) = 0;
     virtual void Clear(bool clear_color, bool clear_depth) = 0;

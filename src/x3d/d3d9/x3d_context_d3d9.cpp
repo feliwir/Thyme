@@ -3,7 +3,7 @@
 #include <comdef.h>
 
 HMODULE X3D::X3DContextD3D9::s_library = nullptr;
-IDirect3D9 *(*X3D::X3DContextD3D9::s_create_function)(unsigned) = nullptr;
+IDirect3D9 *(__stdcall  *X3D::X3DContextD3D9::s_create_function)(unsigned) = nullptr;
 
 X3D::X3DContextD3D9::X3DContextD3D9() : m_clearColor(0) {}
 
@@ -81,6 +81,7 @@ int X3D::X3DContextD3D9::Enumerate_Devices()
 int X3D::X3DContextD3D9::Set_Device(
     int dev, int resx, int resy, int bits, int windowed, bool resize_window, bool reset_device, bool restore_assets)
 {
+    X3DContext::Set_Device(dev, resx, resy, bits, windowed, resize_window, reset_device, restore_assets);
     D3DPRESENT_PARAMETERS present_params;
     ZeroMemory(&present_params, sizeof(present_params));
     present_params.BackBufferWidth = resx;
@@ -134,4 +135,32 @@ void X3D::X3DContextD3D9::Present()
 {
     assert(m_device != nullptr);
     m_device->Present(nullptr, nullptr, nullptr, nullptr);
+}
+
+void X3D::X3DContextD3D9::Begin()
+{
+    assert(m_device != nullptr);
+    X3DContext::Begin();
+    m_device->BeginScene();
+}
+
+void X3D::X3DContextD3D9::End()
+{
+    assert(m_device != nullptr);
+    X3DContext::End();
+    m_device->EndScene();
+}
+
+void X3D::X3DContextD3D9::Set_Viewport(int x, int y, int w, int h)
+{
+    assert(m_device != nullptr);
+    D3DVIEWPORT9 vp;
+    vp.X = x;
+    vp.Y = y;
+    vp.Width = w;
+    vp.Height = h;
+    vp.MinZ = 0.0f;
+    vp.MaxZ = 1.0f;
+
+    m_device->SetViewport(&vp);
 }

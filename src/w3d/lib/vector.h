@@ -240,12 +240,12 @@ public:
     int Growth_Step() { return m_growthStep; }
     T *Uninitialized_Add();
 
-    T *begin() { return &(*this)[0]; }
+    T *begin() { return m_vector; }
     const T *begin() const { return cbegin(); }
-    const T *cbegin() const { return &(*this)[0]; }
-    T *end() { return &(*this)[Count()]; }
+    const T *cbegin() const { return m_vector; }
+    T *end() { return m_vector + m_activeCount; }
     const T *end() const { return cend(); }
-    const T *cend() const { return &(*this)[Count()]; }
+    const T *cend() const { return m_vector + m_activeCount; }
 
 protected:
     int m_activeCount;

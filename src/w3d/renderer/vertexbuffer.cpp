@@ -14,6 +14,7 @@
  *            LICENSE
  */
 #include "vertexbuffer.h"
+#include "dx8vertexbuffer.h"
 #include "w3d.h"
 
 unsigned int g_vertexBufferCount;

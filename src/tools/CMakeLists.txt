@@ -11,5 +11,11 @@ if(WIN32 OR CMAKE_SYSTEM_NAME STREQUAL "Windows")
     add_subdirectory(wndedit)
 endif()
 
+# A lightweight w3d renderer
+if(USE_SDL2)
+    add_subdirectory(w3drender)
+endif()
+
 # These tools are generic and API independent
 add_subdirectory(compressor)
+

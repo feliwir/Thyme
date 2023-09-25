@@ -85,20 +85,58 @@ int X3D::Set_Device(
     return s_context->Set_Device(dev, resx, resy, bits, windowed, resize_window, reset_device, restore_assets);
 }
 
+int X3D::Get_Current_Device_Id()
+{
+    if (s_context == nullptr)
+        return -1;
+    return s_context->Get_Device_Id();
+}
+
 void X3D::Clear(bool clear_color, bool clear_depth)
 {
     assert(s_context != nullptr);
-    return s_context->Clear(clear_color, clear_depth);
+    s_context->Clear(clear_color, clear_depth);
 }
 
 void X3D::Set_Clear_Color(float r, float g, float b, float a)
 {
     assert(s_context != nullptr);
-    return s_context->Set_Clear_Color(r, g, b, a);
+    s_context->Set_Clear_Color(r, g, b, a);
 }
 
 void X3D::Present()
 {
     assert(s_context != nullptr);
-    return s_context->Present();
+    s_context->Present();
+}
+
+void X3D::Begin()
+{
+    assert(s_context != nullptr);
+    s_context->Begin();
+}
+
+void X3D::End()
+{
+    assert(s_context != nullptr);
+    s_context->End();
+}
+
+void X3D::Set_Viewport(int x, int y, int w, int h)
+{
+    assert(s_context != nullptr);
+    s_context->Set_Viewport(x, y, w, h);
+}
+
+void X3D::Get_Device_Resolution(int dev, int &resx, int &resy)
+{
+    assert(s_context != nullptr);
+    s_context->Get_Resolution(resx, resy);
+}
+
+int X3D::Set_Resolution(int resx, int resy, int bits, int windowed, bool resize_window)
+{
+    assert(s_context != nullptr);
+    s_context->Set_Resolution(resx, resy, bits, windowed, resize_window);
+    return X3D::X3D_ERR_OK;
 }

@@ -1,4 +1,5 @@
 #include "indexbuffer.h"
+#include "dx8indexbuffer.h"
 
 unsigned int g_indexBufferCount;
 unsigned int g_indexBufferTotalIndices;

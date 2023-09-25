@@ -15,6 +15,10 @@ public:
     void Clear(bool clear_color, bool clear_depth) override;
     void Set_Clear_Color(float r, float g, float b, float a) override;
     void Present() override;
+    void Begin() override;
+    void End() override;
+
+    void Set_Viewport(int x, int y, int w, int h);
 
 protected:
     int Enumerate_Devices();

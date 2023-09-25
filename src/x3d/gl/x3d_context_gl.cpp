@@ -38,12 +38,6 @@ int X3D::X3DContextGL::Init_From_Hwnd(HWND hwnd)
 }
 #endif
 
-int X3D::X3DContextGL::Set_Device(
-    int dev, int resx, int resy, int bits, int windowed, bool resize_window, bool reset_device, bool restore_assets)
-{
-    return X3D_ERR_OK;
-};
-
 void X3D::X3DContextGL::Clear(bool clear_color, bool clear_depth)
 {
     GLbitfield mask = 0;
@@ -66,4 +60,9 @@ void X3D::X3DContextGL::Present()
 #ifdef _WIN32
     wglSwapLayerBuffers(m_hdc, WGL_SWAP_MAIN_PLANE);
 #endif
+}
+
+void X3D::X3DContextGL::Set_Viewport(int x, int y, int w, int h)
+{
+    glViewport(x, y, w, h);
 }

@@ -1,7 +1,7 @@
 option(X3D_ENABLE_OPENGL "Use OpenGL" ON)
 option(X3D_ENABLE_D3D9 "Use D3D9" ON)
 
-add_library(x3d x3d.cpp)
+add_library(x3d x3d.cpp x3d_context.cpp)
 
 if(X3D_ENABLE_OPENGL)
     find_package(OpenGL REQUIRED)

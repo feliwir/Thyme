@@ -111,7 +111,7 @@ public:
 
 private:
     int m_pass;
-    TextureClass *m_textures[2];
+    TextureClass *m_textures[2] = {};
     ShaderClass m_shader;
     VertexMaterialClass *m_material;
     MultiListClass<DX8PolygonRendererClass> m_polygonRendererList;

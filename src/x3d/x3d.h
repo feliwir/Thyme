@@ -50,6 +50,9 @@ void Shutdown();
 const std::vector<X3DDevice> &Get_Device_List();
 int Set_Device(
     int dev, int resx, int resy, int bits, int windowed, bool resize_window, bool reset_device, bool restore_assets);
+void Get_Device_Resolution(int dev, int& resx, int& resy);
+int Set_Resolution(int resx, int resy, int bits, int windowed, bool resize_window);
+int Get_Current_Device_Id();
 
 /// <summary>
 /// Clear the framebuffer with the specified parameters
@@ -71,5 +74,13 @@ void Set_Clear_Color(float r, float g, float b, float a);
 /// Swap the backbuffer to the front
 /// </summary>
 void Present();
+
+/// @brief Start the current drawing context
+void Begin();
+
+/// @brief End the current drawing context
+void End();
+
+void Set_Viewport(int, int, int, int);
 
 } // namespace X3D

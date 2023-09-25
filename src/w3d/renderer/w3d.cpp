@@ -17,19 +17,24 @@
 #include "assetmgr.h"
 #include "boxrobj.h"
 #include "camera.h"
-#include "dx8indexbuffer.h"
-#include "dx8renderer.h"
-#include "dx8texman.h"
-#include "dx8vertexbuffer.h"
-#include "dx8wrapper.h"
 #include "ffactory.h"
 #include "hashtemplate.h"
 #include "iniclass.h"
+#include "rddesc.h"
+#include "rinfo.h"
 #include "scene.h"
 #include "sortingrenderer.h"
 #include "textureloader.h"
 #ifdef GAME_DLL
 #include "hooker.h"
+#endif
+
+#ifdef BUILD_WITH_D3D8
+#include "dx8indexbuffer.h"
+#include "dx8renderer.h"
+#include "dx8texman.h"
+#include "dx8vertexbuffer.h"
+#include "dx8wrapper.h"
 #endif
 
 #ifdef BUILD_WITH_X3D
@@ -125,19 +130,29 @@ void DefaultStaticSortListClass::Render_And_Clear(RenderInfoClass &rinfo)
         }
 
         if (rendered) {
+#ifdef BUILD_WITH_D3D8
             g_theDX8MeshRenderer.Flush();
+#endif
         }
     }
 }
 
 void W3D::Get_Device_Resolution(int &width, int &height, int &bit_depth, bool &windowed)
 {
+#ifdef BUILD_WITH_X3D
+    X3D::Get_Device_Resolution(0, width, height);
+#else
     DX8Wrapper::Get_Device_Resolution(width, height, bit_depth, windowed);
+#endif
 }
 
 void W3D::Get_Render_Target_Resolution(int &set_w, int &set_h, int &set_bits, bool &set_windowed)
 {
+#ifdef BUILD_WITH_X3D
+    X3D::Get_Device_Resolution(0, set_w, set_w);
+#else
     DX8Wrapper::Get_Render_Target_Resolution(set_w, set_h, set_bits, set_windowed);
+#endif
 }
 
 const RenderDeviceDescClass &W3D::Get_Render_Device_Desc(int deviceidx)
@@ -149,12 +164,13 @@ const RenderDeviceDescClass &W3D::Get_Render_Device_Desc(int deviceidx)
     static std::vector<RenderDeviceDescClass> devices;
     if (devices.empty()) {
         for (auto &dev : X3D::Get_Device_List()) {
-            auto &desc = devices.emplace_back();
+            RenderDeviceDescClass desc; 
             desc.m_deviceName = dev.Name;
             desc.m_deviceVendor = dev.Vendor;
             desc.m_driverName = "X3D";
             desc.m_driverVendor = "X3D";
             desc.m_driverVersion = "1.0";
+            devices.push_back(desc);
         }
     }
     return devices[deviceidx];
@@ -183,12 +199,18 @@ const char *W3D::Get_Render_Device_Name(int device_index)
 
 int W3D::Get_Texture_Bit_Depth()
 {
+#ifdef BUILD_WITH_X3D
+    return 32;
+#else
     return DX8Wrapper::s_textureBitDepth;
+#endif
 }
 
 void W3D::Invalidate_Mesh_Cache()
 {
+#ifdef BUILD_WITH_D3D8
     g_theDX8MeshRenderer.Invalidate(false);
+#endif
 }
 
 void W3D::Invalidate_Textures()
@@ -206,9 +228,15 @@ void W3D::Invalidate_Textures()
 
 W3DErrorType W3D::Set_Device_Resolution(int width, int height, int bits, int windowed, bool resize_window)
 {
+#ifdef BUILD_WITH_X3D
+    return X3D::Set_Resolution(width, height, bits, windowed, resize_window) != X3D::X3D_ERR_OK ?
+        W3D_ERROR_OK :
+        W3D_ERROR_INITIALIZATION_FAILED;
+#else
     return DX8Wrapper::Set_Device_Resolution(width, height, bits, windowed, resize_window) != 0 ?
         W3D_ERROR_OK :
         W3D_ERROR_INITIALIZATION_FAILED;
+#endif
 }
 
 void W3D::Add_To_Static_Sort_List(RenderObjClass *robj, unsigned int sort_level)
@@ -312,21 +340,36 @@ W3DErrorType W3D::Set_Render_Device(
 
 int W3D::Get_Render_Device()
 {
+#if defined BUILD_WITH_X3D
+    return X3D::Get_Current_Device_Id();
+#else
     return DX8Wrapper::Get_Render_Device();
+#endif
 }
 
 W3DErrorType W3D::Begin_Render(bool clear, bool clearz, const Vector3 &color, float alpha, void (*network_callback)())
 {
-#if defined BUILD_WITH_X3D
+#ifdef BUILD_WITH_X3D
     if (!s_isInited) {
         return W3D_ERROR_OK;
     }
 
+    // TODO: check if device needs resetting
+
     captainslog_assert(!s_isRendering);
     s_isRendering = true;
 
-    X3D::Set_Clear_Color(color.X, color.Y, color.Z, alpha);
-    X3D::Clear(clear, clearz);
+    TextureLoader::Update(network_callback);
+
+    if (clear || clearz) {
+        int w, h;
+        X3D::Get_Device_Resolution(0, w, h);
+        X3D::Set_Viewport(0, 0, w, h);
+        X3D::Set_Clear_Color(color.X, color.Y, color.Z, alpha);
+        X3D::Clear(clear, clearz);
+    }
+
+    X3D::Begin();
 #elif defined BUILD_WITH_D3D8
     if (!s_isInited) {
         return W3D_ERROR_OK;
@@ -387,7 +430,12 @@ W3DErrorType W3D::Render(SceneClass *scene, CameraClass *cam, bool clear, bool c
     cam->Apply();
 
     if (clear || clearz) {
+#if defined BUILD_WITH_X3D
+        X3D::Set_Clear_Color(color.X, color.Y, color.Z, 0.0f);
+        X3D::Clear(clear, clearz);
+#else
         DX8Wrapper::Clear(clear, clearz, color, 0.0f);
+#endif
     }
 
 #ifdef BUILD_WITH_D3D8
@@ -404,9 +452,9 @@ W3DErrorType W3D::Render(SceneClass *scene, CameraClass *cam, bool clear, bool c
     }
 
     DX8Wrapper::Set_Ambient_Color(scene->Get_Ambient_Light());
+    g_theDX8MeshRenderer.Set_Camera(&rinfo.m_camera);
 #endif
 
-    g_theDX8MeshRenderer.Set_Camera(&rinfo.m_camera);
     scene->Render(rinfo);
     Flush(rinfo);
     return W3D_ERROR_OK;
@@ -436,10 +484,16 @@ W3DErrorType W3D::Render(RenderObjClass &obj, RenderInfoClass &rinfo)
 
 void W3D::Flush(RenderInfoClass &rinfo)
 {
+#ifdef BUILD_WITH_X3D
+#else
     g_theDX8MeshRenderer.Flush();
+#endif
     Render_And_Clear_Static_Sort_Lists(rinfo);
     SortingRendererClass::Flush();
+#ifdef BUILD_WITH_X3D
+#else
     g_theDX8MeshRenderer.Clear_Pending_Delete_Lists();
+#endif
 }
 
 W3DErrorType W3D::End_Render(bool flip_frame)
@@ -447,14 +501,17 @@ W3DErrorType W3D::End_Render(bool flip_frame)
     if (s_isInited) {
         SortingRendererClass::Flush();
         s_isRendering = false;
-#if defined BUILD_WITH_X3D
+#ifdef BUILD_WITH_X3D
+        X3D::End();
         X3D::Present();
 #else
         DX8Wrapper::End_Scene();
 #endif
         s_frameCount++;
         // Debug_Statistics::End_Statistics();
+#ifdef BUILD_WITH_D3D8
         DX8Wrapper::Invalidate_Cached_Render_States();
+#endif
     }
 
     return W3D_ERROR_OK;
@@ -488,7 +545,9 @@ void W3D::Enable_Coloring(unsigned int enable)
 void W3D::Enable_Sorting(bool onoff)
 {
     s_isSortingEnabled = onoff;
+#ifdef BUILD_WITH_D3D8
     g_theDX8MeshRenderer.Invalidate(false);
+#endif
 }
 
 void W3D::Allocate_Debug_Resources() {}
@@ -497,7 +556,10 @@ void W3D::Release_Debug_Resources() {}
 
 void W3D::Set_Texture_Bit_Depth(int bitdepth)
 {
+    // Just sets an integer that apparently isn't used anywhere
+#ifdef BUILD_WITH_D3D8
     DX8Wrapper::Set_Texture_Bitdepth(bitdepth);
+#endif
 }
 
 void W3D::Render_And_Clear_Static_Sort_Lists(RenderInfoClass &rinfo)

@@ -164,3 +164,8 @@ void X3D::X3DContextD3D9::Set_Viewport(int x, int y, int w, int h)
 
     m_device->SetViewport(&vp);
 }
+
+X3D::X3DVertexBuffer *X3D::X3DContextD3D9::Create_Vertex_Buffer()
+{
+    return nullptr;
+}

@@ -1,10 +1,16 @@
 ﻿#include "x3d_context_gl.h"
 #include "x3d.h"
-#include <GL/gl.h>
+#include "x3d_buffer_gl.h"
 
-// typedef GLubyte (*PFNGETSTRING)(GLuint);
-//
-// static PFNGETSTRING glGetString = NULL;
+#include "flextGL.h"
+
+int X3D::X3DContextGL::Load_Functions()
+{
+    if (flextInit() == GL_FALSE) {
+        return X3D_ERR_FAILED_DEVICE_INIT;
+    }
+    return X3D_ERR_OK;
+}
 
 #ifdef _WIN32
 int X3D::X3DContextGL::Init_From_Hwnd(HWND hwnd)
@@ -34,7 +40,7 @@ int X3D::X3DContextGL::Init_From_Hwnd(HWND hwnd)
     strcpy(dev.Name, (char *)renderer);
     strcpy(dev.Vendor, (char *)vendor);
 
-    return X3D_ERR_OK;
+    return Load_Functions();
 }
 #endif
 
@@ -65,4 +71,9 @@ void X3D::X3DContextGL::Present()
 void X3D::X3DContextGL::Set_Viewport(int x, int y, int w, int h)
 {
     glViewport(x, y, w, h);
+}
+
+X3D::X3DVertexBuffer *X3D::X3DContextGL::Create_Vertex_Buffer()
+{
+    return new X3DVertexBufferGL;
 }

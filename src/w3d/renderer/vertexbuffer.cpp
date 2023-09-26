@@ -15,6 +15,10 @@
  */
 #include "vertexbuffer.h"
 #include "dx8vertexbuffer.h"
+#ifdef BUILD_WITH_X3D
+#include "x3d_vertexbuffer.h"
+#include "x3dvertexbuffer.h"
+#endif
 #include "w3d.h"
 
 unsigned int g_vertexBufferCount;
@@ -31,10 +35,7 @@ VertexBufferClass::VertexBufferClass(
     m_type(type_), m_vertexCount(vertex_count_), m_engineRefs(0)
 {
     captainslog_assert(m_vertexCount);
-    captainslog_assert(m_type == BUFFER_TYPE_DX8 || m_type == BUFFER_TYPE_SORTING);
-#ifndef BUILD_WITH_X3D
     captainslog_assert((fvf != 0 && vertex_size == 0) || (fvf == 0 && vertex_size != 0));
-#endif
     m_fvfInfo = new FVFInfoClass(fvf, vertex_size);
     g_vertexBufferCount++;
     g_vertexBufferTotalVertices += m_vertexCount;
@@ -144,6 +145,16 @@ VertexBufferClass::AppendLockClass::AppendLockClass(
 #endif
             break;
         }
+#ifdef BUILD_WITH_X3D
+        case BUFFER_TYPE_X3D: {
+            m_vertices = static_cast<X3DVertexBufferClass *>(vertex_buffer)
+                             ->Get_X3D_Vertex_Buffer()
+                             ->Lock(X3D::X3D_LOCK_READ,
+                                 vertex_buffer->FVF_Info().Get_FVF_Size() * start_index,
+                                 vertex_buffer->FVF_Info().Get_FVF_Size() * index_range);
+            break;
+        }
+#endif
         case BUFFER_TYPE_SORTING: {
             m_vertices = static_cast<SortingVertexBufferClass *>(vertex_buffer)->Get_Sorting_Vertex_Buffer() + start_index;
             break;
@@ -163,6 +174,12 @@ VertexBufferClass::AppendLockClass::~AppendLockClass()
 #endif
             break;
         }
+#ifdef BUILD_WITH_D3D8
+        case BUFFER_TYPE_X3D: {
+            static_cast<X3DVertexBufferClass *>(m_vertexBuffer)->Get_X3D_Vertex_Buffer()->Unlock();
+            break;
+        }
+#endif
         case BUFFER_TYPE_SORTING:
             break;
         default:

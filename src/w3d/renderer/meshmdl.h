@@ -54,6 +54,7 @@ class DX8SkinFVFCategoryContainer;
 class DX8FVFCategoryContainer;
 class GapFillerClass;
 struct VertexFormatXYZNDUV2;
+class X3DPolygonRendererClass;
 
 class MeshModelClass : public MeshGeometryClass
 {
@@ -156,8 +157,9 @@ public:
     bool Is_Alternate_Material_Description_Enabled();
     bool Needs_Vertex_Normals();
     void Init_For_NPatch_Rendering();
+#ifdef BUILD_WITH_D3D8
     DX8FVFCategoryContainer *Peek_FVF_Category_Container();
-
+#endif
     MeshModelClass *Hook_Ctor() { return new (this) MeshModelClass; }
     MeshModelClass *Hook_Ctor2(const MeshModelClass &src) { return new (this) MeshModelClass(src); }
 
@@ -194,6 +196,9 @@ protected:
     MeshMatDescClass *m_alternateMatDesc;
     MeshMatDescClass *m_curMatDesc;
     MaterialInfoClass *m_matInfo;
+#ifdef BUILD_WITH_X3D
+    MultiListClass<X3DPolygonRendererClass> m_x3d_polygonRendererList;
+#endif
     MultiListClass<DX8PolygonRendererClass> m_polygonRendererList;
     GapFillerClass *m_gapFiller;
     bool m_hasBeenInUse;
@@ -202,4 +207,6 @@ protected:
     friend class DX8SkinFVFCategoryContainer;
     friend class DX8MeshRendererClass;
     friend class DX8PolygonRendererClass;
+    friend class X3DMeshRendererClass;
+    friend class X3DPolygonRendererClass;
 };

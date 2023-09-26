@@ -16,6 +16,7 @@ struct X3DDevice
     char Vendor[256];
 };
 
+class X3DVertexBuffer;
 class X3DContext
 {
 public:
@@ -27,7 +28,7 @@ public:
         int dev, int resx, int resy, int bits, int windowed, bool resize_window, bool reset_device, bool restore_assets);
     int Get_Device_Id() { return m_dev; }
 
-    void Set_Resolution(int width, int height, int bits, int windows, bool resuze_window);    
+    void Set_Resolution(int width, int height, int bits, int windows, bool resuze_window);
     void Get_Resolution(int &resx, int &resy);
 
     virtual void Clear(bool clear_color, bool clear_depth) = 0;
@@ -38,6 +39,8 @@ public:
     virtual void End();
 
     virtual void Set_Viewport(int x, int y, int w, int h) = 0;
+
+    virtual X3DVertexBuffer *Create_Vertex_Buffer() = 0;
 
 protected:
     std::vector<X3DDevice> m_devices;

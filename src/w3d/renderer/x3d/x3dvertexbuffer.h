@@ -18,10 +18,17 @@
 
 #include <x3d.h>
 
+enum X3DVertexFormat
+{
+    X3D_VF_XYZ      = 1 << 0,
+    X3D_VF_NORMAL   = 1 << 1,
+    X3D_VF_DIFFUSE  = 1 << 2,
+    X3D_VF_SPECULAR = 1 << 3,
+};
+
 class X3DVertexBufferClass : public VertexBufferClass
 {
     IMPLEMENT_W3D_POOL(X3DVertexBufferClass)
-    ALLOW_HOOKING
 public:
     enum UsageType
     {
@@ -49,8 +56,8 @@ public:
     void Copy(Vector3 *loc, Vector3 *norm, Vector2 *uv, Vector4 *diffuse, unsigned int first_vertex, unsigned int count);
     void Copy(Vector3 *loc, Vector2 *uv, Vector4 *diffuse, unsigned int first_vertex, unsigned int count);
     void Create_Vertex_Buffer(UsageType usage);
-    X3D::VertexBuffer *Get_X3D_Vertex_Buffer() { return m_vertexBuffer; }
+    X3D::X3DVertexBuffer *Get_X3D_Vertex_Buffer() { return m_vertexBuffer; }
 
 private:
-    X3D::VertexBuffer *m_vertexBuffer;
+    X3D::X3DVertexBuffer *m_vertexBuffer;
 };

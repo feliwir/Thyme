@@ -68,6 +68,7 @@ set(GAMEENGINE_INCLUDES
     w3d/math
     w3d/renderer
     w3d/renderer/dx8
+    w3d/renderer/x3d
     w3d/saveload
 )
 
@@ -540,6 +541,9 @@ set(GAMEENGINE_SRC
     w3d/renderer/dx8/dx8texman.cpp
     w3d/renderer/dx8/dx8vertexbuffer.cpp
     w3d/renderer/dx8/dx8wrapper.cpp
+    w3d/renderer/x3d/x3dpolygonrenderer.cpp
+    w3d/renderer/x3d/x3drenderer.cpp
+    w3d/renderer/x3d/x3dvertexbuffer.cpp
     w3d/renderer/dynamesh.cpp
     w3d/renderer/hanimmgr.cpp
     w3d/renderer/hcanim.cpp
@@ -574,6 +578,7 @@ set(GAMEENGINE_SRC
     w3d/renderer/projector.cpp
     w3d/renderer/render2d.cpp
     w3d/renderer/render2dsentence.cpp
+    w3d/renderer/renderer.cpp
     w3d/renderer/rendobj.cpp
     w3d/renderer/rinfo.cpp
     w3d/renderer/scene.cpp

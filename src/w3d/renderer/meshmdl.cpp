@@ -18,13 +18,20 @@
 #include "assetmgr.h"
 #include "bwrender.h"
 #include "camera.h"
-#include "dx8polygonrenderer.h"
-#include "dx8renderer.h"
 #include "hashtemplate.h"
 #include "htree.h"
 #include "matinfo.h"
 #include "vp.h"
 #include "w3d_util.h"
+
+#if defined BUILD_WITH_D3D8
+#include "dx8polygonrenderer.h"
+#include "dx8renderer.h"
+#endif
+
+#if defined BUILD_WITH_X3D
+#include "x3drenderer.h"
+#endif
 
 static DynamicVectorClass<Vector4> _TempTransformedVertexBuffer;
 
@@ -63,7 +70,9 @@ MeshModelClass::MeshModelClass(const MeshModelClass &that) :
 
 MeshModelClass::~MeshModelClass()
 {
+#if defined BUILD_WITH_D3D8
     g_theDX8MeshRenderer.Unregister_Mesh_Type(this);
+#endif
     Reset(0, 0, 0);
     Ref_Ptr_Release(m_matInfo);
 
@@ -79,7 +88,11 @@ MeshModelClass::~MeshModelClass()
 MeshModelClass &MeshModelClass::operator=(const MeshModelClass &that)
 {
     if (this != &that) {
-        g_theDX8MeshRenderer.Unregister_Mesh_Type(this);
+#if defined BUILD_WITH_X3D
+    g_theX3DMeshRenderer.Unregister_Mesh_Type(this);
+#elif defined BUILD_WITH_D3D8
+    g_theDX8MeshRenderer.Unregister_Mesh_Type(this);
+#endif
         MeshGeometryClass::operator=(that);
 
         *m_defMatDesc = *(that.m_defMatDesc);
@@ -103,7 +116,11 @@ MeshModelClass &MeshModelClass::operator=(const MeshModelClass &that)
 void MeshModelClass::Reset(int polycount, int vertcount, int passcount)
 {
     Reset_Geometry(polycount, vertcount);
+#if defined BUILD_WITH_X3D
+    g_theX3DMeshRenderer.Unregister_Mesh_Type(this);
+#elif defined BUILD_WITH_D3D8
     g_theDX8MeshRenderer.Unregister_Mesh_Type(this);
+#endif
     m_matInfo->Reset();
     m_defMatDesc->Reset(polycount, vertcount, passcount);
 
@@ -118,7 +135,11 @@ void MeshModelClass::Reset(int polycount, int vertcount, int passcount)
 void MeshModelClass::Register_For_Rendering()
 {
     m_hasBeenInUse = true;
+#if defined BUILD_WITH_X3D
+    g_theX3DMeshRenderer.Register_Mesh_Type(this);
+#elif defined BUILD_WITH_D3D8
     g_theDX8MeshRenderer.Register_Mesh_Type(this);
+#endif
 }
 
 void MeshModelClass::Replace_Texture(TextureClass *texture, TextureClass *new_texture)
@@ -140,11 +161,13 @@ void MeshModelClass::Replace_Texture(TextureClass *texture, TextureClass *new_te
                 }
             }
 
+#ifdef BUILD_WITH_D3D8
             DX8FVFCategoryContainer *fvf_category = Peek_FVF_Category_Container();
 
             if (fvf_category) {
                 fvf_category->Change_Polygon_Renderer_Texture(m_polygonRendererList, texture, new_texture, pass, stage);
             }
+#endif
         }
     }
 }
@@ -167,11 +190,13 @@ void MeshModelClass::Replace_VertexMaterial(VertexMaterialClass *vmat, VertexMat
             }
         }
 
+#ifdef BUILD_WITH_D3D8
         DX8FVFCategoryContainer *fvf_category = Peek_FVF_Category_Container();
 
         if (fvf_category) {
             fvf_category->Change_Polygon_Renderer_Material(m_polygonRendererList, vmat, new_vmat, pass);
         }
+#endif
     }
 }
 
@@ -233,8 +258,9 @@ void MeshModelClass::Enable_Alternate_Material_Description(bool onoff)
             if (W3D::Is_Overbright_Modify_On_Load_Enabled()) {
                 Modify_For_Overbright();
             }
-
+#if defined BUILD_WITH_D3D8
             g_theDX8MeshRenderer.Invalidate(false);
+#endif
         }
     } else {
         if (m_curMatDesc != m_defMatDesc) {
@@ -248,7 +274,9 @@ void MeshModelClass::Enable_Alternate_Material_Description(bool onoff)
                 Modify_For_Overbright();
             }
 
+#ifdef BUILD_WITH_D3D8
             g_theDX8MeshRenderer.Invalidate(false);
+#endif
         }
     }
 }
@@ -646,6 +674,7 @@ TextureClass *Load_Texture(ChunkLoadClass &cload)
 
     WW3DFormat format = WW3D_FORMAT_UNKNOWN;
 
+#if defined BUILD_WITH_D3D8
     if ((info.Attributes & W3DTEXTURE_TYPE_MASK) == W3DTEXTURE_TYPE_BUMPMAP) {
         if (DX8Wrapper::Is_Initted()) {
             if (DX8Wrapper::Get_Current_Caps()->Support_Bump_Envmap()) {
@@ -661,6 +690,7 @@ TextureClass *Load_Texture(ChunkLoadClass &cload)
             }
         }
     }
+#endif
 
     TextureClass *tex = W3DAssetManager::Get_Instance()->Get_Texture(name, mips, format);
 
@@ -1345,6 +1375,7 @@ void MeshModelClass::Modify_For_Overbright()
     }
 }
 
+#ifdef BUILD_WITH_D3D8
 DX8FVFCategoryContainer *MeshModelClass::Peek_FVF_Category_Container()
 {
     if (m_polygonRendererList.Is_Empty()) {
@@ -1362,3 +1393,4 @@ DX8FVFCategoryContainer *MeshModelClass::Peek_FVF_Category_Container()
 
     return fvf_category;
 }
+#endif

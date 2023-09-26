@@ -14,8 +14,10 @@ class X3DContextGL : public X3DContext
 
     void Set_Viewport(int x, int y, int w, int h) override;
 
+    X3DVertexBuffer *Create_Vertex_Buffer() override;
+
 private:
-    int LoadFunctions();
+    int Load_Functions();
 
 #ifdef _WIN32
     HDC m_hdc;

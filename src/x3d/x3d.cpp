@@ -140,3 +140,9 @@ int X3D::Set_Resolution(int resx, int resy, int bits, int windowed, bool resize_
     s_context->Set_Resolution(resx, resy, bits, windowed, resize_window);
     return X3D::X3D_ERR_OK;
 }
+
+X3D::X3DVertexBuffer *X3D::Create_Vertex_Buffer()
+{
+    assert(s_context != nullptr);
+    return s_context->Create_Vertex_Buffer();
+}

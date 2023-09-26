@@ -7,7 +7,10 @@ if(X3D_ENABLE_OPENGL)
     find_package(OpenGL REQUIRED)
 
     if(OPENGL_FOUND)
-        target_sources(x3d PRIVATE gl/x3d_context_gl.cpp)
+        target_sources(x3d PRIVATE 
+            gl/x3d_context_gl.cpp 
+            gl/x3d_buffer_gl.cpp
+            gl/flextGL.c)
         target_compile_definitions(x3d PRIVATE X3D_HAS_OPENGL)
         target_link_libraries(x3d PRIVATE OpenGL::GL)
     endif()

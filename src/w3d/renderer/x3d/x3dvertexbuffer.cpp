@@ -13,6 +13,7 @@
  *            LICENSE
  */
 #include "x3dvertexbuffer.h"
+#include "x3d_vertexbuffer.h"
 #include "w3d.h"
 
 X3DVertexBufferClass::X3DVertexBufferClass(

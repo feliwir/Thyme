@@ -16,22 +16,26 @@
 #include "dx8fvf.h"
 #ifdef BUILD_WITH_D3D8
 #include <d3dx8.h>
+#elif defined BUILD_WITH_X3D
+#include <x3dvertexbuffer.h>
 #endif
 
 unsigned int Get_FVF_Vertex_Size(unsigned int fvf)
 {
 #ifdef BUILD_WITH_D3D8
     return D3DXGetFVFVertexSize(fvf);
-#else
-    return 0;
+#elif defined BUILD_WITH_X3D
+    unsigned int size = 0;
+    if (fvf & X3D_VF_XYZ)
+        size += sizeof(float) * 3;
+    // TODO: ADD OTHERS
+    return size;
 #endif
 }
 
 FVFInfoClass::FVFInfoClass(unsigned int fvf_, unsigned int fvf_size_)
 {
-#ifdef BUILD_WITH_D3D8
     m_FVF = fvf_;
-
     if (fvf_) {
         m_fvfSize = Get_FVF_Vertex_Size(m_FVF);
     } else {
@@ -40,7 +44,7 @@ FVFInfoClass::FVFInfoClass(unsigned int fvf_, unsigned int fvf_size_)
 
     m_locationOffset = 0;
     m_blendOffset = 0;
-
+#if defined BUILD_WITH_D3D8
     if ((m_FVF & D3DFVF_XYZ) == D3DFVF_XYZ) {
         m_blendOffset = 0x0C;
     }
@@ -78,6 +82,8 @@ FVFInfoClass::FVFInfoClass(unsigned int fvf_, unsigned int fvf_size_)
         }
         a++;
     }
+#elif defined BUILD_WITH_X3D
+
 #endif
 }
 

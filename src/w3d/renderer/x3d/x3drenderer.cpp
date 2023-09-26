@@ -566,32 +566,30 @@ X3DFVFCategoryContainer::X3DFVFCategoryContainer(unsigned int FVF, bool sorting)
     m_anythingToRender(false),
     m_anyDelayedPassesToRender(false)
 {
-#ifdef BUILD_WITH_D3D8
-    if ((FVF & D3DFVF_TEX1) == D3DFVF_TEX1) {
+    if ((FVF & X3D_VF_TEX1) == X3D_VF_TEX1) {
         m_uvCoordinateChannels = 1;
     }
-    if ((FVF & D3DFVF_TEX2) == D3DFVF_TEX2) {
+    if ((FVF & X3D_VF_TEX2) == X3D_VF_TEX2) {
         m_uvCoordinateChannels = 2;
     }
-    if ((FVF & D3DFVF_TEX3) == D3DFVF_TEX3) {
+    if ((FVF & X3D_VF_TEX3) == X3D_VF_TEX3) {
         m_uvCoordinateChannels = 3;
     }
-    if ((FVF & D3DFVF_TEX4) == D3DFVF_TEX4) {
+    if ((FVF & X3D_VF_TEX4) == X3D_VF_TEX4) {
         m_uvCoordinateChannels = 4;
     }
-    if ((FVF & D3DFVF_TEX5) == D3DFVF_TEX5) {
+    if ((FVF & X3D_VF_TEX5) == X3D_VF_TEX5) {
         m_uvCoordinateChannels = 5;
     }
-    if ((FVF & D3DFVF_TEX6) == D3DFVF_TEX6) {
+    if ((FVF & X3D_VF_TEX6) == X3D_VF_TEX6) {
         m_uvCoordinateChannels = 6;
     }
-    if ((FVF & D3DFVF_TEX7) == D3DFVF_TEX7) {
+    if ((FVF & X3D_VF_TEX7) == X3D_VF_TEX7) {
         m_uvCoordinateChannels = 7;
     }
-    if ((FVF & D3DFVF_TEX8) == D3DFVF_TEX8) {
+    if ((FVF & X3D_VF_TEX8) == X3D_VF_TEX8) {
         m_uvCoordinateChannels = 8;
     }
-#endif
 }
 
 X3DFVFCategoryContainer::~X3DFVFCategoryContainer()
@@ -621,32 +619,32 @@ unsigned int X3DFVFCategoryContainer::Define_FVF(MeshModelClass *mmc, bool enabl
         fvf |= X3D_VF_SPECULAR;
     }
 
-    // switch (mmc->Get_UV_Array_Count()) {
-    //     case 1:
-    //         fvf |= D3DFVF_TEX1;
-    //         break;
-    //     case 2:
-    //         fvf |= D3DFVF_TEX2;
-    //         break;
-    //     case 3:
-    //         fvf |= D3DFVF_TEX3;
-    //         break;
-    //     case 4:
-    //         fvf |= D3DFVF_TEX4;
-    //         break;
-    //     case 5:
-    //         fvf |= D3DFVF_TEX5;
-    //         break;
-    //     case 6:
-    //         fvf |= D3DFVF_TEX6;
-    //         break;
-    //     case 7:
-    //         fvf |= D3DFVF_TEX7;
-    //         break;
-    //     case 8:
-    //         fvf |= D3DFVF_TEX8;
-    //         break;
-    // }
+    switch (mmc->Get_UV_Array_Count()) {
+        case 1:
+            fvf |= X3D_VF_TEX1;
+            break;
+        case 2:
+            fvf |= X3D_VF_TEX2;
+            break;
+        case 3:
+            fvf |= X3D_VF_TEX3;
+            break;
+        case 4:
+            fvf |= X3D_VF_TEX4;
+            break;
+        case 5:
+            fvf |= X3D_VF_TEX5;
+            break;
+        case 6:
+            fvf |= X3D_VF_TEX6;
+            break;
+        case 7:
+            fvf |= X3D_VF_TEX7;
+            break;
+        case 8:
+            fvf |= X3D_VF_TEX8;
+            break;
+    }
 
     if (mmc->Needs_Vertex_Normals()) {
         fvf |= X3D_VF_NORMAL;
@@ -1071,18 +1069,17 @@ void X3DRigidFVFCategoryContainer::Add_Mesh(MeshModelClass *mmc)
     const unsigned int *diffuse = split.Get_Color_Array(0);
     const unsigned int *specular = split.Get_Color_Array(1);
 
-#ifdef BUILD_WITH_D3D8
     for (unsigned int i = 0; i < split.Get_Vertex_Count(); i++) {
 
         *reinterpret_cast<Vector3 *>(&outverts[f.Get_Location_Offset()]) = verts[i];
 
-        if (m_FVF & D3DFVF_NORMAL) {
+        if (m_FVF & X3D_VF_NORMAL) {
             if (normals != nullptr) {
                 *reinterpret_cast<Vector3 *>(&outverts[f.Get_Normal_Offset()]) = normals[i];
             }
         }
 
-        if (m_FVF & D3DFVF_DIFFUSE) {
+        if (m_FVF & X3D_VF_DIFFUSE) {
             if (diffuse != nullptr) {
                 *reinterpret_cast<unsigned int *>(&outverts[f.Get_Diffuse_Offset()]) = diffuse[i];
             } else {
@@ -1090,7 +1087,7 @@ void X3DRigidFVFCategoryContainer::Add_Mesh(MeshModelClass *mmc)
             }
         }
 
-        if (m_FVF & D3DFVF_SPECULAR) {
+        if (m_FVF & X3D_VF_SPECULAR) {
             if (specular != nullptr) {
                 *reinterpret_cast<unsigned int *>(&outverts[f.Get_Specular_Offset()]) = specular[i];
             } else {
@@ -1101,7 +1098,7 @@ void X3DRigidFVFCategoryContainer::Add_Mesh(MeshModelClass *mmc)
         outverts += f.Get_FVF_Size();
     }
 
-    int texcount = (m_FVF & D3DFVF_TEXCOUNT_MASK) >> D3DFVF_TEXCOUNT_SHIFT;
+    int texcount = (m_FVF & X3D_VF_TEXCOUNT_MASK) >> X3D_VF_TEXCOUNT_SHIFT;
 
     for (int i = 0; i < texcount; i++) {
         char *outverts2 = static_cast<char *>(lock.Get_Vertex_Array());
@@ -1114,7 +1111,6 @@ void X3DRigidFVFCategoryContainer::Add_Mesh(MeshModelClass *mmc)
             }
         }
     }
-#endif
 
     Generate_Texture_Categories(split, m_usedVertices);
     m_usedVertices += count;

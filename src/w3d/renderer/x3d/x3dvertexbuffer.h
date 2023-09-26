@@ -20,10 +20,21 @@
 
 enum X3DVertexFormat
 {
-    X3D_VF_XYZ      = 1 << 0,
-    X3D_VF_NORMAL   = 1 << 1,
-    X3D_VF_DIFFUSE  = 1 << 2,
+    X3D_VF_XYZ = 1 << 0,
+    X3D_VF_NORMAL = 1 << 1,
+    X3D_VF_DIFFUSE = 1 << 2,
     X3D_VF_SPECULAR = 1 << 3,
+    X3D_VF_TEX1 = 1 << 4,
+    X3D_VF_TEX2 = 1 << 5,
+    X3D_VF_TEX3 = 1 << 6,
+    X3D_VF_TEX4 = 1 << 7,
+    X3D_VF_TEX5 = 1 << 8,
+    X3D_VF_TEX6 = 1 << 9,
+    X3D_VF_TEX7 = 1 << 10,
+    X3D_VF_TEX8 = 1 << 11,
+    X3D_VF_TEXCOUNT_SHIFT = 4,
+    X3D_VF_TEXCOUNT_MASK =
+        X3D_VF_TEX1 | X3D_VF_TEX2 | X3D_VF_TEX3 | X3D_VF_TEX4 | X3D_VF_TEX5 | X3D_VF_TEX6 | X3D_VF_TEX7 | X3D_VF_TEX8,
 };
 
 class X3DVertexBufferClass : public VertexBufferClass

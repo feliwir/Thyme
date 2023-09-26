@@ -40,7 +40,7 @@ public:
 
     virtual void Set_Viewport(int x, int y, int w, int h) = 0;
 
-    virtual X3DVertexBuffer *Create_Vertex_Buffer() = 0;
+    virtual X3DVertexBuffer *Create_Vertex_Buffer(size_t size) = 0;
 
 protected:
     std::vector<X3DDevice> m_devices;

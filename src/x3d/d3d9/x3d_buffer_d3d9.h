@@ -1,0 +1,22 @@
+#pragma once
+#include "x3d_vertexbuffer.h"
+#include <cassert>
+#include <d3d9.h>
+
+namespace X3D
+{
+class X3DVertexBufferD3D9 : public X3DVertexBuffer
+{
+public:
+    X3DVertexBufferD3D9(IDirect3DDevice9 *device, size_t size)
+    {
+        assert(SUCCEEDED(device->CreateVertexBuffer(size, D3DUSAGE_DYNAMIC, 0, D3DPOOL_DEFAULT, &m_buffer, NULL)));
+    }
+
+    void *Lock(X3DLockUsage usage, size_t offset, size_t size) override;
+    void Unlock() override;
+
+private:
+    IDirect3DVertexBuffer9 *m_buffer = nullptr;
+};
+} // namespace X3D

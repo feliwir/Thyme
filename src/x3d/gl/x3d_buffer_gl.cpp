@@ -1,5 +1,11 @@
 #include "x3d_buffer_gl.h"
 
+X3D::X3DVertexBufferGL::X3DVertexBufferGL(size_t size)
+{
+    glBindBuffer(GL_ARRAY_BUFFER, m_handle);
+    glBufferData(GL_ARRAY_BUFFER, size, 0, GL_STATIC_DRAW);
+}
+
 void *X3D::X3DVertexBufferGL::Lock(X3DLockUsage usage, size_t offset, size_t size)
 {
     glBindBuffer(GL_ARRAY_BUFFER, m_handle);

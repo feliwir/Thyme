@@ -73,7 +73,7 @@ void X3D::X3DContextGL::Set_Viewport(int x, int y, int w, int h)
     glViewport(x, y, w, h);
 }
 
-X3D::X3DVertexBuffer *X3D::X3DContextGL::Create_Vertex_Buffer()
+X3D::X3DVertexBuffer *X3D::X3DContextGL::Create_Vertex_Buffer(size_t size)
 {
-    return new X3DVertexBufferGL;
+    return new X3DVertexBufferGL(size);
 }

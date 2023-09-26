@@ -17,6 +17,8 @@ protected:
 
 class X3DVertexBufferGL : public X3DBufferGL, public X3DVertexBuffer
 {
+public:
+    X3DVertexBufferGL(size_t size);
     void *Lock(X3DLockUsage usage, size_t offset, size_t size) override;
     void Unlock() override;
 };

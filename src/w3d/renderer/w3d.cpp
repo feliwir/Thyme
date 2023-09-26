@@ -306,11 +306,13 @@ W3DErrorType W3D::Shutdown()
         W3DAssetManager::Get_Instance()->Free_Assets();
     }
 
+    #ifdef BUILD_WITH_D3D8
     DX8TextureManagerClass::Shutdown();
 
     if (!s_lite) {
         DX8Wrapper::Shutdown();
     }
+    #endif
 
     if (s_defaultStaticSortLists) {
         delete s_defaultStaticSortLists;

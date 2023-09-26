@@ -77,6 +77,6 @@ void End();
 /// @param
 void Set_Viewport(int, int, int, int);
 
-X3DVertexBuffer *Create_Vertex_Buffer();
+X3DVertexBuffer *Create_Vertex_Buffer(size_t size);
 
 } // namespace X3D

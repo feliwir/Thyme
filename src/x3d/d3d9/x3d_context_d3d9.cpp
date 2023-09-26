@@ -1,9 +1,10 @@
 #include "x3d_context_d3d9.h"
 #include "x3d.h"
+#include "x3d_buffer_d3d9.h"
 #include <comdef.h>
 
 HMODULE X3D::X3DContextD3D9::s_library = nullptr;
-IDirect3D9 *(__stdcall  *X3D::X3DContextD3D9::s_create_function)(unsigned) = nullptr;
+IDirect3D9 *(__stdcall *X3D::X3DContextD3D9::s_create_function)(unsigned) = nullptr;
 
 X3D::X3DContextD3D9::X3DContextD3D9() : m_clearColor(0) {}
 
@@ -165,7 +166,8 @@ void X3D::X3DContextD3D9::Set_Viewport(int x, int y, int w, int h)
     m_device->SetViewport(&vp);
 }
 
-X3D::X3DVertexBuffer *X3D::X3DContextD3D9::Create_Vertex_Buffer()
+X3D::X3DVertexBuffer *X3D::X3DContextD3D9::Create_Vertex_Buffer(size_t size)
 {
-    return nullptr;
+    assert(m_device != nullptr);
+    return new X3DVertexBufferD3D9(m_device, size);
 }

@@ -130,7 +130,8 @@ IndexBufferClass::AppendLockClass::AppendLockClass(
             m_indices = static_cast<uint16_t *>(
                 static_cast<X3DIndexBufferClass *>(m_indexBuffer)
                     ->Get_X3D_Index_Buffer()
-                    ->Lock(X3D::X3D_LOCK_READ, sizeof(uint16_t) * start_index, sizeof(uint16_t) * index_range));
+                    ->Lock(X3D::X3D_LOCK_WRITE, sizeof(uint16_t) * start_index, sizeof(uint16_t) * index_range));
+            break;
         }
 #endif // BUILD_WITH_X3D
         case BUFFER_TYPE_SORTING: {

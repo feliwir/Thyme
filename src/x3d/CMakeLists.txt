@@ -9,12 +9,14 @@ if(X3D_ENABLE_OPENGL)
     if(OPENGL_FOUND)
         target_sources(x3d PRIVATE
             gl/x3d_buffer_gl.cpp
-            gl/x3d_context_gl.cpp 
-            gl/flextGL.c)
+            gl/x3d_context_gl.cpp)
         target_compile_definitions(x3d PRIVATE X3D_HAS_OPENGL)
         target_include_directories(x3d PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/gl)
         target_link_libraries(x3d PRIVATE OpenGL::GL)
     endif()
+
+    # We added this subdirectory in the toplevel CMakeLists.txt
+    target_link_libraries(x3d PRIVATE flextGL)
 endif()
 
 if(X3D_ENABLE_D3D9 AND WIN32)

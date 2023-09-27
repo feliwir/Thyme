@@ -52,7 +52,7 @@ int X3D::Init(X3DBackend backend)
             return X3D_ERR_UNSUPPORTED;
     }
 
-    return X3D_ERR_OK;
+    return s_context->Init();
 }
 
 #ifdef _WIN32

@@ -26,8 +26,8 @@
 
 class MeshClass;
 class W3DTreeDrawModuleData;
-class DX8VertexBufferClass;
-class DX8IndexBufferClass;
+class VertexBufferClass;
+class IndexBufferClass;
 class TileData;
 class W3DProjectedShadow;
 class CameraClass;
@@ -183,8 +183,8 @@ private:
         MAX_PARTITON_INDICES = PARTITION_WIDTH_HEIGHT * PARTITION_WIDTH_HEIGHT,
     };
 
-    DX8VertexBufferClass *m_vertexTree[1]; // confirmed
-    DX8IndexBufferClass *m_indexTree[1]; // confirmed
+    VertexBufferClass *m_vertexTree[1]; // confirmed
+    IndexBufferClass *m_indexTree[1]; // confirmed
     unsigned long m_dwTreePixelShader; // confirmed
     unsigned long m_dwTreeVertexShader; // confirmed
     short m_partitionIndices[MAX_PARTITON_INDICES];

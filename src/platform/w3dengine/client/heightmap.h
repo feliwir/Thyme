@@ -63,7 +63,7 @@ public:
         int num_lights);
     int Get_X_With_Origin(int x);
     int Get_Y_With_Origin(int y);
-    int Update_VB(DX8VertexBufferClass *vb,
+    int Update_VB(VertexBufferClass *vb,
         char *data,
         int x0,
         int y0,
@@ -73,7 +73,7 @@ public:
         int origin_y,
         WorldHeightMap *map,
         RefMultiListIterator<RenderObjClass> *lights);
-    int Update_VB_For_Light(DX8VertexBufferClass *vb,
+    int Update_VB_For_Light(VertexBufferClass *vb,
         char *data,
         int x0,
         int y0,
@@ -83,7 +83,7 @@ public:
         int origin_y,
         W3DDynamicLight **lights,
         int num_lights);
-    int Update_VB_For_Light_Optimized(DX8VertexBufferClass *vb,
+    int Update_VB_For_Light_Optimized(VertexBufferClass *vb,
         char *data,
         int x0,
         int y0,
@@ -101,11 +101,11 @@ private:
     int m_numExtraBlendTiles;
     int m_extraBlendTilesRendered;
     int m_extraBlendTilePositionsSize;
-    DX8VertexBufferClass **m_vertexBufferTiles;
+    VertexBufferClass **m_vertexBufferTiles;
     char **m_vertexBufferBackup;
     int m_originX;
     int m_originY;
-    DX8IndexBufferClass *m_indexBuffer;
+    IndexBufferClass *m_indexBuffer;
     int m_numVBTilesX;
     int m_numVBTilesY;
     int m_numVertexBufferTiles;

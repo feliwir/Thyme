@@ -65,12 +65,16 @@ void RoadType::Load_Texture(Utf8String path, int ID)
     m_roadTexture->Get_Texture_Filter()->Set_Mip_Mapping(TextureFilterClass::FILTER_TYPE_BEST);
     m_roadTexture->Get_Texture_Filter()->Set_U_Address_Mode(TextureFilterClass::TEXTURE_ADDRESS_REPEAT);
     m_roadTexture->Get_Texture_Filter()->Set_V_Address_Mode(TextureFilterClass::TEXTURE_ADDRESS_REPEAT);
+#ifdef BUILD_WITH_D3D8
     m_vertexRoad = new DX8VertexBufferClass(DX8_FVF_XYZDUV1,
         g_theWriteableGlobalData->m_maxRoadVertex + 4,
         g_dynamic != 0 ? DX8VertexBufferClass::USAGE_DYNAMIC : DX8VertexBufferClass::USAGE_DEFAULT,
         0);
     m_indexRoad = new DX8IndexBufferClass(g_theWriteableGlobalData->m_maxRoadIndex + 4,
         g_dynamic != 0 ? DX8IndexBufferClass::USAGE_DYNAMIC : DX8IndexBufferClass::USAGE_DEFAULT);
+#else
+// TODO: X3D
+#endif
     m_numRoadVertices = 0;
     m_numRoadIndices = 0;
     m_texturePath = path;

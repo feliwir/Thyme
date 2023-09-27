@@ -74,9 +74,9 @@ TextureBaseClass::~TextureBaseClass()
         m_d3dTexture->Release();
         m_d3dTexture = W3D_TYPE_INVALID_TEXTURE;
     }
-#endif
 
     DX8TextureManagerClass::Remove(this);
+#endif
 }
 
 /**

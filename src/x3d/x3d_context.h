@@ -22,6 +22,7 @@ class X3DVertexBuffer;
 class X3DContext
 {
 public:
+    virtual int Init() = 0;
 #ifdef _WIN32
     virtual int Init_From_Hwnd(HWND hwnd) = 0;
 #endif

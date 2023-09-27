@@ -33,8 +33,8 @@ class W3DShroud;
 class W3DPropBuffer;
 class W3DBibBuffer;
 class WorldHeightMap;
-class DX8VertexBufferClass;
-class DX8IndexBufferClass;
+class VertexBufferClass;
+class IndexBufferClass;
 class W3DTreeDrawModuleData;
 class W3DTerrainLogic;
 class FrustumClass;
@@ -218,8 +218,8 @@ public:
 protected:
     int m_x;
     int m_y;
-    DX8VertexBufferClass *m_vertexScorch;
-    DX8IndexBufferClass *m_indexScorch;
+    VertexBufferClass *m_vertexScorch;
+    IndexBufferClass *m_indexScorch;
     TextureClass *m_scorchTexture;
     int m_curNumScorchVertices;
     int m_curNumScorchIndices;

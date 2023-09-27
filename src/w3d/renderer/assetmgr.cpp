@@ -202,7 +202,9 @@ void W3DAssetManager::Free_Assets()
 // 0x00814870
 void W3DAssetManager::Free_Assets_With_Exclusion_List(DynamicVectorClass<StringClass> const &list)
 {
+#ifdef BUILD_WITH_D3D8
     g_theDX8MeshRenderer.Invalidate(false);
+#endif
     W3DExclusionListClass exlist(list);
     DynamicVectorClass<PrototypeClass *> vector(8000);
 

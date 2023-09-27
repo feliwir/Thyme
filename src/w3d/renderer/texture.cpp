@@ -216,7 +216,11 @@ TextureClass::TextureClass(unsigned width,
 
     if (pool == POOL_DEFAULT) {
         m_dirty = true;
+#ifdef BUILD_WITH_D3D8
         DX8TextureManagerClass::Add(new DX8TextureTrackerClass(width, height, mip_count, this, format, render_target));
+#else
+// TODO: X3D
+#endif
     }
 
     m_lastAccess = W3D::Get_Sync_Time();

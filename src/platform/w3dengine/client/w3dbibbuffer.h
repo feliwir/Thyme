@@ -19,8 +19,8 @@
 #include <new>
 
 class TextureClass;
-class DX8IndexBufferClass;
-class DX8VertexBufferClass;
+class IndexBufferClass;
+class VertexBufferClass;
 
 class W3DBib
 {
@@ -71,9 +71,9 @@ public:
 #endif
 
 private:
-    DX8VertexBufferClass *m_vertexBib;
+    VertexBufferClass *m_vertexBib;
     int m_maxBibVertex;
-    DX8IndexBufferClass *m_indexBib;
+    IndexBufferClass *m_indexBib;
     int m_maxBibIndex;
     TextureClass *m_bibTexture;
     TextureClass *m_redBibTexture;

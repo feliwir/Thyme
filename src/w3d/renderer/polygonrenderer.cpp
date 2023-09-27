@@ -1,7 +1,7 @@
 /**
  * @file
  *
- * @author Jonathan Wilson
+ * @author feliwir
  *
  * @brief Polygon Renderer
  *
@@ -12,13 +12,13 @@
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
-#include "dx8polygonrenderer.h"
-#include "dx8renderer.h"
+#include "polygonrenderer.h"
 #include "meshmdl.h"
+#include "renderer.h"
 
-DX8PolygonRendererClass::DX8PolygonRendererClass(unsigned int index_count,
+PolygonRendererClass::PolygonRendererClass(unsigned int index_count,
     MeshModelClass *mmc,
-    DX8TextureCategoryClass *tex_cat,
+    TextureCategoryClass *tex_cat,
     unsigned int vertex_offset,
     unsigned int index_offset,
     bool strip,
@@ -37,7 +37,7 @@ DX8PolygonRendererClass::DX8PolygonRendererClass(unsigned int index_count,
     mmc->m_polygonRendererList.Add_Tail(this);
 }
 
-DX8PolygonRendererClass::DX8PolygonRendererClass(const DX8PolygonRendererClass &src, MeshModelClass *mmc) :
+PolygonRendererClass::PolygonRendererClass(const PolygonRendererClass &src, MeshModelClass *mmc) :
     m_mmc(mmc),
     m_textureCategory(src.m_textureCategory),
     m_indexOffset(src.m_indexOffset),
@@ -51,9 +51,9 @@ DX8PolygonRendererClass::DX8PolygonRendererClass(const DX8PolygonRendererClass &
     mmc->m_polygonRendererList.Add_Tail(this);
 }
 
-void DX8PolygonRendererClass::Log() {}
+void PolygonRendererClass::Log() {}
 
-DX8PolygonRendererClass::~DX8PolygonRendererClass()
+PolygonRendererClass::~PolygonRendererClass()
 {
     if (m_textureCategory) {
         m_textureCategory->Remove_Polygon_Renderer(this);

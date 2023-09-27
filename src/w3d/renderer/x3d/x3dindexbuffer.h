@@ -30,6 +30,7 @@ public:
     X3DIndexBufferClass(unsigned short index_count_, UsageType usage);
     ~X3DIndexBufferClass();
     X3D::X3DIndexBuffer *Get_X3D_Index_Buffer() { return m_indexBuffer; }
+
 private:
     X3D::X3DIndexBuffer *m_indexBuffer;
 };

@@ -16,8 +16,8 @@
 #include "always.h"
 #include <new>
 
-class DX8VertexBufferClass;
-class DX8IndexBufferClass;
+class VertexBufferClass;
+class IndexBufferClass;
 
 class W3DBufferManager
 {
@@ -68,7 +68,7 @@ public:
         int m_startFreeIndex;
         int m_size;
         W3DVertexBuffer *m_nextVB;
-        DX8VertexBufferClass *m_DX8VertexBuffer;
+        VertexBufferClass *m_DX8VertexBuffer;
         W3DRenderTask *m_renderTaskList;
     };
 
@@ -91,7 +91,7 @@ public:
         int m_startFreeIndex;
         int m_size;
         W3DIndexBuffer *m_nextIB;
-        DX8IndexBufferClass *m_DX8IndexBuffer;
+        IndexBufferClass *m_DX8IndexBuffer;
     };
 
     struct W3DIndexBufferSlot

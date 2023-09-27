@@ -13,13 +13,19 @@
  *            LICENSE
  */
 #include "w3dstatuscircle.h"
-#include "dx8indexbuffer.h"
-#include "dx8vertexbuffer.h"
 #include "dx8wrapper.h"
 #include "gamelogic.h"
 #include "globaldata.h"
 #include "scriptengine.h"
 #include "vertmaterial.h"
+
+#if defined BUILD_WITH_D3D8
+#include "dx8indexbuffer.h"
+#include "dx8vertexbuffer.h"
+#elif defined BUILD_WITH_X3D
+#include "x3dindexbuffer.h"
+#include "x3dvertexbuffer.h"
+#endif
 
 int W3DStatusCircle::g_diffuse = 0xFF;
 bool W3DStatusCircle::g_needUpdate;
@@ -89,7 +95,11 @@ int W3DStatusCircle::Init_Data()
     g_needUpdate = true;
     Free_Map_Resources();
     m_numTriangles = 20;
+#ifdef BUILD_WITH_D3D8
     m_indexBuffer = new DX8IndexBufferClass(3 * m_numTriangles, DX8IndexBufferClass::USAGE_DEFAULT);
+#elif BUILD_WITH_X3D
+    m_indexBuffer = new X3DIndexBufferClass(3 * m_numTriangles, X3DIndexBufferClass::USAGE_DEFAULT);
+#endif
     IndexBufferClass::WriteLockClass lock(m_indexBuffer, 0);
     unsigned short *indices = lock.Get_Index_Array();
 
@@ -100,9 +110,14 @@ int W3DStatusCircle::Init_Data()
         indices += 3;
     }
 
+#ifdef BUILD_WITH_D3D8
     m_vertexBufferCircle =
         new DX8VertexBufferClass(DX8_FVF_XYZDUV1, 3 * m_numTriangles, DX8VertexBufferClass::USAGE_DEFAULT, 0);
     m_vertexBufferScreen = new DX8VertexBufferClass(DX8_FVF_XYZDUV1, 6, DX8VertexBufferClass::USAGE_DEFAULT, 0);
+#else
+    // TODO: X3D
+#endif
+
     m_vertexMaterialClass = VertexMaterialClass::Get_Preset(VertexMaterialClass::PRELIT_DIFFUSE);
 
     // TODO resolve this

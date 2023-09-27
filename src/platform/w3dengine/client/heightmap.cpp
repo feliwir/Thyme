@@ -537,11 +537,15 @@ int HeightMapRenderObjClass::Init_Height_Data(
         m_numVertexBufferTiles = m_numVBTilesX * m_numVBTilesY;
         m_x = x;
         m_y = y;
-        m_vertexBufferTiles = new DX8VertexBufferClass *[m_numVertexBufferTiles];
+        m_vertexBufferTiles = new VertexBufferClass *[m_numVertexBufferTiles];
         m_vertexBufferBackup = new char *[m_numVertexBufferTiles];
 
         for (int j = 0; j < m_numVertexBufferTiles; j++) {
+#ifdef BUILD_WITH_D3D8
             m_vertexBufferTiles[j] = new DX8VertexBufferClass(DX8_FVF_XYZDUV2, 4096, DX8VertexBufferClass::USAGE_DEFAULT, 0);
+#else
+// TODO: X3D
+#endif
             m_vertexBufferBackup[j] = new char[0x20000];
         }
     }
@@ -1064,7 +1068,7 @@ int HeightMapRenderObjClass::Get_Y_With_Origin(int y)
     return ret;
 }
 
-int HeightMapRenderObjClass::Update_VB(DX8VertexBufferClass *vb,
+int HeightMapRenderObjClass::Update_VB(VertexBufferClass *vb,
     char *data,
     int x0,
     int y0,
@@ -1095,7 +1099,7 @@ int HeightMapRenderObjClass::Update_VB(DX8VertexBufferClass *vb,
 #endif
 }
 
-int HeightMapRenderObjClass::Update_VB_For_Light(DX8VertexBufferClass *vb,
+int HeightMapRenderObjClass::Update_VB_For_Light(VertexBufferClass *vb,
     char *data,
     int x0,
     int y0,
@@ -1125,7 +1129,7 @@ int HeightMapRenderObjClass::Update_VB_For_Light(DX8VertexBufferClass *vb,
 #endif
 }
 
-int HeightMapRenderObjClass::Update_VB_For_Light_Optimized(DX8VertexBufferClass *vb,
+int HeightMapRenderObjClass::Update_VB_For_Light_Optimized(VertexBufferClass *vb,
     char *data,
     int x0,
     int y0,

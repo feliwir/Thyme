@@ -65,12 +65,12 @@ private:
 #ifdef GAME_DLL
     FVFInfoClass *Hook_Ctor(unsigned int fvf_, unsigned int fvf_size_) { return new (this) FVFInfoClass(fvf_, fvf_size_); }
 #endif
-    unsigned int m_FVF;
-    unsigned int m_fvfSize;
-    unsigned int m_locationOffset;
-    unsigned int m_normalOffset;
-    unsigned int m_blendOffset;
-    unsigned int m_texcoordOffset[8];
-    unsigned int m_diffuseOffset;
-    unsigned int m_specularOffset;
+    unsigned int m_FVF = 0;
+    unsigned int m_fvfSize = 0;
+    unsigned int m_locationOffset = 0;
+    unsigned int m_normalOffset = 0;
+    unsigned int m_blendOffset = 0;
+    unsigned int m_texcoordOffset[8] = {};
+    unsigned int m_diffuseOffset = 0;
+    unsigned int m_specularOffset = 0;
 };

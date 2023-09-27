@@ -202,8 +202,12 @@ void W3DBibBuffer::Free_Bib_Buffers()
 
 void W3DBibBuffer::Allocate_Bib_Buffers()
 {
+#ifdef BUILD_WITH_D3D8
     m_vertexBib = new DX8VertexBufferClass(0x142, m_maxBibVertex + 4, DX8VertexBufferClass::USAGE_DYNAMIC, 0);
     m_indexBib = new DX8IndexBufferClass(m_maxBibIndex + 4, DX8IndexBufferClass::USAGE_DYNAMIC);
+#else
+// TODO: X3D
+#endif
     m_numBibVertices = 0;
     m_numBibIndices = 0;
 }

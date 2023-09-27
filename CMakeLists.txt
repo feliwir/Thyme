@@ -258,6 +258,10 @@ if(CMAKE_SIZEOF_VOID_P EQUAL 4 AND NOT OPENAL_FOUND AND NOT FFMPEG_FOUND)
     add_subdirectory(deps/miles EXCLUDE_FROM_ALL)
 endif()
 
+if(USE_X3D)
+    add_subdirectory(deps/flextGL EXCLUDE_FROM_ALL)
+endif()
+
 # If we want to include our own math library for cross platform binary consistency, fetch it and add it.
 if(USE_GAMEMATH)
     include(FetchContent)

@@ -682,7 +682,9 @@ void W3DDisplay::Set_Gamma(float gamma, float bright, float contrast, bool calib
         return;
     }
 
+#if defined BUILD_WITH_D3D8
     DX8Wrapper::Set_Gamma(gamma, bright, contrast, calibrate, false);
+#endif
 }
 
 // 0x00741360 Unsure if used

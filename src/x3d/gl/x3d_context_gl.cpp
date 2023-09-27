@@ -12,6 +12,11 @@ int X3D::X3DContextGL::Load_Functions()
     return X3D_ERR_OK;
 }
 
+int X3D::X3DContextGL::Init()
+{
+    return Load_Functions();
+}
+
 #ifdef _WIN32
 int X3D::X3DContextGL::Init_From_Hwnd(HWND hwnd)
 {
@@ -40,7 +45,7 @@ int X3D::X3DContextGL::Init_From_Hwnd(HWND hwnd)
     strcpy(dev.Name, (char *)renderer);
     strcpy(dev.Vendor, (char *)vendor);
 
-    return Load_Functions();
+    return Init();
 }
 #endif
 

@@ -49,12 +49,11 @@ class HTreeClass;
 class DecalGeneratorClass;
 class LightEnvironmentClass;
 class DX8MeshRendererClass;
-class DX8PolygonRendererClass;
 class DX8SkinFVFCategoryContainer;
 class DX8FVFCategoryContainer;
 class GapFillerClass;
 struct VertexFormatXYZNDUV2;
-class X3DPolygonRendererClass;
+class PolygonRendererClass;
 
 class MeshModelClass : public MeshGeometryClass
 {
@@ -196,17 +195,14 @@ protected:
     MeshMatDescClass *m_alternateMatDesc;
     MeshMatDescClass *m_curMatDesc;
     MaterialInfoClass *m_matInfo;
-#ifdef BUILD_WITH_X3D
-    MultiListClass<X3DPolygonRendererClass> m_x3d_polygonRendererList;
-#endif
-    MultiListClass<DX8PolygonRendererClass> m_polygonRendererList;
+    MultiListClass<PolygonRendererClass> m_polygonRendererList;
     GapFillerClass *m_gapFiller;
     bool m_hasBeenInUse;
     friend class MeshClass;
     friend class MeshLoadContextClass;
     friend class DX8SkinFVFCategoryContainer;
     friend class DX8MeshRendererClass;
-    friend class DX8PolygonRendererClass;
+    friend class PolygonRendererClass;
     friend class X3DMeshRendererClass;
     friend class X3DPolygonRendererClass;
 };

@@ -17,9 +17,9 @@
 #include "rendobj.h"
 #include "shader.h"
 
-class DX8IndexBufferClass;
+class IndexBufferClass;
 class VertexMaterialClass;
-class DX8VertexBufferClass;
+class VertexBufferClass;
 
 class W3DStatusCircle : public RenderObjClass
 {
@@ -46,9 +46,9 @@ public:
 
 private:
     int m_numTriangles;
-    DX8IndexBufferClass *m_indexBuffer;
+    IndexBufferClass *m_indexBuffer;
     ShaderClass m_shaderClass;
     VertexMaterialClass *m_vertexMaterialClass;
-    DX8VertexBufferClass *m_vertexBufferCircle;
-    DX8VertexBufferClass *m_vertexBufferScreen;
+    VertexBufferClass *m_vertexBufferCircle;
+    VertexBufferClass *m_vertexBufferScreen;
 };

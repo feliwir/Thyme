@@ -18,8 +18,8 @@
 #include "shader.h"
 #include "sphere.h"
 
-class DX8VertexBufferClass;
-class DX8IndexBufferClass;
+class VertexBufferClass;
+class IndexBufferClass;
 class RenderInfoClass;
 class Vector2;
 class VertexMaterialClass;
@@ -65,7 +65,7 @@ public:
     int Free_Water_Tracks_Resources();
     void Init(float width, Vector2 const &start, Vector2 const &end, const char *texture);
     void Init(float width, float length, Vector2 const &start, Vector2 const &end, const char *texture, int time_offset);
-    int Render(DX8VertexBufferClass *vertex_buffer, int batch_start);
+    int Render(VertexBufferClass *vertex_buffer, int batch_start);
     int Update(int msElapsed);
 
 private:
@@ -124,8 +124,8 @@ public:
     WaterTracksObj *Find_Track(Vector2 &start, Vector2 &end, WaveType type);
 
 private:
-    DX8VertexBufferClass *m_vertexBuffer;
-    DX8IndexBufferClass *m_indexBuffer;
+    VertexBufferClass *m_vertexBuffer;
+    IndexBufferClass *m_indexBuffer;
     VertexMaterialClass *m_vertexMaterialClass;
     ShaderClass m_shaderClass;
     WaterTracksObj *m_usedModules;

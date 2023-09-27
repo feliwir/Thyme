@@ -23,8 +23,8 @@
 #include "vector3.h"
 class TextureClass;
 class MeshClass;
-class DX8VertexBufferClass;
-class DX8IndexBufferClass;
+class VertexBufferClass;
+class IndexBufferClass;
 class VertexMaterialClass;
 class CameraClass;
 class RenderObjClass;
@@ -155,8 +155,8 @@ public:
 #endif
 
 private:
-    DX8VertexBufferClass *m_vertexBridge;
-    DX8IndexBufferClass *m_indexBridge;
+    VertexBufferClass *m_vertexBridge;
+    IndexBufferClass *m_indexBridge;
     VertexMaterialClass *m_vertexMaterial;
     TextureClass *m_bridgeTexture;
     int m_curNumBridgeVertices;

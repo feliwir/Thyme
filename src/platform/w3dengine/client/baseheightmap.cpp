@@ -1127,8 +1127,12 @@ void BaseHeightMapRenderObjClass::Add_Terrain_Bib_Drawable(Vector3 *points, Draw
 
 void BaseHeightMapRenderObjClass::Allocate_Scorch_Buffers()
 {
+#ifdef BUILD_WITH_D3D8
     m_vertexScorch = new DX8VertexBufferClass(DX8_FVF_XYZDUV1, 8194, DX8VertexBufferClass::USAGE_DEFAULT, 0);
     m_indexScorch = new DX8IndexBufferClass(49164, DX8IndexBufferClass::USAGE_DEFAULT);
+#else
+// TODO: X3D
+#endif
     m_scorchTexture = new ScorchTextureClass(MIP_LEVELS_3);
     m_scorchesInBuffer = 0;
     m_curNumScorchVertices = 0;

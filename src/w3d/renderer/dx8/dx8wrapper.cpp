@@ -346,7 +346,9 @@ void DX8Wrapper::Do_Onetime_Device_Dependent_Shutdowns()
     PointGroupClass::Shutdown();
     VertexMaterialClass::Shutdown();
     BoxRenderObjClass::Shutdown();
+#ifdef BUILD_WITH_D3D8
     g_theDX8MeshRenderer.Shutdown();
+#endif
     MissingTexture::Deinit();
 
     if (s_currentCaps) {

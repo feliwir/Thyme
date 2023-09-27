@@ -19,8 +19,8 @@
 #include "sphere.h"
 #include "vector2.h"
 class TextureClass;
-class DX8VertexBufferClass;
-class DX8IndexBufferClass;
+class VertexBufferClass;
+class IndexBufferClass;
 class WorldHeightMap;
 class RenderObjClass;
 struct VertexFormatXYZDUV1;
@@ -39,8 +39,8 @@ public:
     int Get_Stacking() { return m_stackingOrder; }
     void Set_Stacking(int stacking) { m_stackingOrder = stacking; }
     int Get_Unique_ID() { return m_uniqueID; }
-    DX8VertexBufferClass *Get_VB() { return m_vertexRoad; }
-    DX8IndexBufferClass *Get_IB() { return m_indexRoad; }
+    VertexBufferClass *Get_VB() { return m_vertexRoad; }
+    IndexBufferClass *Get_IB() { return m_indexRoad; }
     int Get_Num_Vertices() { return m_numRoadVertices; }
     void Set_Num_Indices(int indices) { m_numRoadIndices = indices; }
     void Set_Num_Vertices(int vertices) { m_numRoadVertices = vertices; }
@@ -52,8 +52,8 @@ public:
 
 protected:
     TextureClass *m_roadTexture;
-    DX8VertexBufferClass *m_vertexRoad;
-    DX8IndexBufferClass *m_indexRoad;
+    VertexBufferClass *m_vertexRoad;
+    IndexBufferClass *m_indexRoad;
     int m_numRoadVertices;
     int m_numRoadIndices;
     int m_uniqueID;

@@ -14,9 +14,11 @@
  *            LICENSE
  */
 #include "vertexbuffer.h"
+#ifdef BUILD_WITH_D3D8
 #include "dx8vertexbuffer.h"
+#endif
 #ifdef BUILD_WITH_X3D
-#include "x3d_vertexbuffer.h"
+#include "x3d_buffer.h"
 #include "x3dvertexbuffer.h"
 #endif
 #include "w3d.h"
@@ -149,7 +151,7 @@ VertexBufferClass::AppendLockClass::AppendLockClass(
         case BUFFER_TYPE_X3D: {
             m_vertices = static_cast<X3DVertexBufferClass *>(vertex_buffer)
                              ->Get_X3D_Vertex_Buffer()
-                             ->Lock(X3D::X3D_LOCK_READ,
+                             ->Lock(X3D::X3D_LOCK_WRITE,
                                  vertex_buffer->FVF_Info().Get_FVF_Size() * start_index,
                                  vertex_buffer->FVF_Info().Get_FVF_Size() * index_range);
             break;
@@ -174,7 +176,7 @@ VertexBufferClass::AppendLockClass::~AppendLockClass()
 #endif
             break;
         }
-#ifdef BUILD_WITH_D3D8
+#ifdef BUILD_WITH_X3D
         case BUFFER_TYPE_X3D: {
             static_cast<X3DVertexBufferClass *>(m_vertexBuffer)->Get_X3D_Vertex_Buffer()->Unlock();
             break;

@@ -152,7 +152,7 @@ void WaterTracksObj::Init(
     m_stageZeroTexture = W3DAssetManager::Get_Instance()->Get_Texture(texture);
 }
 
-int WaterTracksObj::Render(DX8VertexBufferClass *vertex_buffer, int batch_start)
+int WaterTracksObj::Render(VertexBufferClass *vertex_buffer, int batch_start)
 {
 #ifdef BUILD_WITH_D3D8
     Vector2 v1;

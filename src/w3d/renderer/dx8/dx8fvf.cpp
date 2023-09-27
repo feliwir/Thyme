@@ -28,6 +28,12 @@ unsigned int Get_FVF_Vertex_Size(unsigned int fvf)
     unsigned int size = 0;
     if (fvf & X3D_VF_XYZ)
         size += sizeof(float) * 3;
+    if (fvf & X3D_VF_NORMAL)
+        size += sizeof(float) * 3;
+    if (fvf & X3D_VF_DIFFUSE)
+        size += sizeof(uint32_t);
+    if (fvf & X3D_VF_SPECULAR)
+        size += sizeof(uint32_t);
     // TODO: ADD OTHERS
     return size;
 #endif
@@ -42,8 +48,6 @@ FVFInfoClass::FVFInfoClass(unsigned int fvf_, unsigned int fvf_size_)
         m_fvfSize = fvf_size_;
     }
 
-    m_locationOffset = 0;
-    m_blendOffset = 0;
 #if defined BUILD_WITH_D3D8
     if ((m_FVF & D3DFVF_XYZ) == D3DFVF_XYZ) {
         m_blendOffset = 0x0C;
@@ -83,7 +87,35 @@ FVFInfoClass::FVFInfoClass(unsigned int fvf_, unsigned int fvf_size_)
         a++;
     }
 #elif defined BUILD_WITH_X3D
+    // XYZ vector is always first
+    if (m_FVF & X3D_VF_XYZ) {
+        m_normalOffset = sizeof(float) * 3;
+    }
 
+    m_diffuseOffset = m_diffuseOffset;
+
+    // normaö vector next
+    if (m_FVF & X3D_VF_NORMAL) {
+        m_diffuseOffset += +sizeof(float) * 3;
+    }
+
+    m_specularOffset = m_diffuseOffset;
+
+    // Diffuse color next
+    if (m_FVF & X3D_VF_DIFFUSE) {
+        m_specularOffset += sizeof(uint32_t);
+    }
+
+    // Specular color next
+    m_texcoordOffset[0] = m_specularOffset;
+    if (m_FVF & X3D_VF_SPECULAR) {
+        m_texcoordOffset[0] += sizeof(uint32_t);
+    }
+
+    // Texture coordinates
+    for (int a = 1; a < 8; a++) {
+        m_texcoordOffset[a] = m_texcoordOffset[a - 1] + sizeof(float) * 2;
+    }
 #endif
 }
 

@@ -947,14 +947,19 @@ int W3DProjectedShadowManager::Render_Shadows(RenderInfoClass &rinfo)
     g_nShadowDecalIndicesInBuf = 0xFFFF;
 
     if (g_theWriteableGlobalData->m_shadowDecals) {
+#ifdef BUILD_WITH_D3D8
         g_theDX8MeshRenderer.Set_Camera(&rinfo.m_camera);
+#endif
         W3DShadowTexture *texture = 0;
         ShadowType type = SHADOW_NONE;
 
         for (W3DProjectedShadow *shadow = m_shadowList;; shadow = shadow->m_next) {
             if (!shadow) {
                 Flush_Decals(texture, type);
+#if defined BUILD_WITH_D3D8
                 g_theDX8MeshRenderer.Flush();
+#elif defined BUILD_WITH_X3D
+#endif
                 break;
             }
 
@@ -1003,7 +1008,9 @@ int W3DProjectedShadowManager::Render_Shadows(RenderInfoClass &rinfo)
                         shadow->Update_Projection_Parameters(rinfo.m_camera.Get_Transform());
                         TexProjectClass *projector = shadow->Get_Shadow_Projector();
                         projector->Peek_Material_Pass()->Install_Materials();
+#ifdef BUILD_WITH_D3D8
                         DX8Wrapper::Apply_Render_State_Changes();
+#endif
 
                         if (Render_Projected_Terrain_Shadow(shadow, aaBox)) {
                             count++;

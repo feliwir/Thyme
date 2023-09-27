@@ -635,7 +635,9 @@ void RTS3DScene::Flush(RenderInfoClass &rinfo)
         Do_Shadows(rinfo, false);
     }
 
+#ifdef BUILD_WITH_D3D8
     g_theDX8MeshRenderer.Flush();
+#endif
 
     if (DX8Wrapper::Has_Stencil()) {
         Flush_Occluded_Objects_Into_Stencil(rinfo);
@@ -658,7 +660,9 @@ void RTS3DScene::Flush(RenderInfoClass &rinfo)
     }
 
     SortingRendererClass::Flush();
+#ifdef BUILD_WITH_D3D8
     g_theDX8MeshRenderer.Clear_Pending_Delete_Lists();
+#endif
 }
 
 void RTS3DScene::Update_Fixed_Light_Environments(RenderInfoClass &rinfo)

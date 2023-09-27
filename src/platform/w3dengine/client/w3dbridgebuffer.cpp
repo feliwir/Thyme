@@ -638,9 +638,13 @@ void W3DBridgeBuffer::Free_Bridge_Buffers()
 
 void W3DBridgeBuffer::Allocate_Bridge_Buffers()
 {
+#ifdef BUILD_WITH_D3D8
     m_vertexBridge =
         new DX8VertexBufferClass(DX8_FVF_XYZNDUV1, MAX_BRIDGE_VERTEX + 4, DX8VertexBufferClass::USAGE_DYNAMIC, 0);
     m_indexBridge = new DX8IndexBufferClass(MAX_BRIDGE_INDEX + 4, DX8IndexBufferClass::USAGE_DYNAMIC);
+#else
+// TODO: X3D
+#endif
     m_vertexMaterial = VertexMaterialClass::Get_Preset(VertexMaterialClass::PRELIT_DIFFUSE);
     m_curNumBridgeVertices = 0;
     m_curNumBridgeIndices = 0;

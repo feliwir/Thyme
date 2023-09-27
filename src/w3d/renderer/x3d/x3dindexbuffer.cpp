@@ -16,10 +16,10 @@
 #include "w3d.h"
 #include <x3d.h>
 
-//bool g_dynamicDX8IndexBufferInUse;
-//X3DIndexBufferClass *g_dynamicDX8IndexBuffer;
-//unsigned short g_dynamicDX8IndexBufferSize = 5000;
-//unsigned short g_dynamicDX8IndexBufferOffset;
+// bool g_dynamicDX8IndexBufferInUse;
+// X3DIndexBufferClass *g_dynamicDX8IndexBuffer;
+// unsigned short g_dynamicDX8IndexBufferSize = 5000;
+// unsigned short g_dynamicDX8IndexBufferOffset;
 
 extern unsigned int g_indexBufferCount;
 extern unsigned int g_indexBufferTotalIndices;

@@ -21,9 +21,6 @@
 #include "chunkio.h"
 #include "coltest.h"
 #include "decalmsh.h"
-#include "dx8indexbuffer.h"
-#include "dx8polygonrenderer.h"
-#include "dx8renderer.h"
 #include "htree.h"
 #include "inttest.h"
 #include "matinfo.h"
@@ -31,6 +28,7 @@
 #include "meshgeometry.h"
 #include "meshmdl.h"
 #include "proto.h"
+#include "renderer.h"
 #include "rinfo.h"
 #include "shader.h"
 #include "texture.h"
@@ -39,6 +37,16 @@
 #include "w3d.h"
 #include "w3d_file.h"
 #include "w3derr.h"
+
+#if defined BUILD_WITH_D3D8
+#include "dx8indexbuffer.h"
+#include "dx8polygonrenderer.h"
+#include "dx8renderer.h"
+#elif defined BUILD_WITH_X3D
+#include "x3dindexbuffer.h"
+#include "x3dpolygonrenderer.h"
+#include "x3drenderer.h"
+#endif
 
 static unsigned int g_meshDebugIdCount;
 static SimpleDynVecClass<uint32_t> g_tempApt;
@@ -261,7 +269,7 @@ void MeshClass::Render(RenderInfoClass &rinfo)
                 m_emissiveScale = rinfo.m_emissiveScale;
             }
 
-            DX8FVFCategoryContainer *fvf_container =
+            FVFCategoryContainer *fvf_container =
                 m_model->m_polygonRendererList.Peek_Head()->Get_Texture_Category()->Get_Container();
 
             bool render_base_passes =
@@ -274,10 +282,10 @@ void MeshClass::Render(RenderInfoClass &rinfo)
             }
 
             if (render_base_passes) {
-                MultiListIterator<DX8PolygonRendererClass> it(&(m_model->m_polygonRendererList));
+                MultiListIterator<PolygonRendererClass> it(&(m_model->m_polygonRendererList));
 
                 while (!it.Is_Done()) {
-                    DX8PolygonRendererClass *polygon_renderer = it.Peek_Obj();
+                    PolygonRendererClass *polygon_renderer = it.Peek_Obj();
                     polygon_renderer->Get_Texture_Category()->Add_Render_Task(polygon_renderer, this);
                     it.Next();
                 }
@@ -301,7 +309,11 @@ void MeshClass::Render(RenderInfoClass &rinfo)
             }
 
             if (rendered_something && m_model->Get_Flag(MeshGeometryClass::SKIN)) {
-                static_cast<DX8SkinFVFCategoryContainer *>(fvf_container)->Add_Visible_Skin(this);
+#if defined BUILD_WITH_D3D8
+                static_cast<D3D8SkinFVFCategoryContainer *>(fvf_container)->Add_Visible_Skin(this);
+#elif defined BUILD_WITH_X3D
+                static_cast<X3DSkinFVFCategoryContainer *>(fvf_container)->Add_Visible_Skin(this);
+#endif
             }
         }
     }

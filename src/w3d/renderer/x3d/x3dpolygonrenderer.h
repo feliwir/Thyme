@@ -15,48 +15,28 @@
 #pragma once
 #include "always.h"
 #include "multilist.h"
+#include "polygonrenderer.h"
 #include "sortingrenderer.h"
 #include "sphere.h"
+#include <x3d.h>
 class MeshModelClass;
 class X3DTextureCategoryClass;
 
-class X3DPolygonRendererClass : public MultiListObjectClass
+class X3DPolygonRendererClass : public PolygonRendererClass
 {
 public:
     X3DPolygonRendererClass(unsigned int index_count,
         MeshModelClass *mmc,
-        X3DTextureCategoryClass *tex_cat,
+        TextureCategoryClass *tex_cat,
         unsigned int vertex_offset,
         unsigned int index_offset,
         bool strip,
-        unsigned int pass);
-    X3DPolygonRendererClass(const X3DPolygonRendererClass &src, MeshModelClass *mmc);
-    virtual ~X3DPolygonRendererClass();
+        unsigned int pass) :
+        PolygonRendererClass(index_count, mmc, tex_cat, vertex_offset, index_offset, strip, pass){};
+    virtual ~X3DPolygonRendererClass(){};
 
-    void Render(int offset);
-    void Render_Sorted(int offset, const SphereClass &sphere);
-
-    void Set_Vertex_Index_Range(unsigned int min, unsigned int max);
-    void Set_Texture_Category(X3DTextureCategoryClass *category) { m_textureCategory = category; }
-
-    unsigned int Get_Vertex_Offset() { return m_vertexOffset; }
-    unsigned int Get_Index_Offset() { return m_indexOffset; }
-    MeshModelClass *Get_Mesh_Model_Class() { return m_mmc; }
-    X3DTextureCategoryClass *Get_Texture_Category() { return m_textureCategory; }
-    unsigned int Get_Pass() { return m_pass; }
-
-    void Log();
-
-private:
-    MeshModelClass *m_mmc;
-    X3DTextureCategoryClass *m_textureCategory;
-    unsigned int m_indexOffset;
-    unsigned int m_vertexOffset;
-    unsigned int m_indexCount;
-    unsigned int m_minVertexIndex;
-    unsigned int m_vertexIndexRange;
-    bool m_strip;
-    unsigned int m_pass;
+    void Render(int offset) override;
+    void Render_Sorted(int offset, const SphereClass &sphere) override;
 };
 
 inline void X3DPolygonRendererClass::Render(int offset)
@@ -85,9 +65,4 @@ inline void X3DPolygonRendererClass::Render_Sorted(int offset, const SphereClass
         (unsigned short)(m_indexCount / 3),
         (unsigned short)m_minVertexIndex,
         (unsigned short)m_vertexIndexRange);
-}
-inline void X3DPolygonRendererClass::Set_Vertex_Index_Range(unsigned int min, unsigned int max)
-{
-    m_minVertexIndex = min;
-    m_vertexIndexRange = max;
 }

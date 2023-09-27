@@ -18,6 +18,7 @@
 #include "meshmatdesc.h"
 #include "meshmdl.h"
 #include "multilist.h"
+#include "renderer.h"
 #include "shader.h"
 #include "simplevec.h"
 #include "vector.h"
@@ -30,8 +31,7 @@ class DX8TextureCategoryClass;
 class TextureClass;
 class VertexMaterialClass;
 class DX8PolygonRendererClass;
-template<typename R>
-class PolyRenderTaskClass;
+template<typename R> class PolyRenderTaskClass;
 class MatPassTaskClass;
 class IndexBufferClass;
 class MeshClass;
@@ -78,136 +78,39 @@ protected:
     DecalMeshClass *m_visibleDecalMeshes;
 };
 
-class DX8TextureCategoryClass : public MultiListObjectClass
+class DX8TextureCategoryClass : public TextureCategoryClass
 {
 public:
     DX8TextureCategoryClass(
         DX8FVFCategoryContainer *container, TextureClass **texs, ShaderClass shd, VertexMaterialClass *mat, int pass);
     ~DX8TextureCategoryClass() override;
 
-    void Add_Render_Task(DX8PolygonRendererClass *p_renderer, MeshClass *p_mesh);
-    void Render();
-    bool Anything_To_Render() { return m_renderTaskHead != nullptr; }
-    void Clear_Render_List() { m_renderTaskHead = nullptr; }
-
-    TextureClass *Peek_Texture(int stage) { return m_textures[stage]; }
-    VertexMaterialClass *Peek_Material() { return m_material; }
-
-    ShaderClass Get_Shader() { return m_shader; }
-    DX8FVFCategoryContainer *Get_Container() { return m_container; }
-    MultiListClass<DX8PolygonRendererClass> &Get_Polygon_Renderer_List() { return m_polygonRendererList; }
-
-    unsigned int Add_Mesh(Vertex_Split_Table &split_table,
+    PolygonRendererClass *Create_Polygon_Renderer(unsigned int index_count,
+        MeshModelClass *mmc,
         unsigned int vertex_offset,
         unsigned int index_offset,
-        IndexBufferClass *index_buffer,
-        unsigned int pass);
-
-    void Log(bool only_visible);
-
-    void Remove_Polygon_Renderer(DX8PolygonRendererClass *p_renderer);
-    void Add_Polygon_Renderer(DX8PolygonRendererClass *p_renderer, DX8PolygonRendererClass *add_after_this);
-
-    static void Set_Force_Multiply(bool multiply) { s_forceMultiply = multiply; }
-
-private:
-    int m_pass;
-    TextureClass *m_textures[2] = {};
-    ShaderClass m_shader;
-    VertexMaterialClass *m_material;
-    MultiListClass<DX8PolygonRendererClass> m_polygonRendererList;
-    DX8FVFCategoryContainer *m_container;
-    PolyRenderTaskClass<DX8PolygonRendererClass> *m_renderTaskHead;
-#ifdef GAME_DLL
-    static bool &s_forceMultiply;
-#else
-    static bool s_forceMultiply;
-#endif
+        bool strip,
+        unsigned int pass)
+    {
+        return new DX8PolygonRendererClass(index_count, mmc, this, vertex_offset, index_offset, strip, pass);
+    }
+    void Render() override;
 };
 
-class DX8FVFCategoryContainer : public MultiListObjectClass
+class DX8FVFCategoryContainer : public FVFCategoryContainer
 {
 public:
-    enum
-    {
-        MAX_PASSES = 4
-    };
-
     DX8FVFCategoryContainer(unsigned int FVF, bool sorting);
     ~DX8FVFCategoryContainer() override;
 
-    virtual void Render() = 0;
-
-    virtual void Add_Mesh(MeshModelClass *mmc) = 0;
-
-    virtual void Log(bool only_visible) = 0;
-
-    virtual bool Check_If_Mesh_Fits(MeshModelClass *mmc) = 0;
-
-    virtual void Add_Delayed_Visible_Material_Pass(MaterialPassClass *pass, MeshClass *mesh) = 0;
-    virtual void Render_Delayed_Procedural_Material_Passes() = 0;
-
-    bool Is_Sorting() { return m_sorting; }
-
-    void Change_Polygon_Renderer_Texture(MultiListClass<DX8PolygonRendererClass> &polygon_renderer_list,
-        TextureClass *texture,
-        TextureClass *new_texture,
-        unsigned int pass,
-        unsigned int stage);
-    void Change_Polygon_Renderer_Material(MultiListClass<DX8PolygonRendererClass> &polygon_renderer_list,
-        VertexMaterialClass *vmat,
-        VertexMaterialClass *new_vmat,
-        unsigned int pass);
-
-    void Remove_Texture_Category(DX8TextureCategoryClass *tex_category);
-
-    unsigned int Get_FVF() { return m_FVF; }
-
-    void Add_Visible_Texture_Category(DX8TextureCategoryClass *tex_category, int pass)
+    TextureCategoryClass *Create_Texture_Category(
+        TextureClass **texs, ShaderClass shd, VertexMaterialClass *mat, int pass) override
     {
-        captainslog_assert(pass >= 0 && pass < MAX_PASSES);
-        captainslog_assert(tex_category != nullptr);
-        captainslog_assert(m_textureCategoryList[pass].Contains(tex_category));
-        m_visibleTextureCategoryList[pass].Add(tex_category);
-        m_anythingToRender = true;
+        return new DX8TextureCategoryClass(this, texs, shd, mat, pass);
     }
-
-    void Add_Visible_Material_Pass(MaterialPassClass *pass, MeshClass *mesh);
+    void Generate_Texture_Categories(Vertex_Split_Table &split_table, unsigned int vertex_offset) override;
 
     static unsigned int Define_FVF(MeshModelClass *mmc, bool enable_lighting);
-
-protected:
-    bool Anything_To_Render() { return m_anythingToRender; }
-    bool Any_Delayed_Passes_To_Render() { return m_anyDelayedPassesToRender; }
-
-    void Render_Procedural_Material_Passes();
-
-    DX8TextureCategoryClass *Find_Matching_Texture_Category(
-        VertexMaterialClass *vmat, unsigned int pass, DX8TextureCategoryClass *ref_category);
-    DX8TextureCategoryClass *Find_Matching_Texture_Category(
-        TextureClass *texture, unsigned int pass, unsigned int stage, DX8TextureCategoryClass *ref_category);
-
-    void Insert_To_Texture_Category(Vertex_Split_Table &split_table,
-        TextureClass **texs,
-        VertexMaterialClass *mat,
-        ShaderClass shader,
-        int pass,
-        unsigned int vertex_offset);
-
-    void Generate_Texture_Categories(Vertex_Split_Table &split_table, unsigned int vertex_offset);
-
-    MultiListClass<DX8TextureCategoryClass> m_textureCategoryList[MAX_PASSES];
-    MultiListClass<DX8TextureCategoryClass> m_visibleTextureCategoryList[MAX_PASSES];
-    MatPassTaskClass *m_visibleMatpassHead;
-    MatPassTaskClass *m_visibleMatpassTail;
-    IndexBufferClass *m_indexBuffer;
-    int m_usedIndices;
-    unsigned int m_FVF;
-    unsigned int m_passes;
-    unsigned int m_uvCoordinateChannels;
-    bool m_sorting;
-    bool m_anythingToRender;
-    bool m_anyDelayedPassesToRender;
 };
 
 class DX8RigidFVFCategoryContainer : public DX8FVFCategoryContainer

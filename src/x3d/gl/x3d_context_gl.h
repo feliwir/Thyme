@@ -5,6 +5,7 @@ namespace X3D
 {
 class X3DContextGL : public X3DContext
 {
+    int Init() override;
 #ifdef _WIN32
     int Init_From_Hwnd(HWND hwnd) override;
 #endif

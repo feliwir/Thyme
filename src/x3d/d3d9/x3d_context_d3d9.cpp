@@ -8,6 +8,12 @@ IDirect3D9 *(__stdcall *X3D::X3DContextD3D9::s_create_function)(unsigned) = null
 
 X3D::X3DContextD3D9::X3DContextD3D9() : m_clearColor(0) {}
 
+int X3D::X3DContextD3D9::Init()
+{
+    // Cannot create D3D without a HWND
+    return X3D_ERR_FAILED_DEVICE_INIT;
+}
+
 int X3D::X3DContextD3D9::Init_From_Hwnd(HWND hwnd)
 {
     if (s_library == nullptr) {

@@ -8,6 +8,7 @@ class X3DContextD3D9 : public X3DContext
 {
 public:
     X3DContextD3D9();
+    int Init() override;
     int Init_From_Hwnd(HWND hwnd) override;
     int Set_Device(
         int dev, int resx, int resy, int bits, int windowed, bool resize_window, bool reset_device, bool restore_assets)

@@ -22,8 +22,8 @@
 #include "w3dmpo.h"
 
 class Drawable;
-class DX8VertexBufferClass;
-class DX8IndexBufferClass;
+class VertexBufferClass;
+class IndexBufferClass;
 class VertexMaterialClass;
 class TextureClass;
 
@@ -101,8 +101,8 @@ public:
 #endif
 
 private:
-    DX8VertexBufferClass *m_vertexBuffer;
-    DX8IndexBufferClass *m_indexBuffer;
+    VertexBufferClass *m_vertexBuffer;
+    IndexBufferClass *m_indexBuffer;
     VertexMaterialClass *m_vertexMaterialClass;
     ShaderClass m_shaderClass;
     TerrainTracksRenderObjClass *m_usedModules;

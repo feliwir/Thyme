@@ -89,9 +89,9 @@ MeshModelClass &MeshModelClass::operator=(const MeshModelClass &that)
 {
     if (this != &that) {
 #if defined BUILD_WITH_X3D
-    g_theX3DMeshRenderer.Unregister_Mesh_Type(this);
+        g_theX3DMeshRenderer.Unregister_Mesh_Type(this);
 #elif defined BUILD_WITH_D3D8
-    g_theDX8MeshRenderer.Unregister_Mesh_Type(this);
+        g_theDX8MeshRenderer.Unregister_Mesh_Type(this);
 #endif
         MeshGeometryClass::operator=(that);
 

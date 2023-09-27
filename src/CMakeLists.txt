@@ -533,18 +533,6 @@ set(GAMEENGINE_SRC
     w3d/renderer/composite.cpp
     w3d/renderer/dazzle.cpp
     w3d/renderer/ddsfile.cpp
-    w3d/renderer/dx8/dx8caps.cpp
-    w3d/renderer/dx8/dx8fvf.cpp
-    w3d/renderer/dx8/dx8indexbuffer.cpp
-    w3d/renderer/dx8/dx8polygonrenderer.cpp
-    w3d/renderer/dx8/dx8renderer.cpp
-    w3d/renderer/dx8/dx8texman.cpp
-    w3d/renderer/dx8/dx8vertexbuffer.cpp
-    w3d/renderer/dx8/dx8wrapper.cpp
-    w3d/renderer/x3d/x3dindexbuffer.cpp
-    w3d/renderer/x3d/x3dpolygonrenderer.cpp
-    w3d/renderer/x3d/x3drenderer.cpp
-    w3d/renderer/x3d/x3dvertexbuffer.cpp
     w3d/renderer/dynamesh.cpp
     w3d/renderer/hanimmgr.cpp
     w3d/renderer/hcanim.cpp
@@ -575,6 +563,7 @@ set(GAMEENGINE_SRC
     w3d/renderer/part_ldr.cpp
     w3d/renderer/pivot.cpp
     w3d/renderer/pointgr.cpp
+    w3d/renderer/polygonrenderer.cpp
     w3d/renderer/pot.cpp
     w3d/renderer/projector.cpp
     w3d/renderer/render2d.cpp
@@ -605,6 +594,10 @@ set(GAMEENGINE_SRC
     w3d/renderer/w3d_util.cpp
     w3d/renderer/w3dexclusionlist.cpp
     w3d/renderer/w3dformat.cpp
+    w3d/renderer/dx8/dx8fvf.cpp
+    w3d/renderer/dx8/dx8indexbuffer.cpp # Get rid of that later
+    w3d/renderer/dx8/dx8vertexbuffer.cpp # Get rid of that later
+    w3d/renderer/dx8/dx8wrapper.cpp # Get rid of that later
 )
 
 if(USE_STDFS)
@@ -767,10 +760,23 @@ endif()
 
 if(D3D8_FOUND AND NOT USE_X3D)
     list(APPEND GAME_LINK_LIBRARIES d3d8)
+    list(APPEND GAMEENGINE_SRC
+        w3d/renderer/dx8/dx8caps.cpp
+        #w3d/renderer/dx8/dx8fvf.cpp
+        #w3d/renderer/dx8/dx8indexbuffer.cpp
+        w3d/renderer/dx8/dx8renderer.cpp
+        w3d/renderer/dx8/dx8texman.cpp
+        #w3d/renderer/dx8/dx8vertexbuffer.cpp
+    )
 endif()
 
 if(USE_X3D)
     list(APPEND GAME_LINK_LIBRARIES x3d)
+    list(APPEND GAMEENGINE_SRC
+        w3d/renderer/x3d/x3dindexbuffer.cpp
+        w3d/renderer/x3d/x3drenderer.cpp
+        w3d/renderer/x3d/x3dvertexbuffer.cpp
+    )
 endif()
 
 if(DINPUT8_FOUND)

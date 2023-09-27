@@ -64,8 +64,8 @@ enum
     MAX_QUAD_IB_SIZE = 6 * MAX_QUAD_POINTS
 };
 
-DX8IndexBufferClass *g_tris;
-DX8IndexBufferClass *g_quads;
+IndexBufferClass *g_tris;
+IndexBufferClass *g_quads;
 SortingIndexBufferClass *g_sortingTris;
 SortingIndexBufferClass *g_sortingQuads;
 

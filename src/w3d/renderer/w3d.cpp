@@ -38,7 +38,7 @@
 #endif
 
 #ifdef BUILD_WITH_X3D
-#include "x3d.h"
+#include "x3drenderer.h"
 #endif
 
 #ifdef PLATFORM_WINDOWS
@@ -164,7 +164,7 @@ const RenderDeviceDescClass &W3D::Get_Render_Device_Desc(int deviceidx)
     static std::vector<RenderDeviceDescClass> devices;
     if (devices.empty()) {
         for (auto &dev : X3D::Get_Device_List()) {
-            RenderDeviceDescClass desc; 
+            RenderDeviceDescClass desc;
             desc.m_deviceName = dev.Name;
             desc.m_deviceVendor = dev.Vendor;
             desc.m_driverName = "X3D";
@@ -306,13 +306,13 @@ W3DErrorType W3D::Shutdown()
         W3DAssetManager::Get_Instance()->Free_Assets();
     }
 
-    #ifdef BUILD_WITH_D3D8
+#ifdef BUILD_WITH_D3D8
     DX8TextureManagerClass::Shutdown();
 
     if (!s_lite) {
         DX8Wrapper::Shutdown();
     }
-    #endif
+#endif
 
     if (s_defaultStaticSortLists) {
         delete s_defaultStaticSortLists;
@@ -435,12 +435,14 @@ W3DErrorType W3D::Render(SceneClass *scene, CameraClass *cam, bool clear, bool c
 #if defined BUILD_WITH_X3D
         X3D::Set_Clear_Color(color.X, color.Y, color.Z, 0.0f);
         X3D::Clear(clear, clearz);
-#else
+#elif defined BUILD_WITH_D3D8
         DX8Wrapper::Clear(clear, clearz, color, 0.0f);
 #endif
     }
 
-#ifdef BUILD_WITH_D3D8
+#if defined BUILD_WITH_X3D
+    g_theX3DMeshRenderer.Set_Camera(&rinfo.m_camera);
+#elif defined BUILD_WITH_D3D8
     switch (scene->Get_Polygon_Mode()) {
         case SceneClass::POINT:
             DX8Wrapper::Set_DX8_Render_State(D3DRS_FILLMODE, D3DFILL_POINT);
@@ -487,12 +489,14 @@ W3DErrorType W3D::Render(RenderObjClass &obj, RenderInfoClass &rinfo)
 void W3D::Flush(RenderInfoClass &rinfo)
 {
 #ifdef BUILD_WITH_X3D
+    g_theX3DMeshRenderer.Flush();
 #else
     g_theDX8MeshRenderer.Flush();
 #endif
     Render_And_Clear_Static_Sort_Lists(rinfo);
     SortingRendererClass::Flush();
 #ifdef BUILD_WITH_X3D
+    g_theX3DMeshRenderer.Clear_Pending_Delete_Lists();
 #else
     g_theDX8MeshRenderer.Clear_Pending_Delete_Lists();
 #endif

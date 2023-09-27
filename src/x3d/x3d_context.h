@@ -16,6 +16,8 @@ struct X3DDevice
     char Vendor[256];
 };
 
+class X3DIndexBuffer;
+class X3DIndexBuffer;
 class X3DVertexBuffer;
 class X3DContext
 {
@@ -41,6 +43,7 @@ public:
     virtual void Set_Viewport(int x, int y, int w, int h) = 0;
 
     virtual X3DVertexBuffer *Create_Vertex_Buffer(size_t size) = 0;
+    virtual X3DIndexBuffer *Create_Index_Buffer(size_t size) = 0;
 
 protected:
     std::vector<X3DDevice> m_devices;

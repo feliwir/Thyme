@@ -1,5 +1,8 @@
 #include "indexbuffer.h"
 #include "dx8indexbuffer.h"
+#ifdef BUILD_WITH_X3D
+#include "x3dindexbuffer.h"
+#endif
 
 unsigned int g_indexBufferCount;
 unsigned int g_indexBufferTotalIndices;
@@ -12,7 +15,11 @@ unsigned short g_dynamicSortingIndexArrayOffset;
 IndexBufferClass::IndexBufferClass(unsigned int type_, unsigned short index_count_) :
     m_engineRefs(0), m_indexCount(index_count_), m_type(type_)
 {
+#ifdef BUILD_WITH_X3D
+    captainslog_assert(m_type == BUFFER_TYPE_DX8 || m_type == BUFFER_TYPE_X3D || m_type == BUFFER_TYPE_SORTING);
+#else
     captainslog_assert(m_type == BUFFER_TYPE_DX8 || m_type == BUFFER_TYPE_SORTING);
+#endif
     captainslog_assert(m_indexCount);
     g_indexBufferCount++;
     g_indexBufferTotalIndices += m_indexCount;
@@ -114,10 +121,18 @@ IndexBufferClass::AppendLockClass::AppendLockClass(
 #ifdef BUILD_WITH_D3D8
             static_cast<DX8IndexBufferClass *>(m_indexBuffer)
                 ->Get_DX8_Index_Buffer()
-                ->Lock(2 * start_index, 2 * index_range, (BYTE **)&m_indices, 0);
+                ->Lock(sizeof(uint16_t) * start_index, sizeof(uint16_t) * index_range, (BYTE **)&m_indices, 0);
 #endif
             break;
         }
+#ifdef BUILD_WITH_X3D
+        case BUFFER_TYPE_X3D: {
+            m_indices = static_cast<uint16_t *>(
+                static_cast<X3DIndexBufferClass *>(m_indexBuffer)
+                    ->Get_X3D_Index_Buffer()
+                    ->Lock(X3D::X3D_LOCK_READ, sizeof(uint16_t) * start_index, sizeof(uint16_t) * index_range));
+        }
+#endif // BUILD_WITH_X3D
         case BUFFER_TYPE_SORTING: {
             m_indices = static_cast<SortingIndexBufferClass *>(m_indexBuffer)->Get_Sorting_Index_Buffer() + start_index;
             break;
@@ -138,6 +153,12 @@ IndexBufferClass::AppendLockClass::~AppendLockClass()
 #endif
             break;
         }
+#ifdef BUILD_WITH_X3D
+        case BUFFER_TYPE_X3D: {
+            static_cast<X3DIndexBufferClass *>(m_indexBuffer)->Get_X3D_Index_Buffer()->Unlock();
+        }
+#endif // BUILD_WITH_X3D
+
         case BUFFER_TYPE_SORTING:
             break;
         default:

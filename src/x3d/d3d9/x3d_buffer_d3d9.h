@@ -1,5 +1,5 @@
 #pragma once
-#include "x3d_vertexbuffer.h"
+#include "x3d_buffer.h"
 #include <cassert>
 #include <d3d9.h>
 
@@ -18,5 +18,20 @@ public:
 
 private:
     IDirect3DVertexBuffer9 *m_buffer = nullptr;
+};
+
+class X3DIndexBufferD3D9 : public X3DIndexBuffer
+{
+public:
+    X3DIndexBufferD3D9(IDirect3DDevice9 *device, size_t size)
+    {
+        assert(SUCCEEDED(device->CreateIndexBuffer(size, D3DUSAGE_DYNAMIC, D3DFMT_INDEX16, D3DPOOL_DEFAULT, &m_buffer, NULL)));
+    }
+
+    void *Lock(X3DLockUsage usage, size_t offset, size_t size) override;
+    void Unlock() override;
+
+private:
+    IDirect3DIndexBuffer9 *m_buffer = nullptr;
 };
 } // namespace X3D

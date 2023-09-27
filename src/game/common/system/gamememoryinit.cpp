@@ -637,6 +637,7 @@ static PoolSizeRec UserMemoryPools[] = {
     { "TerrainTracksRenderObjClass", 128, 32 },
     { "DynamicIBAccessClass", 32, 32 },
     { "DX8IndexBufferClass", 128, 32 },
+    { "X3DIndexBufferClass", 128, 32 },
     { "SortingIndexBufferClass", 32, 32 },
     { "DX8VertexBufferClass", 128, 32 },
     { "X3DVertexBufferClass", 128, 32 },

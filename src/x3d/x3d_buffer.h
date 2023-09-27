@@ -15,4 +15,11 @@ public:
     virtual void *Lock(X3DLockUsage, size_t offset, size_t size) = 0;
     virtual void Unlock() = 0;
 };
+
+class X3DIndexBuffer
+{
+public:
+    virtual void *Lock(X3DLockUsage, size_t offset, size_t size) = 0;
+    virtual void Unlock() = 0;
+};
 } // namespace X3D

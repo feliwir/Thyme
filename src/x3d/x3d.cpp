@@ -147,3 +147,10 @@ X3D::X3DVertexBuffer *X3D::Create_Vertex_Buffer(size_t size)
     assert(size > 0);
     return s_context->Create_Vertex_Buffer(size);
 }
+
+X3D::X3DIndexBuffer *X3D::Create_Index_Buffer(size_t size)
+{
+    assert(s_context != nullptr);
+    assert(size > 0);
+    return s_context->Create_Index_Buffer(size);
+}

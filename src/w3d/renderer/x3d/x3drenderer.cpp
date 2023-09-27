@@ -20,6 +20,7 @@
 #include "mesh.h"
 #include "renderer.h"
 #include "w3d.h"
+#include "x3dindexbuffer.h"
 #include "x3dpolygonrenderer.h"
 #include "x3dvertexbuffer.h"
 
@@ -1003,7 +1004,7 @@ void X3DFVFCategoryContainer::Generate_Texture_Categories(Vertex_Split_Table &sp
         if (m_sorting) {
             m_indexBuffer = new SortingIndexBufferClass(index_count);
         } else {
-            m_indexBuffer = new DX8IndexBufferClass(index_count, DX8IndexBufferClass::USAGE_DEFAULT);
+            m_indexBuffer = new X3DIndexBufferClass(index_count, X3DIndexBufferClass::USAGE_DEFAULT);
         }
     }
 

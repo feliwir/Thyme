@@ -78,5 +78,6 @@ void End();
 void Set_Viewport(int, int, int, int);
 
 X3DVertexBuffer *Create_Vertex_Buffer(size_t size);
+X3DIndexBuffer *Create_Index_Buffer(size_t size);
 
 } // namespace X3D

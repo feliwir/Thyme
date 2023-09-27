@@ -20,7 +20,9 @@ public:
 
     void Set_Viewport(int x, int y, int w, int h);
 
-    X3DVertexBuffer* Create_Vertex_Buffer(size_t size) override;
+    X3DVertexBuffer *Create_Vertex_Buffer(size_t size) override;
+    X3DIndexBuffer *Create_Index_Buffer(size_t size) override;
+
 protected:
     int Enumerate_Devices();
 

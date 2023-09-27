@@ -14,7 +14,7 @@
  */
 #include "x3dvertexbuffer.h"
 #include "w3d.h"
-#include "x3d_vertexbuffer.h"
+#include "x3d_buffer.h"
 
 X3DVertexBufferClass::X3DVertexBufferClass(
     unsigned int fvf, unsigned short vertex_count_, UsageType usage, unsigned int flags) :

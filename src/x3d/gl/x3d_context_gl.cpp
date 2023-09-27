@@ -77,3 +77,8 @@ X3D::X3DVertexBuffer *X3D::X3DContextGL::Create_Vertex_Buffer(size_t size)
 {
     return new X3DVertexBufferGL(size);
 }
+
+X3D::X3DIndexBuffer *X3D::X3DContextGL::Create_Index_Buffer(size_t size)
+{
+    return new X3DIndexBufferGL(size);
+}

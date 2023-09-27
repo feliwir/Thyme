@@ -1,5 +1,5 @@
 #pragma once
-#include "x3d_vertexbuffer.h"
+#include "x3d_buffer.h"
 
 #include "flextGL.h"
 
@@ -19,6 +19,14 @@ class X3DVertexBufferGL : public X3DBufferGL, public X3DVertexBuffer
 {
 public:
     X3DVertexBufferGL(size_t size);
+    void *Lock(X3DLockUsage usage, size_t offset, size_t size) override;
+    void Unlock() override;
+};
+
+class X3DIndexBufferGL : public X3DBufferGL, public X3DIndexBuffer
+{
+public:
+    X3DIndexBufferGL(size_t size);
     void *Lock(X3DLockUsage usage, size_t offset, size_t size) override;
     void Unlock() override;
 };

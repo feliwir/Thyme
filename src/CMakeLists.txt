@@ -541,6 +541,7 @@ set(GAMEENGINE_SRC
     w3d/renderer/dx8/dx8texman.cpp
     w3d/renderer/dx8/dx8vertexbuffer.cpp
     w3d/renderer/dx8/dx8wrapper.cpp
+    w3d/renderer/x3d/x3dindexbuffer.cpp
     w3d/renderer/x3d/x3dpolygonrenderer.cpp
     w3d/renderer/x3d/x3drenderer.cpp
     w3d/renderer/x3d/x3dvertexbuffer.cpp

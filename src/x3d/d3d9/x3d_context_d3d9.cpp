@@ -171,3 +171,8 @@ X3D::X3DVertexBuffer *X3D::X3DContextD3D9::Create_Vertex_Buffer(size_t size)
     assert(m_device != nullptr);
     return new X3DVertexBufferD3D9(m_device, size);
 }
+
+X3D::X3DIndexBuffer *X3D::X3DContextD3D9::Create_Index_Buffer(size_t size)
+{
+    return new X3DIndexBufferD3D9(m_device, size);
+}

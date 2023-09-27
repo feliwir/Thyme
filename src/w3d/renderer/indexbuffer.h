@@ -29,6 +29,9 @@ public:
         BUFFER_TYPE_DYNAMIC_DX8,
         BUFFER_TYPE_DYNAMIC_SORTING,
         BUFFER_TYPE_INVALID,
+#ifdef BUILD_WITH_X3D
+        BUFFER_TYPE_X3D,
+#endif
     };
     class WriteLockClass
     {

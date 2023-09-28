@@ -56,6 +56,7 @@ typedef khronos_ssize_t GLsizeiptr;
 typedef khronos_int64_t GLint64;
 typedef khronos_uint64_t GLuint64;
 typedef struct __GLsync *GLsync;
+typedef void (APIENTRY *GLDEBUGPROCARB)(GLenum source,GLenum type,GLuint id,GLenum severity,GLsizei length,const GLchar *message,const void *userParam);
 
 /* ----------------------------------- ENUMS --------------------------------- */
 
@@ -913,7 +914,50 @@ typedef struct __GLsync *GLsync;
 #define GL_TIMESTAMP 0x8E28
 #define GL_INT_2_10_10_10_REV 0x8D9F
 
+/* GL_ARB_debug_output */
+
+#define GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB 0x8242
+#define GL_DEBUG_NEXT_LOGGED_MESSAGE_LENGTH_ARB 0x8243
+#define GL_DEBUG_CALLBACK_FUNCTION_ARB 0x8244
+#define GL_DEBUG_CALLBACK_USER_PARAM_ARB 0x8245
+#define GL_DEBUG_SOURCE_API_ARB 0x8246
+#define GL_DEBUG_SOURCE_WINDOW_SYSTEM_ARB 0x8247
+#define GL_DEBUG_SOURCE_SHADER_COMPILER_ARB 0x8248
+#define GL_DEBUG_SOURCE_THIRD_PARTY_ARB 0x8249
+#define GL_DEBUG_SOURCE_APPLICATION_ARB 0x824A
+#define GL_DEBUG_SOURCE_OTHER_ARB 0x824B
+#define GL_DEBUG_TYPE_ERROR_ARB 0x824C
+#define GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR_ARB 0x824D
+#define GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR_ARB 0x824E
+#define GL_DEBUG_TYPE_PORTABILITY_ARB 0x824F
+#define GL_DEBUG_TYPE_PERFORMANCE_ARB 0x8250
+#define GL_DEBUG_TYPE_OTHER_ARB 0x8251
+#define GL_MAX_DEBUG_MESSAGE_LENGTH_ARB 0x9143
+#define GL_MAX_DEBUG_LOGGED_MESSAGES_ARB 0x9144
+#define GL_DEBUG_LOGGED_MESSAGES_ARB 0x9145
+#define GL_DEBUG_SEVERITY_HIGH_ARB 0x9146
+#define GL_DEBUG_SEVERITY_MEDIUM_ARB 0x9147
+#define GL_DEBUG_SEVERITY_LOW_ARB 0x9148
+
 /* --------------------------- FUNCTION PROTOTYPES --------------------------- */
+
+
+/* GL_ARB_debug_output */
+
+typedef void (APIENTRY PFNGLDEBUGMESSAGECALLBACKARB_PROC (GLDEBUGPROCARB callback, const void * userParam));
+typedef void (APIENTRY PFNGLDEBUGMESSAGECONTROLARB_PROC (GLenum source, GLenum type, GLenum severity, GLsizei count, const GLuint * ids, GLboolean enabled));
+typedef void (APIENTRY PFNGLDEBUGMESSAGEINSERTARB_PROC (GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar * buf));
+typedef GLuint (APIENTRY PFNGLGETDEBUGMESSAGELOGARB_PROC (GLuint count, GLsizei bufSize, GLenum * sources, GLenum * types, GLuint * ids, GLenum * severities, GLsizei * lengths, GLchar * messageLog));
+
+GLAPI PFNGLDEBUGMESSAGECALLBACKARB_PROC *glpfDebugMessageCallbackARB;
+GLAPI PFNGLDEBUGMESSAGECONTROLARB_PROC *glpfDebugMessageControlARB;
+GLAPI PFNGLDEBUGMESSAGEINSERTARB_PROC *glpfDebugMessageInsertARB;
+GLAPI PFNGLGETDEBUGMESSAGELOGARB_PROC *glpfGetDebugMessageLogARB;
+
+#define glDebugMessageCallbackARB glpfDebugMessageCallbackARB
+#define glDebugMessageControlARB glpfDebugMessageControlARB
+#define glDebugMessageInsertARB glpfDebugMessageInsertARB
+#define glGetDebugMessageLogARB glpfGetDebugMessageLogARB
 
 
 /* GL_VERSION_1_0 */
@@ -1896,6 +1940,7 @@ GLAPI PFNGLVERTEXATTRIBP4UIV_PROC *glpfVertexAttribP4uiv;
 
 /* --------------------------- CATEGORY DEFINES ------------------------------ */
 
+#define GL_ARB_debug_output
 #define GL_VERSION_1_0
 #define GL_VERSION_1_1
 #define GL_VERSION_1_2
@@ -1911,6 +1956,7 @@ GLAPI PFNGLVERTEXATTRIBP4UIV_PROC *glpfVertexAttribP4uiv;
 
 /* ---------------------- Flags for optional extensions ---------------------- */
 
+extern int FLEXT_ARB_debug_output;
 
 int flextInit(void);
 

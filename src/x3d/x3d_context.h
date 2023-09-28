@@ -1,4 +1,5 @@
 #pragma once
+#include <cstdint>
 #include <vector>
 
 #ifdef _WIN32
@@ -19,7 +20,7 @@ struct X3DDevice
 class X3DIndexBuffer;
 class X3DIndexBuffer;
 class X3DVertexBuffer;
-enum X3DPrimitive;
+enum X3DPrimitive : uint8_t;
 class X3DContext
 {
 public:

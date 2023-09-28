@@ -5,6 +5,28 @@
 #include "flextGL.h"
 #include <cassert>
 
+namespace X3D
+{
+extern std::function<void(X3DMessageSeverity, const char *)> s_msgCallback;
+
+static void APIENTRY glDebugMessageCallback(
+    GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam)
+{
+    // No handling
+    if (s_msgCallback == nullptr)
+        return;
+
+    switch (type) {
+        case GL_DEBUG_TYPE_ERROR_ARB:
+            s_msgCallback(X3D_MSG_SEVERITY_ERROR, message);
+            break;
+        default:
+            s_msgCallback(X3D_MSG_SEVERITY_INFO, message);
+            break;
+    }
+}
+} // namespace X3D
+
 int X3D::X3DContextGL::Load_Functions()
 {
     if (flextInit() == GL_FALSE) {
@@ -15,7 +37,16 @@ int X3D::X3DContextGL::Load_Functions()
 
 int X3D::X3DContextGL::Init()
 {
-    return Load_Functions();
+    int result = Load_Functions();
+
+    // Check if the extension for debug output exists
+    if (FLEXT_ARB_debug_output) {
+        glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB);
+        // TODO: we could pass our function here
+        glDebugMessageCallbackARB(glDebugMessageCallback, nullptr);
+    }
+
+    return result;
 }
 
 #ifdef _WIN32
@@ -89,11 +120,35 @@ X3D::X3DIndexBuffer *X3D::X3DContextGL::Create_Index_Buffer(size_t size)
     return new X3DIndexBufferGL(size);
 }
 
+void X3D::X3DContextGL::Bind_Vertex_Buffer(X3DVertexBuffer *buffer)
+{
+    X3DContext::Bind_Vertex_Buffer(buffer);
+    static_cast<X3DVertexBufferGL *>(buffer)->Bind();
+}
+
+void X3D::X3DContextGL::Bind_Index_Buffer(X3DIndexBuffer *buffer)
+{
+    X3DContext::Bind_Index_Buffer(buffer);
+    static_cast<X3DIndexBufferGL *>(buffer)->Bind();
+}
+
+static GLenum GetPrimitiveTypeGL(X3D::X3DPrimitive type)
+{
+    switch (type) {
+        case X3D::X3D_TRIANGLES:
+            return GL_TRIANGLES;
+        case X3D::X3D_TRIANGLE_STRIP:
+            return GL_TRIANGLE_STRIP;
+        default:
+            return GL_NONE;
+    }
+}
+
 int X3D::X3DContextGL::Draw_Indexed(X3DPrimitive type, int start, int count, int baseVertex)
 {
     assert(m_vb != nullptr);
     assert(m_ib != nullptr);
 
-    //glDrawElementsBaseVertex();
+    glDrawElementsBaseVertex(GetPrimitiveTypeGL(type), count, GL_UNSIGNED_SHORT, nullptr, baseVertex);
     return X3D_ERR_OK;
 }

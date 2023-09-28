@@ -273,10 +273,21 @@ W3DErrorType W3D::Init(void *hwnd, char *defaultpal, bool lite)
         s_isInited = true;
     }
 
-    captainslog_debug("WW3D Init completed");
+    captainslog_debug("WW3D(DX8) Init completed");
 
     return W3D_ERROR_OK;
 #elif defined BUILD_WITH_X3D
+    X3D::Set_Message_Callback([](X3D::X3DMessageSeverity severity, const char *msg) {
+        switch (severity) {
+            case X3D::X3D_MSG_SEVERITY_ERROR:
+                captainslog_error("[X3D]: %s", msg);
+                break;
+            default:
+                captainslog_info("[X3D]: %s", msg);
+                break;
+        }
+    });
+
 #ifdef PLATFORM_WINDOWS
     if (X3D::Init_From_Hwnd(X3D::X3D_AUTO, s_hwnd) != X3D::X3D_ERR_OK) {
         return W3D_ERROR_INITIALIZATION_FAILED;
@@ -293,8 +304,8 @@ W3DErrorType W3D::Init(void *hwnd, char *defaultpal, bool lite)
     if (!lite) {
         s_isInited = true;
     }
-
-    captainslog_debug("WW3D Init completed");
+    g_theX3DMeshRenderer.Init();
+    captainslog_debug("WW3D(X3D) Init completed");
 
     return W3D_ERROR_OK;
 #else

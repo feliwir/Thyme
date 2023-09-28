@@ -53,6 +53,12 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
+    captains_settings_t captains_settings = { 0 };
+    captains_settings.level = result.count("verbose") > 0 ? LOGLEVEL_TRACE : LOGLEVEL_DEBUG;
+    captains_settings.console = true;
+    captains_settings.print_file = true;
+    captainslog_init(&captains_settings);
+
     SimpleSceneClass *scene = new SimpleSceneClass();
     CameraClass *camera = new CameraClass();
     W3DAssetManager *asset_mgr = new W3DAssetManager();
@@ -69,6 +75,8 @@ int main(int argc, char **argv)
         std::cerr << "Failed to initialize SDL2" << std::endl;
         return EXIT_FAILURE;
     }
+
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
 
     SDL_Window *app_window = SDL_CreateWindow("Westwood 3D (W3D) - Render",
         SDL_WINDOWPOS_CENTERED,

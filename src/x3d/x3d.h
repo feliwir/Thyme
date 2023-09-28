@@ -1,5 +1,6 @@
 #pragma once
 #include "x3d_context.h"
+#include <functional>
 
 namespace X3D
 {
@@ -22,7 +23,7 @@ enum X3DBackend
     X3D_VULKAN,
 };
 
-enum X3DPrimitive
+enum X3DPrimitive : uint8_t
 {
     X3D_TRIANGLES,
     X3D_TRIANGLE_STRIP
@@ -33,6 +34,17 @@ struct X3DDeviceDescr
     char name[256];
     char vendor[256];
 };
+
+enum X3DMessageSeverity
+{
+    X3D_MSG_SEVERITY_INFO,
+    X3D_MSG_SEVERITY_WARN,
+    X3D_MSG_SEVERITY_ERROR,
+};
+
+/// @brief Set the message callback
+/// @param callback
+void Set_Message_Callback(std::function<void(X3DMessageSeverity, const char *)> callback);
 
 /// @brief This function assumes the context underlying context is already created (E.g. by SDL2)
 /// @param backend

@@ -43,7 +43,7 @@ inline void X3DPolygonRendererClass::Render(int offset)
 {
     // DX8Wrapper::Set_Index_Buffer_Index_Offset(offset);
 
-     if (m_strip) {
+    if (m_strip) {
         X3D::Draw_Indexed(X3D::X3D_TRIANGLE_STRIP, m_indexOffset, m_indexCount, m_minVertexIndex);
     } else {
         X3D::Draw_Indexed(X3D::X3D_TRIANGLES, m_indexOffset, m_indexCount, m_minVertexIndex);

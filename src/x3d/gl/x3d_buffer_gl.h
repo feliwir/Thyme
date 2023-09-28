@@ -8,10 +8,13 @@ namespace X3D
 class X3DBufferGL
 {
 public:
-    X3DBufferGL() { glGenBuffers(1, &m_handle); }
+    X3DBufferGL(GLenum target) : m_target(target) { glGenBuffers(1, &m_handle); }
     ~X3DBufferGL() { glDeleteBuffers(1, &m_handle); }
 
+    void Bind() { glBindBuffer(m_target, m_handle); }
+
 protected:
+    GLenum m_target = GL_INVALID_ENUM;
     GLuint m_handle = 0;
 };
 

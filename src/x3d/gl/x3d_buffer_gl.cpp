@@ -1,6 +1,6 @@
 #include "x3d_buffer_gl.h"
 
-X3D::X3DVertexBufferGL::X3DVertexBufferGL(size_t size)
+X3D::X3DVertexBufferGL::X3DVertexBufferGL(size_t size) : X3DVertexBuffer(size)
 {
     glBindBuffer(GL_ARRAY_BUFFER, m_handle);
     glBufferData(GL_ARRAY_BUFFER, size, 0, GL_STATIC_DRAW);
@@ -18,7 +18,7 @@ void X3D::X3DVertexBufferGL::Unlock()
     glUnmapBuffer(GL_ARRAY_BUFFER);
 }
 
-X3D::X3DIndexBufferGL::X3DIndexBufferGL(size_t size)
+X3D::X3DIndexBufferGL::X3DIndexBufferGL(size_t size) : X3DIndexBuffer(size)
 {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_handle);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, 0, GL_STATIC_DRAW);

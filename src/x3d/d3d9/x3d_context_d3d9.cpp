@@ -11,7 +11,7 @@ X3D::X3DContextD3D9::X3DContextD3D9() : m_clearColor(0) {}
 int X3D::X3DContextD3D9::Init()
 {
     // Cannot create D3D without a HWND
-    return X3D_ERR_FAILED_DEVICE_INIT;
+    return X3D_ERR_OK;
 }
 
 int X3D::X3DContextD3D9::Init_From_Hwnd(HWND hwnd)
@@ -180,5 +180,33 @@ X3D::X3DVertexBuffer *X3D::X3DContextD3D9::Create_Vertex_Buffer(size_t size)
 
 X3D::X3DIndexBuffer *X3D::X3DContextD3D9::Create_Index_Buffer(size_t size)
 {
+    assert(m_device != nullptr);
     return new X3DIndexBufferD3D9(m_device, size);
+}
+
+void X3D::X3DContextD3D9::Bind_Vertex_Buffer(X3DVertexBuffer *buffer)
+{
+    assert(m_device != nullptr);
+    X3DContext::Bind_Vertex_Buffer(buffer);
+    m_device->SetStreamSource(0, static_cast<X3DVertexBufferD3D9 *>(buffer)->m_buffer, 0, m_vertexSize);
+}
+
+void X3D::X3DContextD3D9::Bind_Index_Buffer(X3DIndexBuffer *buffer)
+{
+    assert(m_device != nullptr);
+    X3DContext::Bind_Index_Buffer(buffer);
+    m_device->SetIndices(static_cast<X3DIndexBufferD3D9 *>(buffer)->m_buffer);
+}
+
+int X3D::X3DContextD3D9::Draw_Indexed(X3DPrimitive type, int start, int count, int baseVertex)
+{
+    assert(m_device != nullptr);
+    assert(m_vb != nullptr);
+    assert(m_ib != nullptr);
+
+    int vertex_count = m_vb->Get_Size();
+
+    return SUCCEEDED(m_device->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, baseVertex, 0, vertex_count, start, count / 3)) ?
+        X3D_ERR_OK :
+        X3D_ERR_FAILED_DRAW;
 }

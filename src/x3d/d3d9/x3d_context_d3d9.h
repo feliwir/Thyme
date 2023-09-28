@@ -1,5 +1,6 @@
 #pragma once
 #include "x3d_context.h"
+#include "x3d.h"
 #include <d3d9.h>
 
 namespace X3D
@@ -24,6 +25,10 @@ public:
     X3DVertexBuffer *Create_Vertex_Buffer(size_t size) override;
     X3DIndexBuffer *Create_Index_Buffer(size_t size) override;
 
+    void Bind_Vertex_Buffer(X3DVertexBuffer *buffer) override;
+    void Bind_Index_Buffer(X3DIndexBuffer *buffer) override;
+
+    int Draw_Indexed(X3DPrimitive type, int start, int count, int baseVertex) override;
 protected:
     int Enumerate_Devices();
 

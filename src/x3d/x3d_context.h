@@ -19,6 +19,7 @@ struct X3DDevice
 class X3DIndexBuffer;
 class X3DIndexBuffer;
 class X3DVertexBuffer;
+enum X3DPrimitive;
 class X3DContext
 {
 public:
@@ -46,6 +47,11 @@ public:
     virtual X3DVertexBuffer *Create_Vertex_Buffer(size_t size) = 0;
     virtual X3DIndexBuffer *Create_Index_Buffer(size_t size) = 0;
 
+    virtual void Bind_Vertex_Buffer(X3DVertexBuffer *vb) { m_vb = vb; }
+    virtual void Bind_Index_Buffer(X3DIndexBuffer *ib) { m_ib = ib; }
+
+    virtual int Draw_Indexed(X3DPrimitive type, int start, int count, int baseVertex = 0) = 0;
+
 protected:
     std::vector<X3DDevice> m_devices;
     int m_dev;
@@ -54,5 +60,8 @@ protected:
     int m_bits;
     int m_windowed;
     bool m_rendering = false;
+    int m_vertexSize = 0;
+    X3DVertexBuffer *m_vb = nullptr;
+    X3DIndexBuffer *m_ib = nullptr;
 };
 } // namespace X3D

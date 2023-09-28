@@ -3,6 +3,7 @@
 #include "x3d_buffer_gl.h"
 
 #include "flextGL.h"
+#include <cassert>
 
 int X3D::X3DContextGL::Load_Functions()
 {
@@ -86,4 +87,13 @@ X3D::X3DVertexBuffer *X3D::X3DContextGL::Create_Vertex_Buffer(size_t size)
 X3D::X3DIndexBuffer *X3D::X3DContextGL::Create_Index_Buffer(size_t size)
 {
     return new X3DIndexBufferGL(size);
+}
+
+int X3D::X3DContextGL::Draw_Indexed(X3DPrimitive type, int start, int count, int baseVertex)
+{
+    assert(m_vb != nullptr);
+    assert(m_ib != nullptr);
+
+    //glDrawElementsBaseVertex();
+    return X3D_ERR_OK;
 }

@@ -10,6 +10,7 @@ enum X3DError
     X3D_ERR_ALREADY_INITIALIZED,
     X3D_ERR_FAILED_LOAD,
     X3D_ERR_FAILED_DEVICE_INIT,
+    X3D_ERR_FAILED_DRAW,
 };
 
 enum X3DBackend
@@ -19,6 +20,12 @@ enum X3DBackend
     X3D_D3D11,
     X3D_OPENGL,
     X3D_VULKAN,
+};
+
+enum X3DPrimitive
+{
+    X3D_TRIANGLES,
+    X3D_TRIANGLE_STRIP
 };
 
 struct X3DDeviceDescr
@@ -79,5 +86,10 @@ void Set_Viewport(int, int, int, int);
 
 X3DVertexBuffer *Create_Vertex_Buffer(size_t size);
 X3DIndexBuffer *Create_Index_Buffer(size_t size);
+
+void Bind_Vertex_Buffer(X3DVertexBuffer *);
+void Bind_Index_Buffer(X3DIndexBuffer *);
+
+int Draw_Indexed(X3DPrimitive type, int start, int count, int baseVertex = 0);
 
 } // namespace X3D

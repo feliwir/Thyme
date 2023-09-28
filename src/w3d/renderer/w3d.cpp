@@ -133,6 +133,9 @@ void DefaultStaticSortListClass::Render_And_Clear(RenderInfoClass &rinfo)
 #ifdef BUILD_WITH_D3D8
             g_theDX8MeshRenderer.Flush();
 #endif
+#ifdef BUILD_WITH_X3D
+            g_theX3DMeshRenderer.Flush();
+#endif
         }
     }
 }
@@ -210,6 +213,9 @@ void W3D::Invalidate_Mesh_Cache()
 {
 #ifdef BUILD_WITH_D3D8
     g_theDX8MeshRenderer.Invalidate(false);
+#endif
+#ifdef BUILD_WITH_X3D
+    g_theX3DMeshRenderer.Invalidate(false);
 #endif
 }
 
@@ -442,7 +448,8 @@ W3DErrorType W3D::Render(SceneClass *scene, CameraClass *cam, bool clear, bool c
 
 #if defined BUILD_WITH_X3D
     g_theX3DMeshRenderer.Set_Camera(&rinfo.m_camera);
-#elif defined BUILD_WITH_D3D8
+#endif
+#if defined BUILD_WITH_D3D8
     switch (scene->Get_Polygon_Mode()) {
         case SceneClass::POINT:
             DX8Wrapper::Set_DX8_Render_State(D3DRS_FILLMODE, D3DFILL_POINT);
@@ -490,14 +497,16 @@ void W3D::Flush(RenderInfoClass &rinfo)
 {
 #ifdef BUILD_WITH_X3D
     g_theX3DMeshRenderer.Flush();
-#else
+#endif
+#ifdef BUILD_WITH_DX8
     g_theDX8MeshRenderer.Flush();
 #endif
     Render_And_Clear_Static_Sort_Lists(rinfo);
     SortingRendererClass::Flush();
 #ifdef BUILD_WITH_X3D
     g_theX3DMeshRenderer.Clear_Pending_Delete_Lists();
-#else
+#endif
+#ifdef BUILD_WITH_DX8
     g_theDX8MeshRenderer.Clear_Pending_Delete_Lists();
 #endif
 }
@@ -553,6 +562,9 @@ void W3D::Enable_Sorting(bool onoff)
     s_isSortingEnabled = onoff;
 #ifdef BUILD_WITH_D3D8
     g_theDX8MeshRenderer.Invalidate(false);
+#endif
+#ifdef BUILD_WITH_X3D
+    g_theX3DMeshRenderer.Invalidate(false);
 #endif
 }
 

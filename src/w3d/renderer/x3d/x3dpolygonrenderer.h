@@ -43,17 +43,11 @@ inline void X3DPolygonRendererClass::Render(int offset)
 {
     // DX8Wrapper::Set_Index_Buffer_Index_Offset(offset);
 
-    // if (m_strip) {
-    //     DX8Wrapper::Draw_Strip((unsigned short)m_indexOffset,
-    //         (unsigned short)m_indexCount - 2,
-    //         (unsigned short)m_minVertexIndex,
-    //         (unsigned short)m_vertexIndexRange);
-    // } else {
-    //     DX8Wrapper::Draw_Triangles((unsigned short)m_indexOffset,
-    //         (unsigned short)m_indexCount / 3,
-    //         (unsigned short)m_minVertexIndex,
-    //         (unsigned short)m_vertexIndexRange);
-    // }
+     if (m_strip) {
+        X3D::Draw_Indexed(X3D::X3D_TRIANGLE_STRIP, m_indexOffset, m_indexCount, m_minVertexIndex);
+    } else {
+        X3D::Draw_Indexed(X3D::X3D_TRIANGLES, m_indexOffset, m_indexCount, m_minVertexIndex);
+    }
 }
 
 inline void X3DPolygonRendererClass::Render_Sorted(int offset, const SphereClass &sphere)

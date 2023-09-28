@@ -17,6 +17,8 @@ struct X3DDevice
     char Vendor[256];
 };
 
+enum X3DShaderType : uint8_t;
+class X3DShader;
 class X3DIndexBuffer;
 class X3DIndexBuffer;
 class X3DVertexBuffer;
@@ -46,6 +48,8 @@ public:
     virtual void End();
 
     virtual void Set_Viewport(int x, int y, int w, int h) = 0;
+
+    virtual X3DShader *Create_Shader() = 0;
 
     virtual X3DVertexBuffer *Create_Vertex_Buffer(size_t size) = 0;
     virtual X3DIndexBuffer *Create_Index_Buffer(size_t size) = 0;

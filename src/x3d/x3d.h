@@ -1,6 +1,7 @@
 #pragma once
 #include "x3d_context.h"
 #include "x3d_vertexlayout.h"
+#include <cstdlib>
 #include <functional>
 
 namespace X3D

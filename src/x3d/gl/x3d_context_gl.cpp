@@ -1,9 +1,12 @@
 ﻿#include "x3d_context_gl.h"
 #include "x3d.h"
 #include "x3d_buffer_gl.h"
+#include "x3d_shader_gl.h"
 #include "x3d_vertexlayout_gl.h"
 
 #include "flextGL.h"
+#include <hlsl2glsl.h>
+
 #include <cassert>
 
 namespace X3D
@@ -109,6 +112,11 @@ void X3D::X3DContextGL::Present()
 void X3D::X3DContextGL::Set_Viewport(int x, int y, int w, int h)
 {
     glViewport(x, y, w, h);
+}
+
+X3D::X3DShader *X3D::X3DContextGL::Create_Shader()
+{
+    return new X3DShaderGL();
 }
 
 X3D::X3DVertexBuffer *X3D::X3DContextGL::Create_Vertex_Buffer(size_t size)

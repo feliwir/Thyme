@@ -1,5 +1,6 @@
 #pragma once
 #include "x3d_context.h"
+#include "x3d_vertexlayout.h"
 #include <functional>
 
 namespace X3D
@@ -98,6 +99,8 @@ void Set_Viewport(int, int, int, int);
 
 X3DVertexBuffer *Create_Vertex_Buffer(size_t size);
 X3DIndexBuffer *Create_Index_Buffer(size_t size);
+
+X3DVertexLayout *Create_Vertex_Layout(X3DLayoutDescription* descr);
 
 void Bind_Vertex_Buffer(X3DVertexBuffer *);
 void Bind_Index_Buffer(X3DIndexBuffer *);

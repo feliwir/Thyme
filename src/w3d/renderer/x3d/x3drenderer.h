@@ -110,6 +110,8 @@ public:
     void Generate_Texture_Categories(Vertex_Split_Table &split_table, unsigned int vertex_offset) override;
 
     static unsigned int Define_FVF(MeshModelClass *mmc, bool enable_lighting);
+protected:
+    X3D::X3DVertexLayout *m_layout = nullptr;
 };
 
 class X3DRigidFVFCategoryContainer : public X3DFVFCategoryContainer

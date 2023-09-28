@@ -439,6 +439,15 @@ X3DFVFCategoryContainer::X3DFVFCategoryContainer(unsigned int FVF, bool sorting)
     if ((FVF & X3D_VF_TEX8) == X3D_VF_TEX8) {
         m_uvCoordinateChannels = 8;
     }
+
+    // clang-format off
+    X3D::X3DLayoutDescription descr[] = {
+        {0, 0, X3D::X3D_LT_VEC3, X3D::X3D_LU_POSITION},
+        X3D::LayoutEnd
+    };
+    // clang-format on
+
+    m_layout = X3D::Create_Vertex_Layout(descr);
 }
 
 X3DFVFCategoryContainer::~X3DFVFCategoryContainer() {}

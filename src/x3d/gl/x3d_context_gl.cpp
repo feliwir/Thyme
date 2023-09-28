@@ -1,6 +1,7 @@
 ﻿#include "x3d_context_gl.h"
 #include "x3d.h"
 #include "x3d_buffer_gl.h"
+#include "x3d_vertexlayout_gl.h"
 
 #include "flextGL.h"
 #include <cassert>
@@ -118,6 +119,11 @@ X3D::X3DVertexBuffer *X3D::X3DContextGL::Create_Vertex_Buffer(size_t size)
 X3D::X3DIndexBuffer *X3D::X3DContextGL::Create_Index_Buffer(size_t size)
 {
     return new X3DIndexBufferGL(size);
+}
+
+X3D::X3DVertexLayout *X3D::X3DContextGL::Create_Vertex_Layout(X3DLayoutDescription *descr)
+{
+    return new X3DVertexLayoutGL(descr);
 }
 
 void X3D::X3DContextGL::Bind_Vertex_Buffer(X3DVertexBuffer *buffer)

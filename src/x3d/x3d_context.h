@@ -20,6 +20,8 @@ struct X3DDevice
 class X3DIndexBuffer;
 class X3DIndexBuffer;
 class X3DVertexBuffer;
+class X3DVertexLayout;
+struct X3DLayoutDescription;
 enum X3DPrimitive : uint8_t;
 class X3DContext
 {
@@ -47,6 +49,8 @@ public:
 
     virtual X3DVertexBuffer *Create_Vertex_Buffer(size_t size) = 0;
     virtual X3DIndexBuffer *Create_Index_Buffer(size_t size) = 0;
+
+    virtual X3DVertexLayout *Create_Vertex_Layout(X3DLayoutDescription *descr) = 0;
 
     virtual void Bind_Vertex_Buffer(X3DVertexBuffer *vb) { m_vb = vb; }
     virtual void Bind_Index_Buffer(X3DIndexBuffer *ib) { m_ib = ib; }

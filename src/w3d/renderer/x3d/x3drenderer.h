@@ -112,6 +112,7 @@ public:
     static unsigned int Define_FVF(MeshModelClass *mmc, bool enable_lighting);
 protected:
     X3D::X3DVertexLayout *m_layout = nullptr;
+    X3D::X3DShader *m_shader = nullptr;
 };
 
 class X3DRigidFVFCategoryContainer : public X3DFVFCategoryContainer

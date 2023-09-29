@@ -22,6 +22,7 @@
 #include "w3d.h"
 #include "x3dindexbuffer.h"
 #include "x3dpolygonrenderer.h"
+#include "x3dshaders.h"
 #include "x3dvertexbuffer.h"
 
 #include <captainslog.h>
@@ -440,6 +441,11 @@ X3DFVFCategoryContainer::X3DFVFCategoryContainer(unsigned int FVF, bool sorting)
         m_uvCoordinateChannels = 8;
     }
 
+    m_shader = X3D::Create_Shader();
+    m_shader->Build_VS_From_HLSL(X3D_VS_XYZ_SHADER);
+    m_shader->Build_PS_From_HLSL(X3D_PS_XYZ_SHADER);
+    m_shader->Link();
+
     // clang-format off
     X3D::X3DLayoutDescription descr[] = {
         {0, 0, X3D::X3D_LT_VEC3, X3D::X3D_LU_POSITION},
@@ -648,6 +654,7 @@ void X3DRigidFVFCategoryContainer::Render()
 {
     if (Anything_To_Render()) {
         m_anythingToRender = false;
+        m_shader->Bind();
         X3D::Bind_Vertex_Buffer(static_cast<X3DVertexBufferClass *>(m_vertexBuffer)->Get_X3D_Vertex_Buffer());
         X3D::Bind_Index_Buffer(static_cast<X3DIndexBufferClass *>(m_indexBuffer)->Get_X3D_Index_Buffer());
 

@@ -1,7 +1,7 @@
 #pragma once
 #include "x3d_buffer.h"
 
-#include "flextGL.h"
+#include <flextGL.h>
 
 namespace X3D
 {

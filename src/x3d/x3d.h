@@ -1,5 +1,6 @@
 #pragma once
 #include "x3d_context.h"
+#include "x3d_shader.h"
 #include "x3d_vertexlayout.h"
 #include <cstdlib>
 #include <functional>
@@ -14,6 +15,10 @@ enum X3DError
     X3D_ERR_FAILED_LOAD,
     X3D_ERR_FAILED_DEVICE_INIT,
     X3D_ERR_FAILED_DRAW,
+    X3D_ERR_FAILED_SHADER_TRANSPILE,
+    X3D_ERR_FAILED_SHADER_COMPILE,
+    X3D_ERR_FAILED_SHADER_LINKING,
+    X3D_ERR_FAILED_SHADER_BIND
 };
 
 enum X3DBackend
@@ -98,10 +103,12 @@ void End();
 /// @param
 void Set_Viewport(int, int, int, int);
 
+X3DShader *Create_Shader();
+
 X3DVertexBuffer *Create_Vertex_Buffer(size_t size);
 X3DIndexBuffer *Create_Index_Buffer(size_t size);
 
-X3DVertexLayout *Create_Vertex_Layout(X3DLayoutDescription* descr);
+X3DVertexLayout *Create_Vertex_Layout(X3DLayoutDescription *descr);
 
 void Bind_Vertex_Buffer(X3DVertexBuffer *);
 void Bind_Index_Buffer(X3DIndexBuffer *);

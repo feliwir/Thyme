@@ -775,6 +775,7 @@ if(USE_X3D)
     list(APPEND GAMEENGINE_SRC
         w3d/renderer/x3d/x3dindexbuffer.cpp
         w3d/renderer/x3d/x3drenderer.cpp
+        w3d/renderer/x3d/x3dshaders.cpp
         w3d/renderer/x3d/x3dvertexbuffer.cpp
     )
 endif()

@@ -142,6 +142,12 @@ int X3D::Set_Resolution(int resx, int resy, int bits, int windowed, bool resize_
     return X3D::X3D_ERR_OK;
 }
 
+X3D::X3DShader *X3D::Create_Shader()
+{
+    assert(s_context != nullptr);
+    return s_context->Create_Shader();
+}
+
 X3D::X3DVertexBuffer *X3D::Create_Vertex_Buffer(size_t size)
 {
     assert(s_context != nullptr);

@@ -655,8 +655,8 @@ void X3DRigidFVFCategoryContainer::Render()
     if (Anything_To_Render()) {
         m_anythingToRender = false;
         m_shader->Bind();
-        X3D::Bind_Vertex_Buffer(static_cast<X3DVertexBufferClass *>(m_vertexBuffer)->Get_X3D_Vertex_Buffer());
-        X3D::Bind_Index_Buffer(static_cast<X3DIndexBufferClass *>(m_indexBuffer)->Get_X3D_Index_Buffer());
+        static_cast<X3DVertexBufferClass *>(m_vertexBuffer)->Get_X3D_Vertex_Buffer()->Bind();
+        static_cast<X3DIndexBufferClass *>(m_indexBuffer)->Get_X3D_Index_Buffer()->Bind();
 
         for (unsigned int i = 0; i < m_passes; i++) {
             for (TextureCategoryClass *t = m_visibleTextureCategoryList[i].Remove_Head(); t != nullptr;

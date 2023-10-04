@@ -168,18 +168,6 @@ X3D::X3DVertexLayout *X3D::Create_Vertex_Layout(X3DLayoutDescription* descr)
     return s_context->Create_Vertex_Layout(descr);
 }
 
-void X3D::Bind_Vertex_Buffer(X3DVertexBuffer *buffer)
-{
-    assert(s_context != nullptr);
-    return s_context->Bind_Vertex_Buffer(buffer);
-}
-
-void X3D::Bind_Index_Buffer(X3DIndexBuffer *buffer)
-{
-    assert(s_context != nullptr);
-    return s_context->Bind_Index_Buffer(buffer);
-}
-
 int X3D::Draw_Indexed(X3DPrimitive type, int start, int count, int baseVertex)
 {
     assert(s_context != nullptr);

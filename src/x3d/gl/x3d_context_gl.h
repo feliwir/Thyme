@@ -22,9 +22,6 @@ class X3DContextGL : public X3DContext
 
     X3DVertexLayout *Create_Vertex_Layout(X3DLayoutDescription *descr) override;
 
-    void Bind_Vertex_Buffer(X3DVertexBuffer *buffer) override;
-    void Bind_Index_Buffer(X3DIndexBuffer *buffer) override;
-
     int Draw_Indexed(X3DPrimitive type, int start, int count, int baseVertex = 0) override;
 
 private:

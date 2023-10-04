@@ -124,29 +124,17 @@ X3D::X3DShader *X3D::X3DContextGL::Create_Shader()
 
 X3D::X3DVertexBuffer *X3D::X3DContextGL::Create_Vertex_Buffer(size_t size)
 {
-    return new X3DVertexBufferGL(size);
+    return new X3DVertexBufferGL(this, size);
 }
 
 X3D::X3DIndexBuffer *X3D::X3DContextGL::Create_Index_Buffer(size_t size)
 {
-    return new X3DIndexBufferGL(size);
+    return new X3DIndexBufferGL(this, size);
 }
 
 X3D::X3DVertexLayout *X3D::X3DContextGL::Create_Vertex_Layout(X3DLayoutDescription *descr)
 {
     return new X3DVertexLayoutGL(descr);
-}
-
-void X3D::X3DContextGL::Bind_Vertex_Buffer(X3DVertexBuffer *buffer)
-{
-    X3DContext::Bind_Vertex_Buffer(buffer);
-    static_cast<X3DVertexBufferGL *>(buffer)->Bind();
-}
-
-void X3D::X3DContextGL::Bind_Index_Buffer(X3DIndexBuffer *buffer)
-{
-    X3DContext::Bind_Index_Buffer(buffer);
-    static_cast<X3DIndexBufferGL *>(buffer)->Bind();
 }
 
 static GLenum GetPrimitiveTypeGL(X3D::X3DPrimitive type)

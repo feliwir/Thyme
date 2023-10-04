@@ -1,6 +1,8 @@
 #include "x3d_buffer_gl.h"
+#include "x3d_context_gl.h"
 
-X3D::X3DVertexBufferGL::X3DVertexBufferGL(size_t size) : X3DVertexBuffer(size), X3DBufferGL(GL_ARRAY_BUFFER)
+X3D::X3DVertexBufferGL::X3DVertexBufferGL(X3DContextGL *ctx, size_t size) :
+    X3DVertexBuffer(size), X3DBufferGL(GL_ARRAY_BUFFER), m_context(ctx)
 {
     Bind();
     glBufferData(m_target, size, 0, GL_STATIC_DRAW);
@@ -18,7 +20,14 @@ void X3D::X3DVertexBufferGL::Unlock()
     glUnmapBuffer(GL_ARRAY_BUFFER);
 }
 
-X3D::X3DIndexBufferGL::X3DIndexBufferGL(size_t size) : X3DIndexBuffer(size), X3DBufferGL(GL_ELEMENT_ARRAY_BUFFER)
+void X3D::X3DVertexBufferGL::Bind()
+{
+    m_context->Bind_Vertex_Buffer(this);
+    glBindBuffer(m_target, m_handle);
+}
+
+X3D::X3DIndexBufferGL::X3DIndexBufferGL(X3DContextGL *ctx, size_t size) :
+    X3DIndexBuffer(size), X3DBufferGL(GL_ELEMENT_ARRAY_BUFFER), m_context(ctx)
 {
     Bind();
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, 0, GL_STATIC_DRAW);
@@ -35,4 +44,10 @@ void X3D::X3DIndexBufferGL::Unlock()
 {
     Bind();
     glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
+}
+
+void X3D::X3DIndexBufferGL::Bind()
+{
+    m_context->Bind_Index_Buffer(this);
+    glBindBuffer(m_target, m_handle);
 }

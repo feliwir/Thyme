@@ -184,20 +184,6 @@ X3D::X3DIndexBuffer *X3D::X3DContextD3D9::Create_Index_Buffer(size_t size)
     return new X3DIndexBufferD3D9(m_device, size);
 }
 
-void X3D::X3DContextD3D9::Bind_Vertex_Buffer(X3DVertexBuffer *buffer)
-{
-    assert(m_device != nullptr);
-    X3DContext::Bind_Vertex_Buffer(buffer);
-    m_device->SetStreamSource(0, static_cast<X3DVertexBufferD3D9 *>(buffer)->m_buffer, 0, m_vertexSize);
-}
-
-void X3D::X3DContextD3D9::Bind_Index_Buffer(X3DIndexBuffer *buffer)
-{
-    assert(m_device != nullptr);
-    X3DContext::Bind_Index_Buffer(buffer);
-    m_device->SetIndices(static_cast<X3DIndexBufferD3D9 *>(buffer)->m_buffer);
-}
-
 int X3D::X3DContextD3D9::Draw_Indexed(X3DPrimitive type, int start, int count, int baseVertex)
 {
     assert(m_device != nullptr);

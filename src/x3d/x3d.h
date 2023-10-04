@@ -110,9 +110,6 @@ X3DIndexBuffer *Create_Index_Buffer(size_t size);
 
 X3DVertexLayout *Create_Vertex_Layout(X3DLayoutDescription *descr);
 
-void Bind_Vertex_Buffer(X3DVertexBuffer *);
-void Bind_Index_Buffer(X3DIndexBuffer *);
-
 int Draw_Indexed(X3DPrimitive type, int start, int count, int baseVertex = 0);
 
 } // namespace X3D

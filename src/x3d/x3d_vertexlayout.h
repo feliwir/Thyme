@@ -30,9 +30,43 @@ constexpr X3DLayoutDescription LayoutEnd{ -1, 0, X3D_LT_INVALID, X3D_LU_CUSTOM }
 class X3DVertexLayout
 {
 public:
-    X3DVertexLayout(X3DLayoutDescription *descr) : m_descr(descr) {}
+    X3DVertexLayout() : m_descr(nullptr) {}
+
+    virtual void Bind() = 0;
+    virtual int Build(X3DLayoutDescription *descr) = 0;
 
 protected:
+    static size_t Get_Vertex_Size(X3DLayoutDescription *descr)
+    {
+        size_t size = 0;
+        while ((*descr).type != X3D_LT_INVALID) {
+            switch (descr->type) {
+                case X3D_LT_VEC3:
+                    size += 3 * sizeof(float);
+                    break;
+                case X3D_LT_VEC4:
+                    size += 4 * sizeof(float);
+                    break;
+                default:
+                    break;
+            }
+            descr++;
+        }
+        return size;
+    }
+
+    static size_t Get_Component_Count(X3DLayoutDescription *descr)
+    {
+        switch (descr->type) {
+            case X3D_LT_VEC3:
+                return 3;
+            case X3D_LT_VEC4:
+                return 4;
+            default:
+                return 1;
+        }
+    }
+
     X3DLayoutDescription *m_descr = nullptr;
 };
 

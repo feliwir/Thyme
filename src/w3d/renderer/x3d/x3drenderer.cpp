@@ -445,15 +445,7 @@ X3DFVFCategoryContainer::X3DFVFCategoryContainer(unsigned int FVF, bool sorting)
     m_shader->Build_VS_From_HLSL(X3D_VS_XYZ_SHADER);
     m_shader->Build_PS_From_HLSL(X3D_PS_XYZ_SHADER);
     m_shader->Link();
-
-    // clang-format off
-    X3D::X3DLayoutDescription descr[] = {
-        {0, 0, X3D::X3D_LT_VEC3, X3D::X3D_LU_POSITION},
-        X3D::LayoutEnd
-    };
-    // clang-format on
-
-    m_layout = X3D::Create_Vertex_Layout(descr);
+    m_layout = X3D::Create_Vertex_Layout();
 }
 
 X3DFVFCategoryContainer::~X3DFVFCategoryContainer() {}
@@ -655,7 +647,17 @@ void X3DRigidFVFCategoryContainer::Render()
     if (Anything_To_Render()) {
         m_anythingToRender = false;
         m_shader->Bind();
+        m_layout->Bind();
         static_cast<X3DVertexBufferClass *>(m_vertexBuffer)->Get_X3D_Vertex_Buffer()->Bind();
+        // clang-format off
+        X3D::X3DLayoutDescription descr[] = {
+            {0,  0, X3D::X3D_LT_VEC3, X3D::X3D_LU_POSITION},
+            {0, 12, X3D::X3D_LT_VEC3, X3D::X3D_LU_NORMAL},
+            X3D::LayoutEnd
+        };
+        // clang-format on
+
+        m_layout->Build(descr);
         static_cast<X3DIndexBufferClass *>(m_indexBuffer)->Get_X3D_Index_Buffer()->Bind();
 
         for (unsigned int i = 0; i < m_passes; i++) {

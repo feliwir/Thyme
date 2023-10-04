@@ -20,7 +20,7 @@ class X3DContextGL : public X3DContext
     X3DVertexBuffer *Create_Vertex_Buffer(size_t size) override;
     X3DIndexBuffer *Create_Index_Buffer(size_t size) override;
 
-    X3DVertexLayout *Create_Vertex_Layout(X3DLayoutDescription *descr) override;
+    X3DVertexLayout *Create_Vertex_Layout() override;
 
     int Draw_Indexed(X3DPrimitive type, int start, int count, int baseVertex = 0) override;
 

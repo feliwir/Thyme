@@ -162,10 +162,10 @@ X3D::X3DIndexBuffer *X3D::Create_Index_Buffer(size_t size)
     return s_context->Create_Index_Buffer(size);
 }
 
-X3D::X3DVertexLayout *X3D::Create_Vertex_Layout(X3DLayoutDescription* descr)
+X3D::X3DVertexLayout *X3D::Create_Vertex_Layout()
 {
     assert(s_context != nullptr);
-    return s_context->Create_Vertex_Layout(descr);
+    return s_context->Create_Vertex_Layout();
 }
 
 int X3D::Draw_Indexed(X3DPrimitive type, int start, int count, int baseVertex)

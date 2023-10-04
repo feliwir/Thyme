@@ -54,7 +54,7 @@ public:
     virtual X3DVertexBuffer *Create_Vertex_Buffer(size_t size) = 0;
     virtual X3DIndexBuffer *Create_Index_Buffer(size_t size) = 0;
 
-    virtual X3DVertexLayout *Create_Vertex_Layout(X3DLayoutDescription *descr) = 0;
+    virtual X3DVertexLayout *Create_Vertex_Layout() = 0;
 
     void Bind_Vertex_Buffer(X3DVertexBuffer *vb) { m_vb = vb; }
     void Bind_Index_Buffer(X3DIndexBuffer *ib) { m_ib = ib; }

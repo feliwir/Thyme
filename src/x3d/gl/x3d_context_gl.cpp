@@ -132,9 +132,9 @@ X3D::X3DIndexBuffer *X3D::X3DContextGL::Create_Index_Buffer(size_t size)
     return new X3DIndexBufferGL(this, size);
 }
 
-X3D::X3DVertexLayout *X3D::X3DContextGL::Create_Vertex_Layout(X3DLayoutDescription *descr)
+X3D::X3DVertexLayout *X3D::X3DContextGL::Create_Vertex_Layout()
 {
-    return new X3DVertexLayoutGL(descr);
+    return new X3DVertexLayoutGL();
 }
 
 static GLenum GetPrimitiveTypeGL(X3D::X3DPrimitive type)

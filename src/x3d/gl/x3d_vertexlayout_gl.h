@@ -8,12 +8,10 @@ namespace X3D
 class X3DVertexLayoutGL : public X3DVertexLayout
 {
 public:
-    X3DVertexLayoutGL(X3DLayoutDescription *descr) : X3DVertexLayout(descr) 
-    { 
-      glGenVertexArrays(1, &m_vao);
-      glBindVertexArray(m_vao);
+    X3DVertexLayoutGL() { glGenVertexArrays(1, &m_vao); }
 
-    }
+    void Bind() override { glBindVertexArray(m_vao); }
+    int Build(X3DLayoutDescription *descr) override;
 
     ~X3DVertexLayoutGL() { glDeleteVertexArrays(1, &m_vao); }
 

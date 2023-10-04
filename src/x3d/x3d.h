@@ -108,7 +108,7 @@ X3DShader *Create_Shader();
 X3DVertexBuffer *Create_Vertex_Buffer(size_t size);
 X3DIndexBuffer *Create_Index_Buffer(size_t size);
 
-X3DVertexLayout *Create_Vertex_Layout(X3DLayoutDescription *descr);
+X3DVertexLayout *Create_Vertex_Layout();
 
 int Draw_Indexed(X3DPrimitive type, int start, int count, int baseVertex = 0);
 

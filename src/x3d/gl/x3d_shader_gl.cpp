@@ -4,11 +4,6 @@
 #include <hlsl2glsl.h>
 #include <iostream>
 
-namespace X3D
-{
-extern std::function<void(X3DMessageSeverity, const char *)> s_msgCallback;
-}
-
 int X3D::X3DShaderGL::Compile_Shader(GLenum type, const char *glsl_src, GLuint &result)
 {
     GLuint shader = glCreateShader(type);
@@ -28,9 +23,12 @@ int X3D::X3DShaderGL::Compile_Shader(GLenum type, const char *glsl_src, GLuint &
 
     std::vector<GLchar> errorLog(maxLength);
     glGetShaderInfoLog(shader, maxLength, &maxLength, errorLog.data());
-    if (s_msgCallback)
-        s_msgCallback(X3D_MSG_SEVERITY_ERROR, errorLog.data());
-
+    glDebugMessageInsertARB(GL_DEBUG_SOURCE_SHADER_COMPILER_ARB,
+        GL_DEBUG_TYPE_ERROR_ARB,
+        0,
+        GL_DEBUG_SEVERITY_HIGH_ARB,
+        errorLog.size(),
+        errorLog.data());
     glDeleteShader(shader);
 
     return X3D_ERR_FAILED_SHADER_COMPILE;
@@ -44,16 +42,20 @@ int X3D::X3DShaderGL::Build_VS_From_DXBC(uint8_t *bc, size_t bc_size)
 int X3D::X3DShaderGL::Build_VS_From_HLSL(const char *src)
 {
     ShHandle compiler = Hlsl2Glsl_ConstructCompiler(EShLangVertex);
-    int success = Hlsl2Glsl_Parse(compiler, src, ETargetGLSL_110, nullptr, 0);
+    int success = Hlsl2Glsl_Parse(compiler, src, ETargetGLSL_120, nullptr, 0);
     if (success != 1) {
         const char *infoLog = Hlsl2Glsl_GetInfoLog(compiler);
-        if (s_msgCallback)
-            s_msgCallback(X3D_MSG_SEVERITY_ERROR, infoLog);
+        glDebugMessageInsertARB(GL_DEBUG_SOURCE_SHADER_COMPILER_ARB,
+            GL_DEBUG_TYPE_ERROR_ARB,
+            0,
+            GL_DEBUG_SEVERITY_HIGH_ARB,
+            strlen(infoLog),
+            infoLog);
 
         return X3D_ERR_FAILED_SHADER_TRANSPILE;
     }
 
-    success = Hlsl2Glsl_Translate(compiler, "vs_main", ETargetGLSL_110, 0);
+    success = Hlsl2Glsl_Translate(compiler, "vs_main", ETargetGLSL_120, 0);
     if (success != 1) {
         return X3D_ERR_FAILED_SHADER_TRANSPILE;
     }
@@ -76,8 +78,12 @@ int X3D::X3DShaderGL::Build_PS_From_HLSL(const char *src)
     int success = Hlsl2Glsl_Parse(compiler, src, ETargetGLSL_110, nullptr, 0);
     if (success != 1) {
         const char *infoLog = Hlsl2Glsl_GetInfoLog(compiler);
-        if (s_msgCallback)
-            s_msgCallback(X3D_MSG_SEVERITY_ERROR, infoLog);
+        glDebugMessageInsertARB(GL_DEBUG_SOURCE_SHADER_COMPILER_ARB,
+            GL_DEBUG_TYPE_ERROR_ARB,
+            0,
+            GL_DEBUG_SEVERITY_HIGH_ARB,
+            strlen(infoLog),
+            infoLog);
 
         return X3D_ERR_FAILED_SHADER_TRANSPILE;
     }
@@ -121,8 +127,12 @@ int X3D::X3DShaderGL::Link()
 
     std::vector<GLchar> infoLog(maxLength);
     glGetProgramInfoLog(program, maxLength, &maxLength, &infoLog[0]);
-    if (s_msgCallback)
-        s_msgCallback(X3D_MSG_SEVERITY_ERROR, infoLog.data());
+    glDebugMessageInsertARB(GL_DEBUG_SOURCE_SHADER_COMPILER_ARB,
+        GL_DEBUG_TYPE_ERROR_ARB,
+        0,
+        GL_DEBUG_SEVERITY_HIGH_ARB,
+        infoLog.size(),
+        infoLog.data());
 
     glDeleteProgram(program);
 

@@ -41,6 +41,7 @@ class X3DFVFCategoryContainer;
 
 class X3DMeshRendererClass
 {
+    friend class X3DRigidFVFCategoryContainer;
 public:
     X3DMeshRendererClass();
     ~X3DMeshRendererClass();
@@ -94,6 +95,7 @@ public:
         return new X3DPolygonRendererClass(index_count, mmc, this, vertex_offset, index_offset, strip, pass);
     }
     void Render() override;
+    X3D::X3DShader* Get_X3D_Shader();
 };
 
 class X3DFVFCategoryContainer : public FVFCategoryContainer
@@ -110,6 +112,8 @@ public:
     void Generate_Texture_Categories(Vertex_Split_Table &split_table, unsigned int vertex_offset) override;
 
     static unsigned int Define_FVF(MeshModelClass *mmc, bool enable_lighting);
+    X3D::X3DShader *Get_X3D_Shader() const { return m_shader; }
+
 protected:
     X3D::X3DVertexLayout *m_layout = nullptr;
     X3D::X3DShader *m_shader = nullptr;

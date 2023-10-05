@@ -381,6 +381,8 @@ public:
     Vector4 Row[4];
 };
 
+static_assert(sizeof(Matrix4) == sizeof(float) * 16, "Matrix4 is not continous in memory");
+
 __forceinline Matrix4 operator-(const Matrix4 &a)
 {
     return Matrix4(-a.Row[0], -a.Row[1], -a.Row[2], -a.Row[3]);

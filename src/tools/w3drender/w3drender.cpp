@@ -68,6 +68,13 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
+    // Set the camera params
+    Matrix3D tm(true);
+    Vector3 center(0.0f, 0.0f, 0.0f);
+    Vector3 cam_pos(-10.0f, 0.0f, 0.0f);
+    tm.Look_At(cam_pos, center, 0.0f);
+    camera->Set_Transform(tm);
+
     RenderObjClass *robj = asset_mgr->Create_Render_Obj("cube");
     scene->Add_Render_Object(robj);
 

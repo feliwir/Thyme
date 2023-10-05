@@ -501,6 +501,19 @@ W3DErrorType W3D::Render(RenderObjClass &obj, RenderInfoClass &rinfo)
     obj.Render(rinfo);
     Flush(rinfo);
 #endif
+#ifdef BUILD_WITH_X3D
+    if (s_isInited) {
+        return W3D_ERROR_OK;
+    }
+
+    rinfo.m_camera.On_Frame_Update();
+    rinfo.m_camera.Apply();
+
+    g_theX3DMeshRenderer.Set_Camera(&rinfo.m_camera);
+    obj.Render(rinfo);
+    Flush(rinfo);
+#endif
+
     return W3D_ERROR_OK;
 }
 

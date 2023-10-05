@@ -12,17 +12,20 @@ X3D::X3DVertexBufferGL::X3DVertexBufferGL(X3DContextGL *ctx, size_t size) :
 void *X3D::X3DVertexBufferGL::Lock(X3DLockUsage usage, size_t offset, size_t size)
 {
     Bind();
-    return glMapBufferRange(GL_ARRAY_BUFFER, offset, size, usage == X3D_LOCK_READ ? GL_MAP_READ_BIT : GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT);
+    return glMapBufferRange(GL_ARRAY_BUFFER,
+        offset,
+        size,
+        usage == X3D_LOCK_READ ? GL_MAP_READ_BIT : GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT);
 }
 
 void X3D::X3DVertexBufferGL::Unlock()
 {
-    Bind();
     if (glUnmapBuffer(GL_ARRAY_BUFFER) == GL_FALSE) {
         const GLchar *msg = "Failed to unmap array buffer";
         glDebugMessageInsertARB(
             GL_DEBUG_SOURCE_APPLICATION_ARB, GL_DEBUG_TYPE_ERROR_ARB, 0, GL_DEBUG_SEVERITY_HIGH_ARB, strlen(msg), msg);
     }
+    glFlush();
 }
 
 void X3D::X3DVertexBufferGL::Bind()
@@ -47,7 +50,6 @@ void *X3D::X3DIndexBufferGL::Lock(X3DLockUsage usage, size_t offset, size_t size
 
 void X3D::X3DIndexBufferGL::Unlock()
 {
-    Bind();
     if (glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER) == GL_FALSE) {
         const GLchar *msg = "Failed to unmap element array buffer";
         glDebugMessageInsertARB(

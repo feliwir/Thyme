@@ -15,6 +15,8 @@ public:
 
     virtual int Link() = 0;
     virtual int Bind() = 0;
+
+    virtual int Set_Matrix4x4(const char *name, const float *data) = 0;
 };
 
 } // namespace X3D

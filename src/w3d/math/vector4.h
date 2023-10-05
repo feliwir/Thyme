@@ -171,6 +171,8 @@ public:
     float W;
 };
 
+static_assert(sizeof(Vector4) == sizeof(float) * 4, "Vector4 is not continous in memory");
+
 __forceinline Vector4 operator+(const Vector4 &a, const Vector4 &b)
 {
     return Vector4(a[0] + b[0], a[1] + b[1], a[2] + b[2], a[3] + b[3]);

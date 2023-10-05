@@ -239,6 +239,11 @@ X3DTextureCategoryClass::X3DTextureCategoryClass(
 
 X3DTextureCategoryClass::~X3DTextureCategoryClass() {}
 
+X3D::X3DShader *X3DTextureCategoryClass::Get_X3D_Shader()
+{
+    return static_cast<X3DFVFCategoryContainer *>(m_container)->Get_X3D_Shader();
+}
+
 void X3DTextureCategoryClass::Render()
 {
     for (int i = 0; i < 2; i++) {
@@ -310,13 +315,10 @@ void X3DTextureCategoryClass::Render()
             }
 
             if (identity) {
-#ifdef BUILD_WITH_D3D8
-                DX8Wrapper::Set_World_Identity();
-#endif
+                Get_X3D_Shader()->Set_Matrix4x4("world", &Matrix4::IDENTITY[0].X);
             } else {
-#ifdef BUILD_WITH_D3D8
-                DX8Wrapper::Set_Transform(D3DTS_WORLD, tm);
-#endif
+                Matrix4 tm4x4(tm);
+                Get_X3D_Shader()->Set_Matrix4x4("world", &tm4x4[0].X);
             }
 
             if (mesh->Get_ObjectScale() != 1.0f) {
@@ -442,8 +444,8 @@ X3DFVFCategoryContainer::X3DFVFCategoryContainer(unsigned int FVF, bool sorting)
     }
 
     m_shader = X3D::Create_Shader();
-    m_shader->Build_VS_From_HLSL(X3D_VS_XYZ_SHADER);
-    m_shader->Build_PS_From_HLSL(X3D_PS_XYZ_SHADER);
+    m_shader->Build_VS_From_HLSL(X3D_VS_XYZ_NORM_SHADER);
+    m_shader->Build_PS_From_HLSL(X3D_PS_XYZ_NORM_SHADER);
     m_shader->Link();
     m_layout = X3D::Create_Vertex_Layout();
 }
@@ -647,7 +649,10 @@ void X3DRigidFVFCategoryContainer::Render()
     if (Anything_To_Render()) {
         m_anythingToRender = false;
         m_shader->Bind();
-        m_layout->Bind();
+        Matrix4 view(g_theX3DMeshRenderer.m_camera->Get_View_Matrix());
+        m_shader->Set_Matrix4x4("view", &view[0].X);
+        Matrix4 proj(g_theX3DMeshRenderer.m_camera->Get_Projection_Matrix());
+        m_shader->Set_Matrix4x4("proj", &proj[0].X);
         static_cast<X3DVertexBufferClass *>(m_vertexBuffer)->Get_X3D_Vertex_Buffer()->Bind();
         // clang-format off
         X3D::X3DLayoutDescription descr[] = {

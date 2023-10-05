@@ -52,10 +52,15 @@ int X3D::X3DShaderGL::Build_VS_From_HLSL(const char *src)
     std::ostringstream output_stream;
     Xsc::ShaderOutput output_desc;
     output_desc.sourceCode = &output_stream;
+    output_desc.options.explicitBinding = true;
+    output_desc.vertexSemantics.emplace_back(Xsc::VertexSemantic{ "POSITION0", 0 });
+    output_desc.vertexSemantics.emplace_back(Xsc::VertexSemantic{ "NORMAL0", 1 });
+    output_desc.options.writeGeneratorHeader = false;
 
     bool result = false;
+    Xsc::StdLog log;
     try {
-        result = Xsc::CompileShader(input_desc, output_desc, NULL, NULL);
+        result = Xsc::CompileShader(input_desc, output_desc, &log, NULL);
     } catch (const std::exception &e) {
         glDebugMessageInsertARB(GL_DEBUG_SOURCE_SHADER_COMPILER_ARB,
             GL_DEBUG_TYPE_ERROR_ARB,
@@ -66,6 +71,7 @@ int X3D::X3DShaderGL::Build_VS_From_HLSL(const char *src)
     }
 
     if (!result) {
+        log.PrintAll(true);
         return X3D_ERR_FAILED_SHADER_TRANSPILE;
     }
 
@@ -90,7 +96,8 @@ int X3D::X3DShaderGL::Build_PS_From_HLSL(const char *src)
     std::ostringstream output_stream;
     Xsc::ShaderOutput output_desc;
     output_desc.sourceCode = &output_stream;
-
+    output_desc.options.explicitBinding = true;
+    output_desc.options.writeGeneratorHeader = false;
     bool result = false;
     try {
         result = Xsc::CompileShader(input_desc, output_desc, NULL, NULL);
@@ -156,5 +163,18 @@ int X3D::X3DShaderGL::Bind()
     }
 
     glUseProgram(m_program);
+    return X3D_ERR_OK;
+}
+
+int X3D::X3DShaderGL::Set_Matrix4x4(const char *name, const float *matrix)
+{
+    if (m_program == 0) {
+        return X3D_ERR_SHADER_NOT_LINKED;
+    }
+    GLint location = glGetUniformLocation(m_program, name);
+    if (location == -1) {
+        return X3D_ERR_UNIFORM_NOT_FOUND;
+    }
+    glUniformMatrix4fv(location, 1, GL_FALSE, matrix);
     return X3D_ERR_OK;
 }

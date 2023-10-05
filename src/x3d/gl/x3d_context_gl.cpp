@@ -5,7 +5,6 @@
 #include "x3d_vertexlayout_gl.h"
 
 #include <flextGL.h>
-#include <hlsl2glsl.h>
 
 #include <cassert>
 
@@ -49,9 +48,6 @@ int X3D::X3DContextGL::Init()
         // TODO: we could pass our function here
         glDebugMessageCallbackARB(glDebugMessageCallback, nullptr);
     }
-
-    // Setup Hlsl2Glsl
-    Hlsl2Glsl_Initialize();
 
     return result;
 }

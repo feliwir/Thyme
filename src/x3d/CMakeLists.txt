@@ -17,16 +17,19 @@ if(X3D_ENABLE_OPENGL)
         target_link_libraries(x3d PRIVATE OpenGL::GL)
     endif()
 
-    # We need HLSL2GLSL
+    set(XSC_BUILD_SHELL OFF CACHE INTERNAL "Turn off shell")
+    # We need XShaderCompiler
     FetchContent_Declare(
-        hlsl2glsl
-        GIT_REPOSITORY https://github.com/feliwir/hlsl2glslfork.git
-        GIT_TAG        acaf94c6324ed7279df6aa5b7bda246da8a779d6
+        xsc
+        GIT_REPOSITORY https://github.com/LukasBanana/XShaderCompiler.git
+        GIT_TAG        c1d5018f80beaaf7eca8f6b1ab6952b3f2841be5
     )
-    FetchContent_MakeAvailable(hlsl2glsl)
+    FetchContent_MakeAvailable(xsc)
+
+    target_include_directories(x3d PRIVATE ${xsc_SOURCE_DIR}/inc)
 
     # We added this subdirectory in the toplevel CMakeLists.txt
-    target_link_libraries(x3d PRIVATE flextGL hlsl2glsl)
+    target_link_libraries(x3d PRIVATE flextGL xsc_core)
 endif()
 
 if(X3D_ENABLE_D3D9 AND WIN32)

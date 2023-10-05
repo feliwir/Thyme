@@ -1,8 +1,8 @@
 #include "x3d_shader_gl.h"
 #include "x3d.h"
+#include <Xsc/Xsc.h>
 #include <cstring>
-#include <hlsl2glsl.h>
-#include <iostream>
+#include <sstream>
 
 int X3D::X3DShaderGL::Compile_Shader(GLenum type, const char *glsl_src, GLuint &result)
 {
@@ -41,30 +41,35 @@ int X3D::X3DShaderGL::Build_VS_From_DXBC(uint8_t *bc, size_t bc_size)
 
 int X3D::X3DShaderGL::Build_VS_From_HLSL(const char *src)
 {
-    ShHandle compiler = Hlsl2Glsl_ConstructCompiler(EShLangVertex);
-    int success = Hlsl2Glsl_Parse(compiler, src, ETargetGLSL_120, nullptr, 0);
-    if (success != 1) {
-        const char *infoLog = Hlsl2Glsl_GetInfoLog(compiler);
+    auto input_stream = std::make_shared<std::istringstream>(src);
+
+    Xsc::ShaderInput input_desc;
+    input_desc.sourceCode = input_stream;
+    input_desc.entryPoint = "vs_main";
+    input_desc.shaderVersion = Xsc::InputShaderVersion::HLSL3;
+    input_desc.shaderTarget = Xsc::ShaderTarget::VertexShader;
+
+    std::ostringstream output_stream;
+    Xsc::ShaderOutput output_desc;
+    output_desc.sourceCode = &output_stream;
+
+    bool result = false;
+    try {
+        result = Xsc::CompileShader(input_desc, output_desc, NULL, NULL);
+    } catch (const std::exception &e) {
         glDebugMessageInsertARB(GL_DEBUG_SOURCE_SHADER_COMPILER_ARB,
             GL_DEBUG_TYPE_ERROR_ARB,
             0,
             GL_DEBUG_SEVERITY_HIGH_ARB,
-            strlen(infoLog),
-            infoLog);
+            strlen(e.what()),
+            e.what());
+    }
 
+    if (!result) {
         return X3D_ERR_FAILED_SHADER_TRANSPILE;
     }
 
-    success = Hlsl2Glsl_Translate(compiler, "vs_main", ETargetGLSL_120, 0);
-    if (success != 1) {
-        return X3D_ERR_FAILED_SHADER_TRANSPILE;
-    }
-
-    const char *glsl_src = Hlsl2Glsl_GetShader(compiler);
-    int result = Compile_Shader(GL_VERTEX_SHADER, glsl_src, m_vertex);
-    Hlsl2Glsl_DestructCompiler(compiler);
-
-    return result;
+    return Compile_Shader(GL_VERTEX_SHADER, output_stream.str().c_str(), m_vertex);
 }
 
 int X3D::X3DShaderGL::Build_PS_From_DXBC(uint8_t *bc, size_t bc_size)
@@ -74,30 +79,35 @@ int X3D::X3DShaderGL::Build_PS_From_DXBC(uint8_t *bc, size_t bc_size)
 
 int X3D::X3DShaderGL::Build_PS_From_HLSL(const char *src)
 {
-    ShHandle compiler = Hlsl2Glsl_ConstructCompiler(EShLangFragment);
-    int success = Hlsl2Glsl_Parse(compiler, src, ETargetGLSL_110, nullptr, 0);
-    if (success != 1) {
-        const char *infoLog = Hlsl2Glsl_GetInfoLog(compiler);
+    auto input_stream = std::make_shared<std::istringstream>(src);
+
+    Xsc::ShaderInput input_desc;
+    input_desc.sourceCode = input_stream;
+    input_desc.entryPoint = "ps_main";
+    input_desc.shaderVersion = Xsc::InputShaderVersion::HLSL3;
+    input_desc.shaderTarget = Xsc::ShaderTarget::FragmentShader;
+
+    std::ostringstream output_stream;
+    Xsc::ShaderOutput output_desc;
+    output_desc.sourceCode = &output_stream;
+
+    bool result = false;
+    try {
+        result = Xsc::CompileShader(input_desc, output_desc, NULL, NULL);
+    } catch (const std::exception &e) {
         glDebugMessageInsertARB(GL_DEBUG_SOURCE_SHADER_COMPILER_ARB,
             GL_DEBUG_TYPE_ERROR_ARB,
             0,
             GL_DEBUG_SEVERITY_HIGH_ARB,
-            strlen(infoLog),
-            infoLog);
+            strlen(e.what()),
+            e.what());
+    }
 
+    if (!result) {
         return X3D_ERR_FAILED_SHADER_TRANSPILE;
     }
 
-    success = Hlsl2Glsl_Translate(compiler, "ps_main", ETargetGLSL_110, 0);
-    if (success != 1) {
-        return X3D_ERR_FAILED_SHADER_TRANSPILE;
-    }
-
-    const char *glsl_src = Hlsl2Glsl_GetShader(compiler);
-    int result = Compile_Shader(GL_FRAGMENT_SHADER, glsl_src, m_pixel);
-    Hlsl2Glsl_DestructCompiler(compiler);
-
-    return result;
+    return Compile_Shader(GL_FRAGMENT_SHADER, output_stream.str().c_str(), m_pixel);
 }
 
 int X3D::X3DShaderGL::Link()

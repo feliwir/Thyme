@@ -19,7 +19,7 @@ VS_OUTPUT vs_main(VS_INPUT v)
 {
     VS_OUTPUT o;
 
-    float4 wp = mul(v.vPosition, world);
+    float4 wp = mul(float4(v.vPosition, 1), world);
     o.vPosition = mul(mul(wp, view), proj);
 
     return o;
@@ -60,7 +60,7 @@ VS_OUTPUT vs_main(VS_INPUT v)
 {
     VS_OUTPUT o;
 
-    float4 wp = mul(v.vPosition, world);
+    float4 wp = mul(float4(v.vPosition, 1), world);
     o.vPosition = mul(mul(wp, view), proj);
     o.vNormal = float4(v.vNormal, 0);
 

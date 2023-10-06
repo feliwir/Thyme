@@ -175,6 +175,6 @@ int X3D::X3DShaderGL::Set_Matrix4x4(const char *name, const float *matrix)
     if (location == -1) {
         return X3D_ERR_UNIFORM_NOT_FOUND;
     }
-    glUniformMatrix4fv(location, 1, GL_FALSE, matrix);
+    glUniformMatrix4fv(location, 1, GL_TRUE, matrix);
     return X3D_ERR_OK;
 }

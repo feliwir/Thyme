@@ -27,6 +27,11 @@ constexpr int DEFAULT_HEIGHT = 600;
     if ((S) != W3D_ERROR_OK) \
         return EXIT_FAILURE;
 
+static bool Is_LOD(int id)
+{
+    return id == RenderObjClass::CLASSID_HMODEL || id == RenderObjClass::CLASSID_HLOD;
+}
+
 int main(int argc, char **argv)
 {
     cxxopts::Options options("W3DRender", "A lightweight W3D renderer");
@@ -36,6 +41,7 @@ int main(int argc, char **argv)
     // clang-format off
     options.add_options()
     ("i,input", "input file", cxxopts::value<std::string>())
+    ("t,toplevel", "toplevel only", cxxopts::value<bool>()->default_value("false"))
     ("h,help", "print usage")
     ("v,verbose", "verbose output", cxxopts::value<bool>()->default_value("false"))
     ;
@@ -54,7 +60,7 @@ int main(int argc, char **argv)
     }
 
     captains_settings_t captains_settings = { 0 };
-    captains_settings.level = result.count("verbose") > 0 ? LOGLEVEL_TRACE : LOGLEVEL_DEBUG;
+    captains_settings.level = result["verbose"].as<bool>() ? LOGLEVEL_TRACE : LOGLEVEL_DEBUG;
     captains_settings.console = true;
     captains_settings.print_file = true;
     captainslog_init(&captains_settings);
@@ -71,12 +77,25 @@ int main(int argc, char **argv)
     // Set the camera params
     Matrix3D tm(true);
     Vector3 center(0.0f, 0.0f, 0.0f);
-    Vector3 cam_pos(-10.0f, 0.0f, 0.0f);
+    Vector3 cam_pos(-100.0f, 0.0f, 0.0f);
     tm.Look_At(cam_pos, center, 0.0f);
     camera->Set_Transform(tm);
 
-    RenderObjClass *robj = asset_mgr->Create_Render_Obj("cube");
-    scene->Add_Render_Object(robj);
+    RenderObjIterator *iter = asset_mgr->Create_Render_Obj_Iterator();
+
+    if (iter != nullptr) {
+        for (iter->First(); !iter->Is_Done(); iter->Next()) {
+            const char *name = iter->Current_Item_Name();
+            std::cout << name << std::endl;
+            RenderObjClass *robj = asset_mgr->Create_Render_Obj(name);
+            if (result["toplevel"].as<bool>() && Is_LOD(robj->Class_ID()))
+                scene->Add_Render_Object(robj);
+            else
+                scene->Add_Render_Object(robj);
+        }
+
+        delete iter;
+    }
 
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         std::cerr << "Failed to initialize SDL2" << std::endl;

@@ -19,13 +19,17 @@
 #include "matpass.h"
 #include "mesh.h"
 #include "renderer.h"
+#include "vector.h"
 #include "w3d.h"
+#include "x3d_vertexlayout.h"
 #include "x3dindexbuffer.h"
 #include "x3dpolygonrenderer.h"
 #include "x3dshaders.h"
 #include "x3dvertexbuffer.h"
 
 #include <captainslog.h>
+#include <map>
+#include <vector>
 
 X3DMeshRendererClass g_theX3DMeshRenderer;
 MultiListClass<X3DTextureCategoryClass> g_x3d_textureCategoryDeleteList;
@@ -416,6 +420,18 @@ void X3DTextureCategoryClass::Render()
     }
 }
 
+static std::map<unsigned int, const char *> FVF_VS_MAP = {
+    { X3D_VF_XYZ, X3D_VS_XYZ_SHADER },
+    { X3D_VF_XYZ | X3D_VF_NORMAL, X3D_VS_XYZ_NORM_SHADER },
+    { X3D_VF_XYZ | X3D_VF_NORMAL | X3D_VF_TEX1, X3D_VS_XYZ_NORM_TX1_SHADER },
+};
+
+static std::map<unsigned int, const char *> FVF_PS_MAP = {
+    { X3D_VF_XYZ, X3D_PS_XYZ_SHADER },
+    { X3D_VF_XYZ | X3D_VF_NORMAL, X3D_PS_XYZ_NORM_SHADER },
+    { X3D_VF_XYZ | X3D_VF_NORMAL | X3D_VF_TEX1, X3D_PS_XYZ_NORM_TX1_SHADER },
+};
+
 X3DFVFCategoryContainer::X3DFVFCategoryContainer(unsigned int FVF, bool sorting) : FVFCategoryContainer(FVF, sorting)
 {
     if ((FVF & X3D_VF_TEX1) == X3D_VF_TEX1) {
@@ -443,9 +459,12 @@ X3DFVFCategoryContainer::X3DFVFCategoryContainer(unsigned int FVF, bool sorting)
         m_uvCoordinateChannels = 8;
     }
 
+    captainslog_assert(FVF_VS_MAP.count(FVF) > 0);
+    captainslog_assert(FVF_PS_MAP.count(FVF) > 0);
+
     m_shader = X3D::Create_Shader();
-    m_shader->Build_VS_From_HLSL(X3D_VS_XYZ_NORM_SHADER);
-    m_shader->Build_PS_From_HLSL(X3D_PS_XYZ_NORM_SHADER);
+    m_shader->Build_VS_From_HLSL(FVF_VS_MAP[FVF]);
+    m_shader->Build_PS_From_HLSL(FVF_PS_MAP[FVF]);
     m_shader->Link();
     m_layout = X3D::Create_Vertex_Layout();
 }
@@ -654,15 +673,17 @@ void X3DRigidFVFCategoryContainer::Render()
         Matrix4 proj(g_theX3DMeshRenderer.m_camera->Get_Projection_Matrix());
         m_shader->Set_Matrix4x4("proj", &proj[0].X);
         static_cast<X3DVertexBufferClass *>(m_vertexBuffer)->Get_X3D_Vertex_Buffer()->Bind();
-        // clang-format off
-        X3D::X3DLayoutDescription descr[] = {
-            {0,  0, X3D::X3D_LT_VEC3, X3D::X3D_LU_POSITION},
-            {0, 12, X3D::X3D_LT_VEC3, X3D::X3D_LU_NORMAL},
-            X3D::LayoutEnd
-        };
-        // clang-format on
+        // Build vertex layout
+        FVFInfoClass f = m_vertexBuffer->FVF_Info();
+        std::vector<X3D::X3DLayoutDescription> descr;
+        descr.emplace_back(X3D::X3DLayoutDescription{ 0, f.Get_Location_Offset(), X3D::X3D_LT_VEC3, X3D::X3D_LU_POSITION });
+        if (f.Get_FVF() & X3D_VF_NORMAL)
+            descr.emplace_back(X3D::X3DLayoutDescription{ 0, f.Get_Normal_Offset(), X3D::X3D_LT_VEC3, X3D::X3D_LU_NORMAL });
+        if (f.Get_FVF() & X3D_VF_TEX1)
+            descr.emplace_back(X3D::X3DLayoutDescription{ 0, f.Get_Tex_Offset(0), X3D::X3D_LT_VEC2, X3D::X3D_LU_TEX1 });
+        descr.emplace_back(X3D::LayoutEnd);
+        m_layout->Build(descr.data());
 
-        m_layout->Build(descr);
         static_cast<X3DIndexBufferClass *>(m_indexBuffer)->Get_X3D_Index_Buffer()->Bind();
 
         for (unsigned int i = 0; i < m_passes; i++) {

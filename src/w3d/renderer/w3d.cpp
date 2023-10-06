@@ -164,8 +164,8 @@ const RenderDeviceDescClass &W3D::Get_Render_Device_Desc(int deviceidx)
     if (deviceidx == -1)
         deviceidx = 0;
 
-    static std::vector<RenderDeviceDescClass> devices;
-    if (devices.empty()) {
+    static DynamicVectorClass<RenderDeviceDescClass> devices;
+    if (devices.Count() == 0) {
         for (auto &dev : X3D::Get_Device_List()) {
             RenderDeviceDescClass desc;
             desc.m_deviceName = dev.Name;
@@ -173,7 +173,7 @@ const RenderDeviceDescClass &W3D::Get_Render_Device_Desc(int deviceidx)
             desc.m_driverName = "X3D";
             desc.m_driverVendor = "X3D";
             desc.m_driverVersion = "1.0";
-            devices.push_back(desc);
+            devices.Add(desc);
         }
     }
     return devices[deviceidx];

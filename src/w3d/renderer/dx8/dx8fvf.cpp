@@ -34,7 +34,22 @@ unsigned int Get_FVF_Vertex_Size(unsigned int fvf)
         size += sizeof(uint32_t);
     if (fvf & X3D_VF_SPECULAR)
         size += sizeof(uint32_t);
-    // TODO: ADD OTHERS
+    if (fvf & X3D_VF_TEX1)
+        size += sizeof(float) * 2;
+    if (fvf & X3D_VF_TEX2)
+        size += sizeof(float) * 2;
+    if (fvf & X3D_VF_TEX3)
+        size += sizeof(float) * 2;
+    if (fvf & X3D_VF_TEX4)
+        size += sizeof(float) * 2;
+    if (fvf & X3D_VF_TEX5)
+        size += sizeof(float) * 2;
+    if (fvf & X3D_VF_TEX6)
+        size += sizeof(float) * 2;
+    if (fvf & X3D_VF_TEX7)
+        size += sizeof(float) * 2;
+    if (fvf & X3D_VF_TEX8)
+        size += sizeof(float) * 2;
     return size;
 #endif
 }
@@ -92,11 +107,11 @@ FVFInfoClass::FVFInfoClass(unsigned int fvf_, unsigned int fvf_size_)
         m_normalOffset = sizeof(float) * 3;
     }
 
-    m_diffuseOffset = m_diffuseOffset;
+    m_diffuseOffset = m_normalOffset;
 
-    // normaö vector next
+    // normal vector next
     if (m_FVF & X3D_VF_NORMAL) {
-        m_diffuseOffset += +sizeof(float) * 3;
+        m_diffuseOffset += sizeof(float) * 3;
     }
 
     m_specularOffset = m_diffuseOffset;

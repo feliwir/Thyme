@@ -3,6 +3,7 @@
 #include <Xsc/Xsc.h>
 #include <cstring>
 #include <sstream>
+#include <iostream>
 
 int X3D::X3DShaderGL::Compile_Shader(GLenum type, const char *glsl_src, GLuint &result)
 {
@@ -23,7 +24,7 @@ int X3D::X3DShaderGL::Compile_Shader(GLenum type, const char *glsl_src, GLuint &
 
     std::vector<GLchar> errorLog(maxLength);
     glGetShaderInfoLog(shader, maxLength, &maxLength, errorLog.data());
-    glDebugMessageInsertARB(GL_DEBUG_SOURCE_SHADER_COMPILER_ARB,
+    glDebugMessageInsertARB(GL_DEBUG_SOURCE_APPLICATION_ARB,
         GL_DEBUG_TYPE_ERROR_ARB,
         0,
         GL_DEBUG_SEVERITY_HIGH_ARB,
@@ -55,6 +56,7 @@ int X3D::X3DShaderGL::Build_VS_From_HLSL(const char *src)
     output_desc.options.explicitBinding = true;
     output_desc.vertexSemantics.emplace_back(Xsc::VertexSemantic{ "POSITION0", 0 });
     output_desc.vertexSemantics.emplace_back(Xsc::VertexSemantic{ "NORMAL0", 1 });
+    output_desc.vertexSemantics.emplace_back(Xsc::VertexSemantic{ "TEXCOORD0", 2 });
     output_desc.options.writeGeneratorHeader = false;
 
     bool result = false;
@@ -62,7 +64,7 @@ int X3D::X3DShaderGL::Build_VS_From_HLSL(const char *src)
     try {
         result = Xsc::CompileShader(input_desc, output_desc, &log, NULL);
     } catch (const std::exception &e) {
-        glDebugMessageInsertARB(GL_DEBUG_SOURCE_SHADER_COMPILER_ARB,
+        glDebugMessageInsertARB(GL_DEBUG_SOURCE_APPLICATION_ARB,
             GL_DEBUG_TYPE_ERROR_ARB,
             0,
             GL_DEBUG_SEVERITY_HIGH_ARB,
@@ -99,10 +101,11 @@ int X3D::X3DShaderGL::Build_PS_From_HLSL(const char *src)
     output_desc.options.explicitBinding = true;
     output_desc.options.writeGeneratorHeader = false;
     bool result = false;
+    Xsc::StdLog log;
     try {
-        result = Xsc::CompileShader(input_desc, output_desc, NULL, NULL);
+        result = Xsc::CompileShader(input_desc, output_desc, &log, NULL);
     } catch (const std::exception &e) {
-        glDebugMessageInsertARB(GL_DEBUG_SOURCE_SHADER_COMPILER_ARB,
+        glDebugMessageInsertARB(GL_DEBUG_SOURCE_APPLICATION_ARB,
             GL_DEBUG_TYPE_ERROR_ARB,
             0,
             GL_DEBUG_SEVERITY_HIGH_ARB,
@@ -111,6 +114,7 @@ int X3D::X3DShaderGL::Build_PS_From_HLSL(const char *src)
     }
 
     if (!result) {
+        log.PrintAll(true);
         return X3D_ERR_FAILED_SHADER_TRANSPILE;
     }
 
@@ -144,7 +148,7 @@ int X3D::X3DShaderGL::Link()
 
     std::vector<GLchar> infoLog(maxLength);
     glGetProgramInfoLog(program, maxLength, &maxLength, &infoLog[0]);
-    glDebugMessageInsertARB(GL_DEBUG_SOURCE_SHADER_COMPILER_ARB,
+    glDebugMessageInsertARB(GL_DEBUG_SOURCE_APPLICATION_ARB,
         GL_DEBUG_TYPE_ERROR_ARB,
         0,
         GL_DEBUG_SEVERITY_HIGH_ARB,

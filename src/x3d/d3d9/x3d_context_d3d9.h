@@ -1,6 +1,6 @@
 #pragma once
-#include "x3d_context.h"
 #include "x3d.h"
+#include "x3d_context.h"
 #include <d3d9.h>
 
 namespace X3D
@@ -22,10 +22,15 @@ public:
 
     void Set_Viewport(int x, int y, int w, int h);
 
+    X3DShader *Create_Shader() override;
+
     X3DVertexBuffer *Create_Vertex_Buffer(size_t size) override;
     X3DIndexBuffer *Create_Index_Buffer(size_t size) override;
 
+    X3DVertexLayout *Create_Vertex_Layout() override;
+
     int Draw_Indexed(X3DPrimitive type, int start, int count, int baseVertex) override;
+
 protected:
     int Enumerate_Devices();
 

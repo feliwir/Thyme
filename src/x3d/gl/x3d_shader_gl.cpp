@@ -1,5 +1,7 @@
 #include "x3d_shader_gl.h"
 #include "x3d.h"
+#undef min
+#undef max
 #include <Xsc/Xsc.h>
 #include <cstring>
 #include <sstream>

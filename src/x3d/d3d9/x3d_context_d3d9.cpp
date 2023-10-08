@@ -1,4 +1,6 @@
 #include "x3d_context_d3d9.h"
+#include "x3d_context_d3d9.h"
+#include "x3d_context_d3d9.h"
 #include "x3d.h"
 #include "x3d_buffer_d3d9.h"
 #include <comdef.h>
@@ -172,16 +174,26 @@ void X3D::X3DContextD3D9::Set_Viewport(int x, int y, int w, int h)
     m_device->SetViewport(&vp);
 }
 
+X3D::X3DShader *X3D::X3DContextD3D9::Create_Shader()
+{
+    return nullptr;
+}
+
 X3D::X3DVertexBuffer *X3D::X3DContextD3D9::Create_Vertex_Buffer(size_t size)
 {
     assert(m_device != nullptr);
-    return new X3DVertexBufferD3D9(m_device, size);
+    return new X3DVertexBufferD3D9(this, m_device, size);
 }
 
 X3D::X3DIndexBuffer *X3D::X3DContextD3D9::Create_Index_Buffer(size_t size)
 {
     assert(m_device != nullptr);
-    return new X3DIndexBufferD3D9(m_device, size);
+    return new X3DIndexBufferD3D9(this, m_device, size);
+}
+
+X3D::X3DVertexLayout *X3D::X3DContextD3D9::Create_Vertex_Layout()
+{
+    return nullptr;
 }
 
 int X3D::X3DContextD3D9::Draw_Indexed(X3DPrimitive type, int start, int count, int baseVertex)
@@ -190,7 +202,7 @@ int X3D::X3DContextD3D9::Draw_Indexed(X3DPrimitive type, int start, int count, i
     assert(m_vb != nullptr);
     assert(m_ib != nullptr);
 
-    int vertex_count = m_vb->Get_Size();
+    size_t vertex_count = m_vb->Get_Size();
 
     return SUCCEEDED(m_device->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, baseVertex, 0, vertex_count, start, count / 3)) ?
         X3D_ERR_OK :

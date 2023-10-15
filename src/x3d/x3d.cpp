@@ -15,7 +15,7 @@ std::function<void(X3DMessageSeverity, const char *)> s_msgCallback = nullptr;
 
 static X3DBackend GetPreferredBackend()
 {
-#if defined X3D_HAS_D3D9
+#if 0 // defined X3D_HAS_D3D9
     return X3D_D3D9;
 #elif defined X3D_HAS_OPENGL
     return X3D_OPENGL;
@@ -168,11 +168,17 @@ X3D::X3DVertexLayout *X3D::Create_Vertex_Layout()
     return s_context->Create_Vertex_Layout();
 }
 
-int X3D::Draw_Indexed(X3DPrimitive type, int start, int count, int baseVertex)
+X3D::X3DTexture *X3D::Create_Texture(int width, int height, X3DTextureFormat format, int mip_count)
+{
+    assert(s_context != nullptr);
+    return s_context->Create_Texture(width, height, format, mip_count);
+}
+
+int X3D::Draw_Indexed(X3DPrimitive type, int count, int baseVertex)
 {
     assert(s_context != nullptr);
     assert(count > 0);
-    return s_context->Draw_Indexed(type, start, count, baseVertex);
+    return s_context->Draw_Indexed(type, count, baseVertex);
 }
 
 void X3D::Set_Message_Callback(std::function<void(X3DMessageSeverity, const char *)> callback)

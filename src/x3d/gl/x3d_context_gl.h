@@ -22,7 +22,10 @@ class X3DContextGL : public X3DContext
 
     X3DVertexLayout *Create_Vertex_Layout() override;
 
-    int Draw_Indexed(X3DPrimitive type, int start, int count, int baseVertex = 0) override;
+    X3DTexture *Create_Texture(int width, int height, X3DTextureFormat format, int mip_count) override;
+
+    int Draw_Indexed(X3DPrimitive type, int count, int baseIndex = 0) override;
+    int Draw_Indexed_Range(X3DPrimitive type, int count, int minVertex, int maxVertex, int baseIndex = 0) override;
 
 private:
     int Load_Functions();

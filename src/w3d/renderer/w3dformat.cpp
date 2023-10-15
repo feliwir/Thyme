@@ -297,6 +297,8 @@ WW3DFormat Get_Valid_Texture_Format(WW3DFormat format, bool allow_compression)
 {
     WW3DFormat check_format = format;
 
+    // Just use the incomin format with X3D
+    #ifndef BUILD_WITH_X3D
     if (!DX8Wrapper::Get_Current_Caps()->Supports_DXTC() || !allow_compression) {
         if (format == WW3D_FORMAT_DXT1) {
             check_format = WW3D_FORMAT_X8R8G8B8;
@@ -357,6 +359,7 @@ WW3DFormat Get_Valid_Texture_Format(WW3DFormat format, bool allow_compression)
             }
         }
     }
+    #endif
 
     return check_format;
 }

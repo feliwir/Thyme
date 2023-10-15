@@ -759,6 +759,7 @@ if(ICU_FOUND)
 endif()
 
 if(D3D8_FOUND AND NOT USE_X3D)
+    message(STATUS "Using D3D8")
     list(APPEND GAME_LINK_LIBRARIES d3d8)
     list(APPEND GAMEENGINE_SRC
         w3d/renderer/dx8/dx8caps.cpp
@@ -776,6 +777,7 @@ if(USE_X3D)
         w3d/renderer/x3d/x3dindexbuffer.cpp
         w3d/renderer/x3d/x3drenderer.cpp
         w3d/renderer/x3d/x3dshaders.cpp
+        w3d/renderer/x3d/x3dutil.cpp
         w3d/renderer/x3d/x3dvertexbuffer.cpp
     )
 endif()

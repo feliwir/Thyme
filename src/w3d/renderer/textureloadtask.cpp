@@ -26,6 +26,10 @@
 #include "thumbnail.h"
 #include "thumbnailmanager.h"
 #include "w3d.h"
+#ifdef BUILD_WITH_X3D
+#include "x3d.h"
+#include "x3dutil.h"
+#endif
 #include <algorithm>
 #include <cstring>
 
@@ -253,8 +257,13 @@ bool TextureLoadTaskClass::Begin_Compressed_Load()
     }
 
     mip_level_count = min(mip_level_count, mip_limit);
+#ifdef BUILD_WITH_X3D
+    X3D::X3DTextureFormat x3d_fmt = WW3DFormat_To_X3DFormat(m_format);
+    m_d3dTexture = (intptr_t)X3D::Create_Texture(reduced_width, reduced_height, x3d_fmt, mip_level_count);
+#else
     m_d3dTexture = DX8Wrapper::Create_Texture(
         reduced_width, reduced_height, m_format, (MipCountType)mip_level_count, (w3dpool_t)1, false);
+#endif
     m_mipLevelCount = mip_level_count;
 
     return true;
@@ -551,9 +560,11 @@ void TextureLoadTaskClass::Apply(bool initialized)
  */
 void TextureLoadTaskClass::Apply_Missing_Texture()
 {
+#ifndef BUILD_WITH_X3D
     captainslog_assert(TextureLoader::Is_DX8_Thread());
     captainslog_assert(m_d3dTexture == W3D_TYPE_INVALID_TEXTURE);
     m_d3dTexture = MissingTexture::Get_Missing_Texture();
+#endif
     Apply(true);
 }
 

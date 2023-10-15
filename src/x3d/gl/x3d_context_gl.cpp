@@ -2,6 +2,7 @@
 #include "x3d.h"
 #include "x3d_buffer_gl.h"
 #include "x3d_shader_gl.h"
+#include "x3d_texture_gl.h"
 #include "x3d_vertexlayout_gl.h"
 
 #include <flextGL.h>
@@ -53,6 +54,12 @@ int X3D::X3DContextGL::Init()
 }
 
 #ifdef _WIN32
+#define WGL_CONTEXT_MAJOR_VERSION_ARB 0x2091
+#define WGL_CONTEXT_MINOR_VERSION_ARB 0x2092
+
+typedef HGLRC(APIENTRY PFNWGLCREATECONTEXTATTRIBS_PROC(HDC hDC, HGLRC hShareContext, const int *attribList));
+PFNWGLCREATECONTEXTATTRIBS_PROC *wglCreateContextAttribsARB = nullptr;
+
 int X3D::X3DContextGL::Init_From_Hwnd(HWND hwnd)
 {
     // TODO: Use WGL to create a context
@@ -73,6 +80,15 @@ int X3D::X3DContextGL::Init_From_Hwnd(HWND hwnd)
     HGLRC hrc = wglCreateContext(m_hdc);
     if (wglMakeCurrent(m_hdc, hrc) == FALSE)
         return X3D_ERR_FAILED_DEVICE_INIT;
+
+    wglCreateContextAttribsARB = (PFNWGLCREATECONTEXTATTRIBS_PROC *)wglGetProcAddress("wglCreateContextAttribsARB");
+    if (wglCreateContextAttribsARB == nullptr)
+        return X3D_ERR_FAILED_DEVICE_INIT;
+
+    int const create_attribs[] = { WGL_CONTEXT_MAJOR_VERSION_ARB, 3, WGL_CONTEXT_MINOR_VERSION_ARB, 3, 0 };
+    HGLRC core_hrc = wglCreateContextAttribsARB(m_hdc, 0, create_attribs);
+    wglMakeCurrent(NULL, NULL);
+    wglMakeCurrent(m_hdc, core_hrc);
 
     X3DDevice &dev = m_devices.emplace_back();
     const GLubyte *vendor = glGetString(GL_VENDOR); // Returns the vendor
@@ -133,6 +149,11 @@ X3D::X3DVertexLayout *X3D::X3DContextGL::Create_Vertex_Layout()
     return new X3DVertexLayoutGL();
 }
 
+X3D::X3DTexture *X3D::X3DContextGL::Create_Texture(int width, int height, X3DTextureFormat format, int mip_count)
+{
+    return new X3DTextureGL(width, height, format);
+}
+
 static GLenum GetPrimitiveTypeGL(X3D::X3DPrimitive type)
 {
     switch (type) {
@@ -145,11 +166,23 @@ static GLenum GetPrimitiveTypeGL(X3D::X3DPrimitive type)
     }
 }
 
-int X3D::X3DContextGL::Draw_Indexed(X3DPrimitive type, int start, int count, int baseVertex)
+int X3D::X3DContextGL::Draw_Indexed(X3DPrimitive type, int count, int baseIndex)
 {
     assert(m_vb != nullptr);
     assert(m_ib != nullptr);
 
-    glDrawElementsBaseVertex(GetPrimitiveTypeGL(type), count, GL_UNSIGNED_SHORT, nullptr, baseVertex);
+    const void *buffer_offset = (const void *)(baseIndex * sizeof(uint16_t));
+    glDrawElementsBaseVertex(GetPrimitiveTypeGL(type), count, GL_UNSIGNED_SHORT, buffer_offset, 0);
+    return X3D_ERR_OK;
+}
+
+int X3D::X3DContextGL::Draw_Indexed_Range(X3DPrimitive type, int count, int minVertex, int maxVertex, int baseIndex)
+{
+    assert(m_vb != nullptr);
+    assert(m_ib != nullptr);
+
+    const void *buffer_offset = (const void *)(baseIndex * sizeof(uint16_t));
+    glDrawRangeElementsBaseVertex(
+        GetPrimitiveTypeGL(type), minVertex, maxVertex, count, GL_UNSIGNED_SHORT, buffer_offset, 0);
     return X3D_ERR_OK;
 }

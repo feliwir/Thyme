@@ -241,7 +241,24 @@ X3DTextureCategoryClass::X3DTextureCategoryClass(
 {
 }
 
-X3DTextureCategoryClass::~X3DTextureCategoryClass() {}
+X3DTextureCategoryClass::~X3DTextureCategoryClass()
+{
+    for (;;) {
+        PolygonRendererClass *r = m_polygonRendererList.Get_Head();
+
+        if (r == nullptr) {
+            break;
+        }
+
+        g_theX3DMeshRenderer.Unregister_Mesh_Type(r->Get_Mesh_Model_Class());
+    }
+
+    for (int i = 0; i < 2; i++) {
+        Ref_Ptr_Release(m_textures[i]);
+    }
+
+    Ref_Ptr_Release(m_material);
+}
 
 X3D::X3DShader *X3DTextureCategoryClass::Get_X3D_Shader()
 {
@@ -251,7 +268,9 @@ X3D::X3DShader *X3DTextureCategoryClass::Get_X3D_Shader()
 void X3DTextureCategoryClass::Render()
 {
     for (int i = 0; i < 2; i++) {
-        DX8Wrapper::Set_Texture(i, Peek_Texture(i));
+        auto tex = Peek_Texture(i);
+        if (tex)
+            tex->Init();
     }
 
     DX8Wrapper::Set_Material(Peek_Material());
@@ -590,6 +609,8 @@ void X3DRigidFVFCategoryContainer::Add_Mesh(MeshModelClass *mmc)
             m_vertexBuffer = new X3DVertexBufferClass(m_FVF, size, X3DVertexBufferClass::USAGE_DEFAULT, 0);
         }
     }
+
+    captainslog_info("FVF: %u", m_FVF);
 
     VertexBufferClass::AppendLockClass lock(m_vertexBuffer, m_usedVertices, split.Get_Vertex_Count());
     FVFInfoClass f = m_vertexBuffer->FVF_Info();

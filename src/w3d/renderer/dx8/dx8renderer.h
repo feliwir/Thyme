@@ -167,16 +167,6 @@ private:
 
 #ifdef GAME_DLL
 extern DX8MeshRendererClass &g_theDX8MeshRenderer;
-extern DynamicVectorClass<Vector3> &g_tempVertexBuffer;
-extern DynamicVectorClass<Vector3> &g_tempNormalBuffer;
-extern MultiListClass<MeshModelClass> &g_registeredMeshList;
-extern MultiListClass<DX8TextureCategoryClass> &g_textureCategoryDeleteList;
-extern MultiListClass<DX8FVFCategoryContainer> &g_fvfCategoryContainerDeleteList;
 #else
 extern DX8MeshRendererClass g_theDX8MeshRenderer;
-extern DynamicVectorClass<Vector3> g_tempVertexBuffer;
-extern DynamicVectorClass<Vector3> g_tempNormalBuffer;
-extern MultiListClass<MeshModelClass> g_registeredMeshList;
-extern MultiListClass<DX8TextureCategoryClass> g_textureCategoryDeleteList;
-extern MultiListClass<DX8FVFCategoryContainer> g_fvfCategoryContainerDeleteList;
 #endif

@@ -1,8 +1,7 @@
 #include "x3d_context_d3d9.h"
-#include "x3d_context_d3d9.h"
-#include "x3d_context_d3d9.h"
 #include "x3d.h"
 #include "x3d_buffer_d3d9.h"
+#include "x3d_context_d3d9.h"
 #include <comdef.h>
 
 HMODULE X3D::X3DContextD3D9::s_library = nullptr;
@@ -196,7 +195,12 @@ X3D::X3DVertexLayout *X3D::X3DContextD3D9::Create_Vertex_Layout()
     return nullptr;
 }
 
-int X3D::X3DContextD3D9::Draw_Indexed(X3DPrimitive type, int start, int count, int baseVertex)
+X3D::X3DTexture *X3D::X3DContextD3D9::Create_Texture(int width, int height, X3DTextureFormat fmt, int mipcount)
+{
+    return nullptr;
+}
+
+int X3D::X3DContextD3D9::Draw_Indexed(X3DPrimitive type, int count, int baseIndex)
 {
     assert(m_device != nullptr);
     assert(m_vb != nullptr);
@@ -204,7 +208,18 @@ int X3D::X3DContextD3D9::Draw_Indexed(X3DPrimitive type, int start, int count, i
 
     size_t vertex_count = m_vb->Get_Size();
 
-    return SUCCEEDED(m_device->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, baseVertex, 0, vertex_count, start, count / 3)) ?
+    return SUCCEEDED(m_device->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, baseIndex, 0, vertex_count, 0, count / 3)) ?
+        X3D_ERR_OK :
+        X3D_ERR_FAILED_DRAW;
+}
+
+int X3D::X3DContextD3D9::Draw_Indexed_Range(X3DPrimitive type, int count, int minVertex, int maxVertex, int baseIndex)
+{
+    assert(m_device != nullptr);
+    assert(m_vb != nullptr);
+    assert(m_ib != nullptr);
+
+    return SUCCEEDED(m_device->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, baseIndex, minVertex, maxVertex, 0, count / 3)) ?
         X3D_ERR_OK :
         X3D_ERR_FAILED_DRAW;
 }

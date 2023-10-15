@@ -26,8 +26,6 @@
 #include "w3d.h"
 #ifndef GAME_DLL
 DX8MeshRendererClass g_theDX8MeshRenderer;
-MultiListClass<TextureCategoryClass> g_textureCategoryDeleteList;
-MultiListClass<FVFCategoryContainer> g_fvfCategoryContainerDeleteList;
 #else
 #include "hooker.h"
 #endif
@@ -220,7 +218,7 @@ void DX8MeshRendererClass::Register_Mesh_Type(MeshModelClass *mmc)
 
 void DX8MeshRendererClass::Unregister_Mesh_Type(MeshModelClass *mmc)
 {
-    for (DX8PolygonRendererClass *i = mmc->m_polygonRendererList.Remove_Head(); i != nullptr;
+    for (PolygonRendererClass *i = mmc->m_polygonRendererList.Remove_Head(); i != nullptr;
          i = mmc->m_polygonRendererList.Remove_Head()) {
         delete i;
     }
@@ -257,22 +255,12 @@ DX8TextureCategoryClass::DX8TextureCategoryClass(
     DX8FVFCategoryContainer *container, TextureClass **texs, ShaderClass shd, VertexMaterialClass *mat, int pass) :
     TextureCategoryClass(container, texs, shd, mat, pass)
 {
-    captainslog_assert(pass >= 0);
-    captainslog_assert(pass < DX8FVFCategoryContainer::MAX_PASSES);
-
-    for (int i = 0; i < 2; i++) {
-        Ref_Ptr_Set(m_textures[i], texs[i]);
-    }
-
-    if (m_material != nullptr) {
-        m_material->Add_Ref();
-    }
 }
 
 DX8TextureCategoryClass::~DX8TextureCategoryClass()
 {
     for (;;) {
-        DX8PolygonRendererClass *r = m_polygonRendererList.Get_Head();
+        PolygonRendererClass *r = m_polygonRendererList.Get_Head();
 
         if (r == nullptr) {
             break;
@@ -286,14 +274,6 @@ DX8TextureCategoryClass::~DX8TextureCategoryClass()
     }
 
     Ref_Ptr_Release(m_material);
-}
-
-void DX8TextureCategoryClass::Add_Render_Task(DX8PolygonRendererClass *p_renderer, MeshClass *p_mesh)
-{
-    auto task = new PolyRenderTaskClass(p_renderer, p_mesh);
-    task->Set_Next_Visible(m_renderTaskHead);
-    m_renderTaskHead = task;
-    m_container->Add_Visible_Texture_Category(this, m_pass);
 }
 
 void DX8TextureCategoryClass::Render()
@@ -323,9 +303,9 @@ void DX8TextureCategoryClass::Render()
 
     bool b = false;
     auto task = m_renderTaskHead;
-    PolyRenderTaskClass<DX8PolygonRendererClass> *task2 = nullptr;
+    PolyRenderTaskClass<PolygonRendererClass> *task2 = nullptr;
     while (task != nullptr) {
-        DX8PolygonRendererClass *renderer = task->Peek_Polygon_Renderer();
+        PolygonRendererClass *renderer = task->Peek_Polygon_Renderer();
         MeshClass *mesh = task->Peek_Mesh();
         captainslog_assert(mesh != nullptr);
 
@@ -712,7 +692,7 @@ void DX8RigidFVFCategoryContainer::Render()
         DX8Wrapper::Set_Index_Buffer(m_indexBuffer, 0);
 
         for (unsigned int i = 0; i < m_passes; i++) {
-            for (DX8TextureCategoryClass *t = m_visibleTextureCategoryList[i].Remove_Head(); t != nullptr;
+            for (TextureCategoryClass *t = m_visibleTextureCategoryList[i].Remove_Head(); t != nullptr;
                  t = m_visibleTextureCategoryList[i].Remove_Head()) {
                 t->Render();
             }
@@ -929,7 +909,7 @@ void DX8SkinFVFCategoryContainer::Render()
                 DX8Wrapper::Set_Index_Buffer(m_indexBuffer, 0);
 
                 for (unsigned int i = 0; i < m_passes; i++) {
-                    MultiListIterator<DX8TextureCategoryClass> tex_it(&m_visibleTextureCategoryList[i]);
+                    MultiListIterator<TextureCategoryClass> tex_it(&m_visibleTextureCategoryList[i]);
 
                     while (!tex_it.Is_Done()) {
                         tex_it.Peek_Obj()->Render();

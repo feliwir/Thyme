@@ -2,6 +2,7 @@
 #include "x3d_context.h"
 #include "x3d_shader.h"
 #include "x3d_vertexlayout.h"
+#include "x3d_texture.h"
 #include <cstdlib>
 #include <functional>
 
@@ -110,8 +111,10 @@ X3DShader *Create_Shader();
 X3DVertexBuffer *Create_Vertex_Buffer(size_t size);
 X3DIndexBuffer *Create_Index_Buffer(size_t size);
 
+X3DTexture *Create_Texture(int width, int height, X3DTextureFormat format, int mip_count);
+
 X3DVertexLayout *Create_Vertex_Layout();
 
-int Draw_Indexed(X3DPrimitive type, int start, int count, int baseVertex = 0);
+int Draw_Indexed(X3DPrimitive type, int count, int baseIndex = 0);
 
 } // namespace X3D

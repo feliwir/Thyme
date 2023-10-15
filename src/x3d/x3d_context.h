@@ -24,8 +24,10 @@ class X3DIndexBuffer;
 class X3DIndexBuffer;
 class X3DVertexBuffer;
 class X3DVertexLayout;
+class X3DTexture;
 struct X3DLayoutDescription;
 enum X3DPrimitive : uint8_t;
+enum X3DTextureFormat : uint8_t;
 class X3DContext
 {
 public:
@@ -57,10 +59,13 @@ public:
 
     virtual X3DVertexLayout *Create_Vertex_Layout() = 0;
 
+    virtual X3DTexture *Create_Texture(int width, int height, X3DTextureFormat format, int mip_count) = 0;
+
     void Bind_Vertex_Buffer(X3DVertexBuffer *vb) { m_vb = vb; }
     void Bind_Index_Buffer(X3DIndexBuffer *ib) { m_ib = ib; }
 
-    virtual int Draw_Indexed(X3DPrimitive type, int start, int count, int baseVertex = 0) = 0;
+    virtual int Draw_Indexed(X3DPrimitive type, int count, int baseVertex = 0) = 0;
+    virtual int Draw_Indexed_Range(X3DPrimitive type, int count, int minVertex, int maxVertex, int baseVertex = 0) = 0;
 
 protected:
     std::vector<X3DDevice> m_devices;

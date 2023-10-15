@@ -15,7 +15,7 @@ void *X3D::X3DVertexBufferGL::Lock(X3DLockUsage usage, size_t offset, size_t siz
     return glMapBufferRange(GL_ARRAY_BUFFER,
         offset,
         size,
-        usage == X3D_LOCK_READ ? GL_MAP_READ_BIT : GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT);
+        usage == X3D_LOCK_READ ? GL_MAP_READ_BIT : GL_MAP_WRITE_BIT);
 }
 
 void X3D::X3DVertexBufferGL::Unlock()

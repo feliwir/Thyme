@@ -310,7 +310,7 @@ void MeshClass::Render(RenderInfoClass &rinfo)
 
             if (rendered_something && m_model->Get_Flag(MeshGeometryClass::SKIN)) {
 #if defined BUILD_WITH_D3D8
-                static_cast<D3D8SkinFVFCategoryContainer *>(fvf_container)->Add_Visible_Skin(this);
+                static_cast<DX8SkinFVFCategoryContainer *>(fvf_container)->Add_Visible_Skin(this);
 #elif defined BUILD_WITH_X3D
                 static_cast<X3DSkinFVFCategoryContainer *>(fvf_container)->Add_Visible_Skin(this);
 #endif
@@ -353,7 +353,7 @@ void MeshClass::Render_Material_Pass(MaterialPassClass *pass, IndexBufferClass *
         DX8Wrapper::Set_Index_Buffer(ib, 0);
         DX8Wrapper::Set_World_Identity();
 
-        MultiListIterator<DX8PolygonRendererClass> it(&(m_model->m_polygonRendererList));
+        MultiListIterator<PolygonRendererClass> it(&(m_model->m_polygonRendererList));
         while (!it.Is_Done()) {
             if (!it.Peek_Obj()->Get_Pass()) {
                 it.Peek_Obj()->Render(m_baseVertexOffset);
@@ -460,7 +460,7 @@ void MeshClass::Render_Material_Pass(MaterialPassClass *pass, IndexBufferClass *
         DX8Wrapper::Set_Index_Buffer(ib, 0);
         DX8Wrapper::Set_Transform(D3DTS_WORLD, m_transform);
 
-        MultiListIterator<DX8PolygonRendererClass> it(&(m_model->m_polygonRendererList));
+        MultiListIterator<PolygonRendererClass> it(&(m_model->m_polygonRendererList));
         while (!it.Is_Done()) {
             if (!it.Peek_Obj()->Get_Pass()) {
                 it.Peek_Obj()->Render(m_baseVertexOffset);

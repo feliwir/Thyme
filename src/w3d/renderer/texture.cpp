@@ -14,11 +14,16 @@
  *            LICENSE
  */
 #include "texture.h"
+#ifdef BUILD_WITH_D3D8
 #include "dx8texman.h"
+#endif
 #include "dx8wrapper.h"
 #include "surfaceclass.h"
 #include "textureloader.h"
 #include "w3d.h"
+#ifdef BUILD_WITH_X3D
+#include "x3d.h"
+#endif
 #include <algorithm>
 #include <cstring>
 
@@ -212,6 +217,66 @@ TextureClass::TextureClass(unsigned width,
             m_d3dTexture = DX8Wrapper::Create_Texture(width, height, format, mip_count, D3DPOOL_DEFAULT, render_target);
             break;
     }
+#elif BUILD_WITH_X3D
+    X3D::X3DTextureFormat x3d_fmt;
+    switch (format) {
+        case WW3D_FORMAT_UNKNOWN:
+            break;
+        case WW3D_FORMAT_R8G8B8:
+            break;
+        case WW3D_FORMAT_A8R8G8B8:
+            break;
+        case WW3D_FORMAT_X8R8G8B8:
+            break;
+        case WW3D_FORMAT_R5G6B5:
+            break;
+        case WW3D_FORMAT_X1R5G5B5:
+            break;
+        case WW3D_FORMAT_A1R5G5B5:
+            break;
+        case WW3D_FORMAT_A4R4G4B4:
+            break;
+        case WW3D_FORMAT_R3G3B2:
+            break;
+        case WW3D_FORMAT_A8:
+            break;
+        case WW3D_FORMAT_A8R3G3B2:
+            break;
+        case WW3D_FORMAT_X4R4G4B4:
+            break;
+        case WW3D_FORMAT_A8P8:
+            break;
+        case WW3D_FORMAT_P8:
+            break;
+        case WW3D_FORMAT_L8:
+            break;
+        case WW3D_FORMAT_A8L8:
+            break;
+        case WW3D_FORMAT_A4L4:
+            break;
+        case WW3D_FORMAT_U8V8:
+            break;
+        case WW3D_FORMAT_L6V5U5:
+            break;
+        case WW3D_FORMAT_X8L8V8U8:
+            break;
+        case WW3D_FORMAT_DXT1:
+            break;
+        case WW3D_FORMAT_DXT2:
+            break;
+        case WW3D_FORMAT_DXT3:
+            break;
+        case WW3D_FORMAT_DXT4:
+            break;
+        case WW3D_FORMAT_DXT5:
+            break;
+        case WW3D_FORMAT_COUNT:
+            break;
+        default:
+            break;
+    }
+
+    m_d3dTexture = (intptr_t)X3D::Create_Texture(width, height, x3d_fmt, mip_count);
 #endif
 
     if (pool == POOL_DEFAULT) {

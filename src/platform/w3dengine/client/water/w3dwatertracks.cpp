@@ -161,17 +161,21 @@ int WaterTracksObj::Render(VertexBufferClass *vertex_buffer, int batch_start)
     VertexFormatXYZDUV1 *verts;
 
     if (batch_start < 4000 - m_y * m_x) {
-        if (FAILED(vertex_buffer->Get_DX8_Vertex_Buffer()->Lock(vertex_buffer->FVF_Info().Get_FVF_Size() * batch_start,
-                vertex_buffer->FVF_Info().Get_FVF_Size() * m_y * m_x,
-                reinterpret_cast<BYTE **>(&verts),
-                D3DLOCK_NOOVERWRITE))) {
+        if (FAILED(static_cast<DX8VertexBufferClass*>(vertex_buffer)
+                       ->Get_DX8_Vertex_Buffer()
+                       ->Lock(vertex_buffer->FVF_Info().Get_FVF_Size() * batch_start,
+                           vertex_buffer->FVF_Info().Get_FVF_Size() * m_y * m_x,
+                           reinterpret_cast<BYTE **>(&verts),
+                           D3DLOCK_NOOVERWRITE))) {
             return batch_start;
         }
     } else {
-        if (FAILED(vertex_buffer->Get_DX8_Vertex_Buffer()->Lock(0,
-                vertex_buffer->FVF_Info().Get_FVF_Size() * m_y * m_x,
-                reinterpret_cast<BYTE **>(&verts),
-                D3DLOCK_DISCARD))) {
+        if (FAILED(static_cast<DX8VertexBufferClass*>(vertex_buffer)
+                       ->Get_DX8_Vertex_Buffer()
+                       ->Lock(0,
+                           vertex_buffer->FVF_Info().Get_FVF_Size() * m_y * m_x,
+                           reinterpret_cast<BYTE **>(&verts),
+                           D3DLOCK_DISCARD))) {
             return batch_start;
         }
 
@@ -320,7 +324,7 @@ int WaterTracksObj::Render(VertexBufferClass *vertex_buffer, int batch_start)
     verts->v1 = 1.0f;
     verts++;
 
-    vertex_buffer->Get_DX8_Vertex_Buffer()->Unlock();
+    static_cast<DX8VertexBufferClass*>(vertex_buffer)->Get_DX8_Vertex_Buffer()->Unlock();
     float f7 = (2 * m_x + 2) * (m_y - 1) - 2;
     DX8Wrapper::Set_Index_Buffer(g_theWaterTracksRenderSystem->m_indexBuffer, batch_start);
     DX8Wrapper::Draw_Strip(0, f7 - 2, 0, (unsigned short)m_y * (unsigned short)m_x);

@@ -147,6 +147,7 @@ void TextureLoader::Validate_Texture_Size(unsigned &width, unsigned &height, uns
     for (v = 1; v < volume; v *= 2);
     // clang-format on
 
+#ifdef BUILD_WITH_D3D8
     if (DX8Wrapper::Get_Current_Caps()->Get_Max_Tex_Width() < w) {
         w = DX8Wrapper::Get_Current_Caps()->Get_Max_Tex_Width();
     }
@@ -158,6 +159,7 @@ void TextureLoader::Validate_Texture_Size(unsigned &width, unsigned &height, uns
     if (v > DX8Wrapper::Get_Current_Caps()->Get_Max_Vol_Extent()) {
         v = DX8Wrapper::Get_Current_Caps()->Get_Max_Vol_Extent();
     }
+#endif
 
     if (w > h) {
         while ((w / h) > 8) {

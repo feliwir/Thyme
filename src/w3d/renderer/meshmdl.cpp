@@ -1382,15 +1382,15 @@ DX8FVFCategoryContainer *MeshModelClass::Peek_FVF_Category_Container()
         return nullptr;
     }
 
-    DX8PolygonRendererClass *polygon_renderer = m_polygonRendererList.Get_Head();
+    PolygonRendererClass *polygon_renderer = m_polygonRendererList.Get_Head();
     captainslog_assert(polygon_renderer);
 
-    DX8TextureCategoryClass *texture_category = polygon_renderer->Get_Texture_Category();
+    TextureCategoryClass *texture_category = polygon_renderer->Get_Texture_Category();
     captainslog_assert(texture_category);
 
-    DX8FVFCategoryContainer *fvf_category = texture_category->Get_Container();
+    FVFCategoryContainer *fvf_category = texture_category->Get_Container();
     captainslog_assert(fvf_category);
 
-    return fvf_category;
+    return static_cast<DX8FVFCategoryContainer *>(fvf_category);
 }
 #endif

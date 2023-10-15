@@ -11,6 +11,7 @@ if(X3D_ENABLE_OPENGL)
             gl/x3d_buffer_gl.cpp
             gl/x3d_context_gl.cpp
             gl/x3d_shader_gl.cpp
+            gl/x3d_texture_gl.cpp
             gl/x3d_vertexlayout_gl.cpp)
         target_compile_definitions(x3d PRIVATE X3D_HAS_OPENGL)
         target_include_directories(x3d PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/gl)

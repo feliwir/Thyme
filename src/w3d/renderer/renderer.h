@@ -274,8 +274,12 @@ protected:
 extern DynamicVectorClass<Vector3> &g_tempVertexBuffer;
 extern DynamicVectorClass<Vector3> &g_tempNormalBuffer;
 extern MultiListClass<MeshModelClass> &g_registeredMeshList;
+extern MultiListClass<TextureCategoryClass> &g_textureCategoryDeleteList;
+extern MultiListClass<FVFCategoryContainer> &g_fvfCategoryContainerDeleteList;
 #else
 extern DynamicVectorClass<Vector3> g_tempVertexBuffer;
 extern DynamicVectorClass<Vector3> g_tempNormalBuffer;
 extern MultiListClass<MeshModelClass> g_registeredMeshList;
+extern MultiListClass<TextureCategoryClass> g_textureCategoryDeleteList;
+extern MultiListClass<FVFCategoryContainer> g_fvfCategoryContainerDeleteList;
 #endif

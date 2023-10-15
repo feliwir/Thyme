@@ -29,7 +29,10 @@ public:
 
     X3DVertexLayout *Create_Vertex_Layout() override;
 
-    int Draw_Indexed(X3DPrimitive type, int start, int count, int baseVertex) override;
+    X3DTexture *Create_Texture(int width, int height, X3DTextureFormat fmt, int mipcount);
+
+    int Draw_Indexed(X3DPrimitive type, int count, int baseVertex) override;
+    int Draw_Indexed_Range(X3DPrimitive type, int count, int minVertex, int maxVertex, int baseVertex) override;
 
 protected:
     int Enumerate_Devices();

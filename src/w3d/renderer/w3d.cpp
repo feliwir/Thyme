@@ -290,8 +290,14 @@ W3DErrorType W3D::Init(void *hwnd, char *defaultpal, bool lite)
     });
 
 #ifdef PLATFORM_WINDOWS
-    if (X3D::Init_From_Hwnd(X3D::X3D_AUTO, s_hwnd) != X3D::X3D_ERR_OK) {
-        return W3D_ERROR_INITIALIZATION_FAILED;
+    if (s_hwnd != nullptr) {
+        if (X3D::Init_From_Hwnd(X3D::X3D_AUTO, s_hwnd) != X3D::X3D_ERR_OK) {
+            return W3D_ERROR_INITIALIZATION_FAILED;
+        }
+    } else {
+        if (X3D::Init(X3D::X3D_AUTO) != X3D::X3D_ERR_OK) {
+            return W3D_ERROR_INITIALIZATION_FAILED;
+        }
     }
 #else
     if (X3D::Init(X3D::X3D_AUTO) != X3D::X3D_ERR_OK) {
@@ -321,7 +327,7 @@ W3DErrorType W3D::Shutdown()
 #if defined BUILD_WITH_X3D
     if (W3DAssetManager::Get_Instance()) {
         W3DAssetManager::Get_Instance()->Free_Assets();
-    }
+    };
 
     TextureLoader::Deinit();
     MissingTexture::Deinit();

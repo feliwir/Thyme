@@ -36,9 +36,9 @@ public:
     virtual void Unbind(int slot) = 0;
 
     int Get_Levels() const { return m_levels; }
-    int Get_Width() const { return m_width; }
-    int Get_Height() const { return m_height; }
-    int Get_Bytesize(int level);
+    int Get_Width(int level = 0) const { return m_width >> level; }
+    int Get_Height(int level = 0) const { return m_height >> level; }
+    int Get_Bytesize(int level = 0);
 
 protected:
     int m_width = 0;

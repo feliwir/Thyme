@@ -325,8 +325,13 @@ bool TextureLoadTaskClass::Begin_Uncompressed_Load()
         reduced_height >>= m_reduction;
     }
 
+#ifdef BUILD_WITH_X3D
+    X3D::X3DTextureFormat x3d_fmt = WW3DFormat_To_X3DFormat(m_format);
+    m_d3dTexture = (intptr_t)X3D::Create_Texture(reduced_width, reduced_height, x3d_fmt, mip_level_count);
+#else
     m_d3dTexture = DX8Wrapper::Create_Texture(
         reduced_width, reduced_height, m_format, (MipCountType)mip_level_count, (w3dpool_t)1, false);
+#endif
 
     return true;
 }
@@ -515,7 +520,7 @@ void TextureLoadTaskClass::Lock_Surfaces()
 
     for (unsigned i = 0; i < m_mipLevelCount; ++i) {
         m_lockedSurfacePtr[i] = (uint8_t *)x3d_texture->Lock(X3D::X3D_LOCK_READ, i);
-        m_lockedSurfacePitch[i] = x3d_texture->Get_Width();
+        m_lockedSurfacePitch[i] = x3d_texture->Get_Width(i);
     }
 #elif defined BUILD_WITH_D3D8
     m_mipLevelCount = m_d3dTexture->GetLevelCount();

@@ -135,7 +135,7 @@ class TextureCategoryClass : public MultiListObjectClass
 public:
     TextureCategoryClass(
         FVFCategoryContainer *container, TextureClass **texs, ShaderClass shd, VertexMaterialClass *mat, int pass);
-    ~TextureCategoryClass() override;
+    virtual ~TextureCategoryClass() override;
 
     virtual void Render() = 0;
     virtual PolygonRendererClass *Create_Polygon_Renderer(unsigned int index_count,
@@ -193,7 +193,7 @@ public:
     };
 
     FVFCategoryContainer(unsigned int FVF, bool sorting);
-    ~FVFCategoryContainer() override;
+    virtual ~FVFCategoryContainer() override;
 
     virtual TextureCategoryClass *Create_Texture_Category(
         TextureClass **texs, ShaderClass shd, VertexMaterialClass *mat, int pass) = 0;

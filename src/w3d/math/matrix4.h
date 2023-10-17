@@ -260,6 +260,11 @@ public:
         return t;
     }
 
+    __forceinline bool operator==(const Matrix4 &m)
+    {
+        return Row[0] == m.Row[0] && Row[1] == m.Row[1] && Row[2] == m.Row[2] && Row[3] == m.Row[3];
+    }
+
     __forceinline Matrix4 &operator=(const Matrix4 &m)
     {
         Row[0] = m.Row[0];

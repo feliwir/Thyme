@@ -172,5 +172,3 @@ private:
 };
 
 extern X3DMeshRendererClass g_theX3DMeshRenderer;
-extern MultiListClass<X3DTextureCategoryClass> g_x3d_textureCategoryDeleteList;
-extern MultiListClass<X3DFVFCategoryContainer> g_x3d_fvfCategoryContainerDeleteList;

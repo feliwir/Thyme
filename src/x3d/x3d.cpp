@@ -59,12 +59,33 @@ int X3D::Init(X3DBackend backend)
 #ifdef _WIN32
 int X3D::Init_From_Hwnd(X3DBackend backend, HWND hwnd)
 {
-    int result = Init(backend);
-    if (result != X3D_ERR_OK)
-        return result;
+    if (s_context) {
+        return X3D_ERR_ALREADY_INITIALIZED;
+    }
 
-    result = s_context->Init_From_Hwnd(hwnd);
-    return result;
+    if (backend == X3D_AUTO) {
+        backend = GetPreferredBackend();
+    }
+
+    switch (backend) {
+#ifdef X3D_HAS_OPENGL
+        case X3D_OPENGL:
+            s_context = new X3DContextGL;
+            break;
+#endif
+#ifdef X3D_HAS_D3D9
+        case X3D_D3D9:
+            s_context = new X3DContextD3D9;
+            break;
+#endif
+        case X3D_D3D11:
+            break;
+
+        default:
+            return X3D_ERR_UNSUPPORTED;
+    }
+
+    return s_context->Init_From_Hwnd(hwnd);
 }
 #endif
 

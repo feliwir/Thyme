@@ -32,8 +32,6 @@
 #include <vector>
 
 X3DMeshRendererClass g_theX3DMeshRenderer;
-MultiListClass<X3DTextureCategoryClass> g_x3d_textureCategoryDeleteList;
-MultiListClass<X3DFVFCategoryContainer> g_x3d_fvfCategoryContainerDeleteList;
 
 void X3DMeshRendererClass::Init()
 {
@@ -78,13 +76,13 @@ void X3DMeshRendererClass::Invalidate(bool shutdown)
 
 void X3DMeshRendererClass::Clear_Pending_Delete_Lists()
 {
-    for (MultiListObjectClass *i = g_x3d_textureCategoryDeleteList.Remove_Head(); i != nullptr;
-         i = g_x3d_textureCategoryDeleteList.Remove_Head()) {
+    for (MultiListObjectClass *i = g_textureCategoryDeleteList.Remove_Head(); i != nullptr;
+         i = g_textureCategoryDeleteList.Remove_Head()) {
         delete i;
     }
 
-    for (MultiListObjectClass *i = g_x3d_fvfCategoryContainerDeleteList.Remove_Head(); i != nullptr;
-         i = g_x3d_fvfCategoryContainerDeleteList.Remove_Head()) {
+    for (MultiListObjectClass *i = g_fvfCategoryContainerDeleteList.Remove_Head(); i != nullptr;
+         i = g_fvfCategoryContainerDeleteList.Remove_Head()) {
         delete i;
     }
 }
@@ -343,7 +341,7 @@ void X3DTextureCategoryClass::Render()
                 world_is_identity = true;
             } else {
                 Matrix4 tm4x4(tm);
-                bool is_identity = tm4x4 == Matrix4::IDENTITY;
+                bool is_identity = (tm4x4 == Matrix4::IDENTITY);
                 if (is_identity && !world_is_identity) {
                     Get_X3D_Shader()->Set_Matrix4x4("world", &tm4x4[0].X);
                     world_is_identity = true;

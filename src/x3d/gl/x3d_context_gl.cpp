@@ -20,6 +20,9 @@ static void APIENTRY glDebugMessageCallback(
     if (s_msgCallback == nullptr)
         return;
 
+    if (severity != GL_DEBUG_SEVERITY_HIGH_ARB)
+        return;
+
     switch (type) {
         case GL_DEBUG_TYPE_ERROR_ARB:
             s_msgCallback(X3D_MSG_SEVERITY_ERROR, message);
@@ -151,7 +154,7 @@ X3D::X3DVertexLayout *X3D::X3DContextGL::Create_Vertex_Layout()
 
 X3D::X3DTexture *X3D::X3DContextGL::Create_Texture(int width, int height, X3DTextureFormat format, int mip_count)
 {
-    return new X3DTextureGL(width, height, format);
+    return new X3DTextureGL(width, height, format, mip_count + 1);
 }
 
 static GLenum GetPrimitiveTypeGL(X3D::X3DPrimitive type)

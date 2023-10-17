@@ -68,12 +68,12 @@ int main(int argc, char **argv)
     captainslog_init(&captains_settings);
 
     std::filesystem::path input_path(result["input"].as<std::string>());
-    g_theSimpleFileFactory->Append_Sub_Directory(input_path.parent_path().c_str());
+    g_theSimpleFileFactory->Append_Sub_Directory(input_path.parent_path().generic_u8string().c_str());
 
     SimpleSceneClass *scene = new SimpleSceneClass();
     CameraClass *camera = new CameraClass();
     W3DAssetManager *asset_mgr = new W3DAssetManager();
-    if (!asset_mgr->Load_3D_Assets(input_path.filename().c_str())) {
+    if (!asset_mgr->Load_3D_Assets(input_path.filename().generic_u8string().c_str())) {
         std::cerr << "Failed to load W3D assert" << std::endl;
         return EXIT_FAILURE;
     }

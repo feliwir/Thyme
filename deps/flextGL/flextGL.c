@@ -1,7 +1,7 @@
 /*
     This file was generated using https://github.com/mosra/flextgl:
 
-        path/to/flextGLgen.py ./profiles/gl33_core.txt
+        path/to/flextGLgen.py ../Thyme/deps/flextGL/gl33_core.txt
 
     Do not edit directly, modify the template or profile and regenerate.
 */
@@ -75,6 +75,11 @@ int flextInit(void)
         add_extension((const char*)glGetStringi(GL_EXTENSIONS, i));
     }
 
+    if (!FLEXT_EXT_texture_compression_s3tc) {
+        fprintf(stderr, "Error: OpenGL extension GL_EXT_texture_compression_s3tc not supported.\n");
+        fprintf(stderr, "       Try updating your graphics driver.\n");
+        return GL_FALSE;
+    }
 
     return GL_TRUE;
 }
@@ -92,6 +97,10 @@ void flextLoadOpenGLFunctions(void)
     glpfDebugMessageControlARB = (PFNGLDEBUGMESSAGECONTROLARB_PROC*)get_proc("glDebugMessageControlARB");
     glpfDebugMessageInsertARB = (PFNGLDEBUGMESSAGEINSERTARB_PROC*)get_proc("glDebugMessageInsertARB");
     glpfGetDebugMessageLogARB = (PFNGLGETDEBUGMESSAGELOGARB_PROC*)get_proc("glGetDebugMessageLogARB");
+
+
+    /* GL_EXT_texture_compression_s3tc */
+
 
 
     /* GL_VERSION_1_2 */
@@ -421,6 +430,7 @@ void flextLoadOpenGLFunctions(void)
 
 /* ----------------------- Extension flag definitions ---------------------- */
 int FLEXT_ARB_debug_output = GL_FALSE;
+int FLEXT_EXT_texture_compression_s3tc = GL_FALSE;
 
 /* ---------------------- Function pointer definitions --------------------- */
 
@@ -750,6 +760,9 @@ static void add_extension(const char* extension)
 {
     if (strcmp("GL_ARB_debug_output", extension) == 0) {
         FLEXT_ARB_debug_output = GL_TRUE;
+    }
+    if (strcmp("GL_EXT_texture_compression_s3tc", extension) == 0) {
+        FLEXT_EXT_texture_compression_s3tc = GL_TRUE;
     }
 }
 

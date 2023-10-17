@@ -293,6 +293,7 @@ void X3DTextureCategoryClass::Render()
     }
 
     bool b = false;
+    bool world_is_identity = false;
     auto task = m_renderTaskHead;
     PolyRenderTaskClass<PolygonRendererClass> *task2 = nullptr;
     while (task != nullptr) {
@@ -337,11 +338,19 @@ void X3DTextureCategoryClass::Render()
                 identity = true;
             }
 
-            if (identity) {
+            if (identity && !world_is_identity) {
                 Get_X3D_Shader()->Set_Matrix4x4("world", &Matrix4::IDENTITY[0].X);
+                world_is_identity = true;
             } else {
                 Matrix4 tm4x4(tm);
-                Get_X3D_Shader()->Set_Matrix4x4("world", &tm4x4[0].X);
+                bool is_identity = tm4x4 == Matrix4::IDENTITY;
+                if (is_identity && !world_is_identity) {
+                    Get_X3D_Shader()->Set_Matrix4x4("world", &tm4x4[0].X);
+                    world_is_identity = true;
+                } else if (!is_identity) {
+                    Get_X3D_Shader()->Set_Matrix4x4("world", &tm4x4[0].X);
+                    world_is_identity = false;
+                }
             }
 
             if (mesh->Get_ObjectScale() != 1.0f) {

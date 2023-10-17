@@ -91,13 +91,13 @@ void ThreadClass::Internal_Thread_Function(void *params)
 {
     // Set is running true and call the virtual thread function. Function should
     // check for m_isRunning in its loop and finish if set false;
-    static_cast<ThreadClass *>(params)->m_isRunning = true;
-    static_cast<ThreadClass *>(params)->m_threadID = Get_Current_Thread_ID();
-    Register_Thread_ID(
-        static_cast<ThreadClass *>(params)->m_threadID, static_cast<ThreadClass *>(params)->m_threadName, false);
-    static_cast<ThreadClass *>(params)->Thread_Function();
-    Unregister_Thread_ID(static_cast<ThreadClass *>(params)->m_threadID, static_cast<ThreadClass *>(params)->m_threadName);
-    static_cast<ThreadClass *>(params)->m_handle = 0;
+    ThreadClass *thread = static_cast<ThreadClass *>(params);
+    thread->m_isRunning = true;
+    thread->m_threadID = Get_Current_Thread_ID();
+    Register_Thread_ID(thread->m_threadID, thread->m_threadName, false);
+    thread->Thread_Function();
+    Unregister_Thread_ID(thread->m_threadID, thread->m_threadName);
+    thread->m_handle = 0;
 
 // Returns void * for pthread
 #ifdef HAVE_PTHREAD_H

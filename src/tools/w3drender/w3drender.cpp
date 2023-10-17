@@ -14,11 +14,13 @@
  */
 #include <assetmgr.h>
 #include <camera.h>
+#include <ffactory.h>
 #include <scene.h>
 #include <w3d.h>
 
 #include <SDL.h>
 #include <cxxopts.hpp>
+#include <filesystem>
 
 constexpr int DEFAULT_WIDTH = 800;
 constexpr int DEFAULT_HEIGHT = 600;
@@ -65,11 +67,13 @@ int main(int argc, char **argv)
     captains_settings.print_file = true;
     captainslog_init(&captains_settings);
 
+    std::filesystem::path input_path(result["input"].as<std::string>());
+    g_theSimpleFileFactory->Append_Sub_Directory(input_path.parent_path().c_str());
+
     SimpleSceneClass *scene = new SimpleSceneClass();
     CameraClass *camera = new CameraClass();
     W3DAssetManager *asset_mgr = new W3DAssetManager();
-    const auto input_path = result["input"].as<std::string>();
-    if (!asset_mgr->Load_3D_Assets(input_path.c_str())) {
+    if (!asset_mgr->Load_3D_Assets(input_path.filename().c_str())) {
         std::cerr << "Failed to load W3D assert" << std::endl;
         return EXIT_FAILURE;
     }

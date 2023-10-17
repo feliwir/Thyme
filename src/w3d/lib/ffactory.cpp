@@ -119,8 +119,8 @@ void SimpleFileFactoryClass::Append_Sub_Directory(const char *sub_directory)
     if (strlen(sub_directory) <= 1022 && strlen(sub_directory) >= 1) {
         strcpy(temp_sub_dir, sub_directory);
 
-        if (temp_sub_dir[strlen(sub_directory)] != '\\') {
-            temp_sub_dir[strlen(sub_directory)] = '\\';
+        if (temp_sub_dir[strlen(sub_directory)] != '/') {
+            temp_sub_dir[strlen(sub_directory)] = '/';
             temp_sub_dir[strlen(sub_directory) + 1] = 0;
         }
 

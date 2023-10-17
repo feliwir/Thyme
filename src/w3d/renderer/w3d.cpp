@@ -299,7 +299,8 @@ W3DErrorType W3D::Init(void *hwnd, char *defaultpal, bool lite)
     }
 #endif
     MissingTexture::Init();
-    
+    TextureLoader::Init();
+
     s_defaultStaticSortLists = new DefaultStaticSortListClass();
     Reset_Current_Static_Sort_Lists_To_Default();
 
@@ -317,7 +318,15 @@ W3DErrorType W3D::Init(void *hwnd, char *defaultpal, bool lite)
 
 W3DErrorType W3D::Shutdown()
 {
-#ifdef PLATFORM_WINDOWS
+#if defined BUILD_WITH_X3D
+    if (W3DAssetManager::Get_Instance()) {
+        W3DAssetManager::Get_Instance()->Free_Assets();
+    }
+
+    TextureLoader::Deinit();
+    MissingTexture::Deinit();
+    X3D::Shutdown();
+#elif defined PLATFORM_WINDOWS
     MMRESULT r = timeEndPeriod(1);
     captainslog_assert(r == TIMERR_NOERROR);
 
@@ -332,17 +341,13 @@ W3DErrorType W3D::Shutdown()
         DX8Wrapper::Shutdown();
     }
 #endif
-
+#endif
     if (s_defaultStaticSortLists) {
         delete s_defaultStaticSortLists;
     }
 
     s_isInited = false;
     return W3D_ERROR_OK;
-#else
-    s_isInited = false;
-    return W3D_ERROR_OK;
-#endif
 }
 
 W3DErrorType W3D::Set_Render_Device(

@@ -410,11 +410,6 @@ void TextureClass::Init()
 void TextureClass::Apply_New_Surface(w3dbasetexture_t d3d_texture, bool initialized, bool reset)
 {
 #if defined BUILD_WITH_X3D
-    w3dbasetexture_t old = Peek_Platform_Base_Texture();
-    if (old != W3D_TYPE_INVALID_TEXTURE) {
-        delete reinterpret_cast<X3D::X3DTexture *>(old);
-    }
-
     m_d3dTexture = d3d_texture;
     X3D::X3DTexture *x3d_texture = reinterpret_cast<X3D::X3DTexture *>(m_d3dTexture);
 

@@ -10,9 +10,7 @@ class X3DBufferGL
 {
 public:
     X3DBufferGL(GLenum target) : m_target(target) { glGenBuffers(1, &m_handle); }
-    ~X3DBufferGL() { 
-        glDeleteBuffers(1, &m_handle); 
-    }
+    virtual ~X3DBufferGL() { glDeleteBuffers(1, &m_handle); }
 
 protected:
     GLenum m_target = GL_INVALID_ENUM;

@@ -3,3 +3,4 @@
 
 version 3.3 core
 extension ARB_debug_output optional
+extension EXT_texture_compression_s3tc required

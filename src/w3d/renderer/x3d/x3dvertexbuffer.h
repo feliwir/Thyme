@@ -59,7 +59,7 @@ public:
         UsageType usage);
     X3DVertexBufferClass(
         Vector3 *vertices, Vector4 *diffuse, Vector2 *tex_coords, unsigned short VertexCount, UsageType usage);
-    ~X3DVertexBufferClass();
+    virtual ~X3DVertexBufferClass();
     void Copy(Vector3 *loc, Vector3 *norm, Vector2 *uv, unsigned int first_vertex, unsigned int count);
     void Copy(Vector3 *loc, unsigned int first_vertex, unsigned int count);
     void Copy(Vector3 *loc, Vector2 *uv, unsigned int first_vertex, unsigned int count);

@@ -537,9 +537,15 @@ void TextureLoadTaskClass::Lock_Surfaces()
  */
 void TextureLoadTaskClass::Unlock_Surfaces()
 {
-#ifdef BUILD_WITH_D3D8
     captainslog_assert(m_mipLevelCount < MAX_MIPLEVEL_COUNT);
+#ifdef BUILD_WITH_X3D
+    auto x3d_texture = reinterpret_cast<X3D::X3DTexture *>(m_d3dTexture);
 
+    for (unsigned i = 0; i < m_mipLevelCount; ++i) {
+        x3d_texture->Unlock(i);
+    }
+#endif
+#ifdef BUILD_WITH_D3D8
     for (unsigned i = 0; i < m_mipLevelCount; ++i) {
         if (m_lockedSurfacePtr[i] != nullptr) {
             m_d3dTexture->UnlockRect(i);

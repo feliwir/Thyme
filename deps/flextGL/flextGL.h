@@ -3,7 +3,7 @@
 /*
     This file was generated using https://github.com/mosra/flextgl:
 
-        path/to/flextGLgen.py ./profiles/gl33_core.txt
+        path/to/flextGLgen.py ../Thyme/deps/flextGL/gl33_core.txt
 
     Do not edit directly, modify the template or profile and regenerate.
 */
@@ -939,6 +939,13 @@ typedef void (APIENTRY *GLDEBUGPROCARB)(GLenum source,GLenum type,GLuint id,GLen
 #define GL_DEBUG_SEVERITY_MEDIUM_ARB 0x9147
 #define GL_DEBUG_SEVERITY_LOW_ARB 0x9148
 
+/* GL_EXT_texture_compression_s3tc */
+
+#define GL_COMPRESSED_RGB_S3TC_DXT1_EXT 0x83F0
+#define GL_COMPRESSED_RGBA_S3TC_DXT1_EXT 0x83F1
+#define GL_COMPRESSED_RGBA_S3TC_DXT3_EXT 0x83F2
+#define GL_COMPRESSED_RGBA_S3TC_DXT5_EXT 0x83F3
+
 /* --------------------------- FUNCTION PROTOTYPES --------------------------- */
 
 
@@ -958,6 +965,12 @@ GLAPI PFNGLGETDEBUGMESSAGELOGARB_PROC *glpfGetDebugMessageLogARB;
 #define glDebugMessageControlARB glpfDebugMessageControlARB
 #define glDebugMessageInsertARB glpfDebugMessageInsertARB
 #define glGetDebugMessageLogARB glpfGetDebugMessageLogARB
+
+
+/* GL_EXT_texture_compression_s3tc */
+
+
+
 
 
 /* GL_VERSION_1_0 */
@@ -1941,6 +1954,7 @@ GLAPI PFNGLVERTEXATTRIBP4UIV_PROC *glpfVertexAttribP4uiv;
 /* --------------------------- CATEGORY DEFINES ------------------------------ */
 
 #define GL_ARB_debug_output
+#define GL_EXT_texture_compression_s3tc
 #define GL_VERSION_1_0
 #define GL_VERSION_1_1
 #define GL_VERSION_1_2
@@ -1957,6 +1971,7 @@ GLAPI PFNGLVERTEXATTRIBP4UIV_PROC *glpfVertexAttribP4uiv;
 /* ---------------------- Flags for optional extensions ---------------------- */
 
 extern int FLEXT_ARB_debug_output;
+extern int FLEXT_EXT_texture_compression_s3tc;
 
 int flextInit(void);
 

@@ -16,6 +16,10 @@
 #include "missingtexture.h"
 #include "dx8wrapper.h"
 #include "w3dformat.h"
+#ifdef BUILD_WITH_X3D
+#include "x3d.h"
+#include "x3dutil.h"
+#endif
 #include <captainslog.h>
 
 #ifndef GAME_DLL
@@ -36,7 +40,22 @@ void MissingTexture::Init()
     static const int _missing_width = 256;
     static const int _missing_height = 256;
 
-#ifdef BUILD_WITH_D3D8
+#if defined BUILD_WITH_X3D
+    X3D::X3DTextureFormat x3d_fmt = WW3DFormat_To_X3DFormat(WW3D_FORMAT_A8R8G8B8);
+    X3D::X3DTexture* texture = X3D::Create_Texture(_missing_width, _missing_height, x3d_fmt, 0);
+    uint32_t *pixels = (uint32_t *)texture->Lock(X3D::X3D_LOCK_WRITE);
+
+    // Builds the texture, jut pink for now as original had.
+    for (int h = 0; h < _missing_height; ++h) {
+        for (int w = 0; w < _missing_width; ++w) {
+            pixels[h * (_missing_width) + w] = 0x7FFF00FF;
+        }
+    }
+
+    texture->Unlock();
+
+    s_missingTexture = (intptr_t)texture;
+#elif defined BUILD_WITH_D3D8
     captainslog_assert(s_missingTexture == W3D_TYPE_INVALID_TEXTURE);
     w3dsurface_t dest = W3D_TYPE_INVALID_SURFACE;
     w3dsurface_t src = W3D_TYPE_INVALID_SURFACE;

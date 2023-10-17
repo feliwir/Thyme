@@ -409,7 +409,30 @@ void TextureClass::Init()
  */
 void TextureClass::Apply_New_Surface(w3dbasetexture_t d3d_texture, bool initialized, bool reset)
 {
-#ifdef BUILD_WITH_D3D8
+#if defined BUILD_WITH_X3D
+    w3dbasetexture_t old = Peek_Platform_Base_Texture();
+    if (old != W3D_TYPE_INVALID_TEXTURE) {
+        delete reinterpret_cast<X3D::X3DTexture *>(old);
+    }
+
+    m_d3dTexture = d3d_texture;
+    X3D::X3DTexture *x3d_texture = reinterpret_cast<X3D::X3DTexture *>(m_d3dTexture);
+
+    if (initialized) {
+        m_initialized = true;
+    }
+
+    if (reset) {
+        m_inactivationTime = 0;
+    }
+
+    captainslog_assert(d3d_texture != W3D_TYPE_INVALID_TEXTURE);
+
+    if (initialized) {
+        m_width = x3d_texture->Get_Width();
+        m_height = x3d_texture->Get_Height();
+    }
+#elif defined BUILD_WITH_D3D8
     w3dbasetexture_t old = Peek_Platform_Base_Texture();
     if (old != W3D_TYPE_INVALID_TEXTURE) {
         old->Release();

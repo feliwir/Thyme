@@ -508,7 +508,16 @@ bool TextureLoadTaskClass::Load_Uncompressed_Mipmap()
  */
 void TextureLoadTaskClass::Lock_Surfaces()
 {
-#ifdef BUILD_WITH_D3D8
+#if defined BUILD_WITH_X3D
+    auto x3d_texture = reinterpret_cast<X3D::X3DTexture *>(m_d3dTexture);
+    m_mipLevelCount = x3d_texture->Get_Levels();
+    captainslog_assert(m_mipLevelCount < MAX_MIPLEVEL_COUNT);
+
+    for (unsigned i = 0; i < m_mipLevelCount; ++i) {
+        m_lockedSurfacePtr[i] = (uint8_t *)x3d_texture->Lock(X3D::X3D_LOCK_READ, i);
+        m_lockedSurfacePitch[i] = x3d_texture->Get_Width();
+    }
+#elif defined BUILD_WITH_D3D8
     m_mipLevelCount = m_d3dTexture->GetLevelCount();
     captainslog_assert(m_mipLevelCount < MAX_MIPLEVEL_COUNT);
 
@@ -560,11 +569,11 @@ void TextureLoadTaskClass::Apply(bool initialized)
  */
 void TextureLoadTaskClass::Apply_Missing_Texture()
 {
-#ifndef BUILD_WITH_X3D
+#ifdef BUILD_WITH_D3D8
     captainslog_assert(TextureLoader::Is_DX8_Thread());
+#endif
     captainslog_assert(m_d3dTexture == W3D_TYPE_INVALID_TEXTURE);
     m_d3dTexture = MissingTexture::Get_Missing_Texture();
-#endif
     Apply(true);
 }
 
@@ -622,7 +631,9 @@ bool TextureLoadTaskClass::Load()
  */
 void TextureLoadTaskClass::End_Load()
 {
+#ifdef BUILD_WITH_D3D8
     captainslog_assert(TextureLoader::Is_DX8_Thread());
+#endif
     Unlock_Surfaces();
     Apply(true);
     m_loadState = STATE_LOAD_ENDED;

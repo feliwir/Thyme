@@ -38,6 +38,7 @@
 #endif
 
 #ifdef BUILD_WITH_X3D
+#include "missingtexture.h"
 #include "x3drenderer.h"
 #endif
 
@@ -297,7 +298,8 @@ W3DErrorType W3D::Init(void *hwnd, char *defaultpal, bool lite)
         return W3D_ERROR_INITIALIZATION_FAILED;
     }
 #endif
-
+    MissingTexture::Init();
+    
     s_defaultStaticSortLists = new DefaultStaticSortListClass();
     Reset_Current_Static_Sort_Lists_To_Default();
 

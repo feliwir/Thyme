@@ -1,15 +1,10 @@
 #pragma once
+#include "x3d_types.h"
 #include <cstddef>
 #include <vector>
 
 namespace X3D
 {
-enum X3DLockUsage
-{
-    X3D_LOCK_READ,
-    X3D_LOCK_WRITE
-};
-
 class X3DVertexBuffer
 {
 public:

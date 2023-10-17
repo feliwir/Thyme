@@ -21,11 +21,23 @@
 #include "resource.h"
 #include "w3dviewdoc.h"
 #include "w3dviewview.h"
+#include <captainslog.h>
 
 CW3DViewApp theApp;
 
 BOOL CW3DViewApp::InitInstance()
 {
+#ifndef NDEBUG
+    AllocConsole();
+    freopen("CONIN$", "w", stdin);
+    freopen("CONOUT$", "w", stdout);
+    freopen("CONOUT$", "w", stderr);
+    captains_settings_t captains_settings = { 0 };
+    captains_settings.level = LOGLEVEL_DEBUG;
+    captains_settings.console = true;
+    captainslog_init(&captains_settings);
+    captainslog_info("Starting W3DViewer");
+#endif
     ColorPickerClass::RegisterWndClass(AfxGetInstanceHandle());
     ColorBarClass::RegisterWndClass(AfxGetInstanceHandle());
     GameMath::Init();

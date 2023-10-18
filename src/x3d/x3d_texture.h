@@ -1,5 +1,6 @@
 #pragma once
 #include "x3d_types.h"
+#undef max
 #include <algorithm>
 #include <cstddef>
 #include <cstdint>

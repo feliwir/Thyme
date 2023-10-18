@@ -211,6 +211,7 @@ void DDSFileClass::Copy_Level_To_Surface(unsigned level,
     if (m_DDSMemory == nullptr) {
         return;
     }
+    captainslog_dbgassert(level < m_mipLevels, "Trying to copy into miplevel that does not exist.");
 
     // uint8_t *level_ptr = Get_Memory_Pointer(level);
     bool adjust_color = false;

@@ -364,8 +364,8 @@ bool TextureLoadTaskClass::Load_Compressed_Mipmap()
     for (unsigned i = 0; i < m_mipLevelCount; ++i) {
         dds.Copy_Level_To_Surface(i,
             m_format,
-            reduced_width,
-            reduced_height,
+            max(reduced_width, 4u),
+            max(reduced_height, 4u),
             Get_Locked_Surface_Pointer(i),
             Get_Locked_Surface_Pitch(i),
             m_hsvAdjust);
@@ -519,8 +519,9 @@ void TextureLoadTaskClass::Lock_Surfaces()
     captainslog_assert(m_mipLevelCount < MAX_MIPLEVEL_COUNT);
 
     for (unsigned i = 0; i < m_mipLevelCount; ++i) {
+        captainslog_info("Locking level: %i from TID: %i", i, ThreadClass::Get_Current_Thread_ID());
         m_lockedSurfacePtr[i] = (uint8_t *)x3d_texture->Lock(X3D::X3D_LOCK_READ, i);
-        m_lockedSurfacePitch[i] = x3d_texture->Get_Width(i);
+        m_lockedSurfacePitch[i] = x3d_texture->Get_Level_Bytesize(i) / x3d_texture->Get_Width(i);
     }
 #elif defined BUILD_WITH_D3D8
     m_mipLevelCount = m_d3dTexture->GetLevelCount();
@@ -547,7 +548,9 @@ void TextureLoadTaskClass::Unlock_Surfaces()
     auto x3d_texture = reinterpret_cast<X3D::X3DTexture *>(m_d3dTexture);
 
     for (unsigned i = 0; i < m_mipLevelCount; ++i) {
+        captainslog_info("Unlocking level: %i from TID: %i", i, ThreadClass::Get_Current_Thread_ID());
         x3d_texture->Unlock(i);
+        m_lockedSurfacePtr[i] = nullptr;
     }
 #endif
 #ifdef BUILD_WITH_D3D8

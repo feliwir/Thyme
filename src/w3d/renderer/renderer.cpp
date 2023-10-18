@@ -13,6 +13,7 @@
  *            LICENSE
  */
 #include "renderer.h"
+#include "indexbuffer.h"
 #include "polygonrenderer.h"
 #include <captainslog.h>
 

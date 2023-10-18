@@ -1,7 +1,7 @@
 #include "x3d_texture.h"
 #include <cmath>
 
-int X3D::X3DTexture::Get_Bytesize(int level)
+int X3D::X3DTexture::Get_Level_Bytesize(int level)
 {
     int width = Get_Width(level);
     int height = Get_Height(level);
@@ -20,4 +20,20 @@ int X3D::X3DTexture::Get_Bytesize(int level)
         default:
             return -1;
     }
+}
+
+int X3D::X3DTexture::Get_Total_Bytesize()
+{
+    int size = 0;
+    for (int i = 0; i < m_levels; i++)
+        size += Get_Level_Bytesize(i);
+    return size;
+}
+
+intptr_t X3D::X3DTexture::Get_Level_Offset(int level)
+{
+    intptr_t offset = 0;
+    for (int i = 0; i < level; i++)
+        offset += Get_Level_Bytesize(i);
+    return offset;
 }

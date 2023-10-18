@@ -1,8 +1,8 @@
 #pragma once
 #include "x3d_context.h"
 #include "x3d_shader.h"
-#include "x3d_vertexlayout.h"
 #include "x3d_texture.h"
+#include "x3d_vertexlayout.h"
 #include <cstdlib>
 #include <functional>
 

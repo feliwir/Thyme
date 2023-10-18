@@ -266,24 +266,24 @@ X3D::X3DShader *X3DTextureCategoryClass::Get_X3D_Shader()
 void X3DTextureCategoryClass::Render()
 {
     for (int i = 0; i < 2; i++) {
-        auto tex = Peek_Texture(i);
-        if (tex)
-            tex->Init();
+        g_theX3DMeshRenderer.Get_State().Set_Texture(i, Peek_Texture(i));
     }
 
-    DX8Wrapper::Set_Material(Peek_Material());
+    g_theX3DMeshRenderer.Get_State().Apply_Changes();
+
+    // DX8Wrapper::Set_Material(Peek_Material());
     ShaderClass shader = Get_Shader();
     ShaderClass shader2 = shader;
     shader2.Set_Src_Blend_Func(ShaderClass::SRCBLEND_SRC_ALPHA);
     shader2.Set_Dst_Blend_Func(ShaderClass::DSTBLEND_ONE_MINUS_SRC_ALPHA);
-    DX8Wrapper::Set_Shader(shader);
+    // DX8Wrapper::Set_Shader(shader);
 
     if (s_forceMultiply) {
         if (shader.Get_Dst_Blend_Func() == ShaderClass::DSTBLEND_ZERO) {
             shader.Set_Dst_Blend_Func(ShaderClass::DSTBLEND_SRC_COLOR);
             shader.Set_Src_Blend_Func(ShaderClass::SRCBLEND_ZERO);
-            DX8Wrapper::Set_Shader(shader);
-            DX8Wrapper::Apply_Render_State_Changes();
+            // DX8Wrapper::Set_Shader(shader);
+            // DX8Wrapper::Apply_Render_State_Changes();
 #ifdef BUILD_WITH_D3D8
             DX8Wrapper::Set_DX8_Render_State(D3DRS_SRCBLEND, D3DBLEND_DESTCOLOR);
 #endif
@@ -305,7 +305,7 @@ void X3DTextureCategoryClass::Render()
             b = true;
         } else {
             if (mesh->Get_Lighting_Environment() != nullptr) {
-                DX8Wrapper::Set_Light_Environment(mesh->Get_Lighting_Environment());
+                // DX8Wrapper::Set_Light_Environment(mesh->Get_Lighting_Environment());
             }
 
             Matrix3D tm = mesh->Get_Transform();
@@ -392,8 +392,8 @@ void X3DTextureCategoryClass::Render()
                     }
 
                     m_material->Set_Opacity(mesh->Get_Alpha_Override());
-                    DX8Wrapper::Set_Shader(shader2);
-                    DX8Wrapper::Apply_Render_State_Changes();
+                    // DX8Wrapper::Set_Shader(shader2);
+                    // DX8Wrapper::Apply_Render_State_Changes();
 #ifdef BUILD_WITH_D3D8
                     DX8Wrapper::Set_DX8_Render_State(D3DRS_ALPHAREF, mesh->Get_Alpha_Override() * 96);
 #endif
@@ -403,7 +403,7 @@ void X3DTextureCategoryClass::Render()
 #endif
                     m_material->Set_Opacity(opacity);
                     m_material->Set_Diffuse(diffuse.X, diffuse.Y, diffuse.Z);
-                    DX8Wrapper::Set_Shader(shader);
+                    // DX8Wrapper::Set_Shader(shader);
                 }
 
                 if (mapper != nullptr) {
@@ -412,8 +412,8 @@ void X3DTextureCategoryClass::Render()
                     l->Set_Current_UV_Offset(uv);
                 }
 
-                DX8Wrapper::Set_Material(nullptr);
-                DX8Wrapper::Set_Material(m_material);
+                // DX8Wrapper::Set_Material(nullptr);
+                // DX8Wrapper::Set_Material(m_material);
             } else {
                 renderer->Render(mesh->Get_Base_Vertex_Offset());
             }
@@ -745,8 +745,8 @@ void X3DRigidFVFCategoryContainer::Render_Delayed_Procedural_Material_Passes()
 {
     if (Any_Delayed_Passes_To_Render()) {
         m_anyDelayedPassesToRender = false;
-        DX8Wrapper::Set_Vertex_Buffer(m_vertexBuffer, 0);
-        DX8Wrapper::Set_Index_Buffer(m_indexBuffer, 0);
+        // DX8Wrapper::Set_Vertex_Buffer(m_vertexBuffer, 0);
+        // DX8Wrapper::Set_Index_Buffer(m_indexBuffer, 0);
 
         MatPassTaskClass *m;
 
@@ -814,14 +814,14 @@ void X3DSkinFVFCategoryContainer::Render()
 {
     if (Anything_To_Render()) {
         m_anythingToRender = false;
-        DX8Wrapper::Set_Vertex_Buffer(nullptr, 0);
+        // DX8Wrapper::Set_Vertex_Buffer(nullptr, 0);
         unsigned int vertcount = m_visibleVertexCount;
 
         if (vertcount > 65535) {
             vertcount = 65535;
         }
 
-        DynamicVBAccessClass vb(m_sorting + 2, DX8_FVF_XYZNDUV2, vertcount);
+        // DynamicVBAccessClass vb(m_sorting + 2, DX8_FVF_XYZNDUV2, vertcount);
         MeshClass *mesh1 = m_visibleSkinHead;
         unsigned int renderedvertexcount = 0;
 
@@ -833,8 +833,8 @@ void X3DSkinFVFCategoryContainer::Render()
                 MeshClass *mesh3 = nullptr;
 
                 { // added to control the lifetime of the DynamicVBAccessClass::WriteLockClass object
-                    DynamicVBAccessClass::WriteLockClass lock(&vb);
-                    VertexFormatXYZNDUV2 *vertexes = lock.Get_Formatted_Vertex_Array();
+                    // DynamicVBAccessClass::WriteLockClass lock(&vb);
+                    VertexFormatXYZNDUV2 *vertexes = NULL; // lock.Get_Formatted_Vertex_Array();
 
                     if (mesh1 != nullptr) {
                         for (;;) {
@@ -928,8 +928,8 @@ void X3DSkinFVFCategoryContainer::Render()
                     }
                 }
 
-                DX8Wrapper::Set_Vertex_Buffer(vb);
-                DX8Wrapper::Set_Index_Buffer(m_indexBuffer, 0);
+                // DX8Wrapper::Set_Vertex_Buffer(vb);
+                // DX8Wrapper::Set_Index_Buffer(m_indexBuffer, 0);
 
                 for (unsigned int i = 0; i < m_passes; i++) {
                     MultiListIterator<TextureCategoryClass> tex_it(&m_visibleTextureCategoryList[i]);

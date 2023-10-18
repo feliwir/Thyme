@@ -1,5 +1,6 @@
 #pragma once
 #include "x3d_types.h"
+#include <algorithm>
 #include <cstddef>
 #include <cstdint>
 
@@ -22,8 +23,8 @@ enum X3DTextureFormat : uint8_t
 class X3DTexture
 {
 public:
-    X3DTexture(int widht, int height, X3DTextureFormat fmt, int levels) :
-        m_width(widht), m_height(height), m_fmt(fmt), m_levels(levels)
+    X3DTexture(int width, int height, X3DTextureFormat fmt, int levels) :
+        m_width(width), m_height(height), m_fmt(fmt), m_levels(std::max(levels, 1))
     {
     }
     virtual ~X3DTexture() {}
@@ -38,7 +39,9 @@ public:
     int Get_Levels() const { return m_levels; }
     int Get_Width(int level = 0) const { return m_width >> level; }
     int Get_Height(int level = 0) const { return m_height >> level; }
-    int Get_Bytesize(int level = 0);
+    int Get_Level_Bytesize(int level = 0);
+    int Get_Total_Bytesize();
+    intptr_t Get_Level_Offset(int level = 0);
 
 protected:
     int m_width = 0;

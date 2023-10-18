@@ -20,6 +20,7 @@ public:
 
 protected:
     GLuint m_texture = 0;
-    GLuint *m_pbos = nullptr;
+    // GLuint *m_pbos = nullptr;
+    uint8_t **m_locked_levels = nullptr;
 };
 } // namespace X3D

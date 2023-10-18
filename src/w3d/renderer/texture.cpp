@@ -474,8 +474,13 @@ void TextureClass::Apply(unsigned stage)
     m_lastAccess = W3D::Get_Sync_Time();
 
     // Debug_Statistics::Record_Texture();
-
-#ifdef BUILD_WITH_D3D8
+#if defined BUILD_WITH_X3D
+    if (W3D::Is_Texturing_Enabled()) {
+        X3D::X3DTexture *texture = reinterpret_cast<X3D::X3DTexture *>(Peek_Platform_Base_Texture());
+        if (texture)
+            texture->Bind(stage);
+    }
+#elif defined BUILD_WITH_D3D8
     if (W3D::Is_Texturing_Enabled()) {
         DX8Wrapper::Set_DX8_Texture(stage, Peek_Platform_Base_Texture());
     } else {

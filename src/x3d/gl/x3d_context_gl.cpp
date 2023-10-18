@@ -154,7 +154,7 @@ X3D::X3DVertexLayout *X3D::X3DContextGL::Create_Vertex_Layout()
 
 X3D::X3DTexture *X3D::X3DContextGL::Create_Texture(int width, int height, X3DTextureFormat format, int mip_count)
 {
-    return new X3DTextureGL(width, height, format, mip_count + 1);
+    return new X3DTextureGL(width, height, format, mip_count);
 }
 
 static GLenum GetPrimitiveTypeGL(X3D::X3DPrimitive type)

@@ -6,13 +6,19 @@ X3D::X3DTextureGL::X3DTextureGL(int width, int height, X3DTextureFormat fmt, int
     X3DTexture(width, height, fmt, levels)
 {
     glGenTextures(1, &m_texture);
-    m_pbos = new GLuint[m_levels];
+    m_locked_levels = new uint8_t *[m_levels];
+    for (int i = 0; i < levels; i++)
+        m_locked_levels[i] = nullptr;
 }
 
 X3D::X3DTextureGL::~X3DTextureGL()
 {
     glDeleteTextures(1, &m_texture);
-    delete[] m_pbos;
+    for (int level = 0; level < m_levels; level++) {
+        if (m_locked_levels[level] != nullptr)
+            delete[] m_locked_levels[level];
+    }
+    delete[] m_locked_levels;
 }
 
 void X3D::X3DTextureGL::Upload(uint8_t *data, size_t size, int level)
@@ -81,29 +87,22 @@ void X3D::X3DTextureGL::Upload(uint8_t *data, size_t size, int level)
     }
 }
 
+// TODO: we had this implemented using PBO's - however it did not work
+// Retry using PBOs in the future. Use a single PBO and always map ranges from it
 void *X3D::X3DTextureGL::Lock(X3DLockUsage usage, int level)
 {
     assert(level < m_levels);
-    glGenBuffers(1, &m_pbos[level]);
-    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, m_pbos[level]);
-    glBufferData(GL_PIXEL_UNPACK_BUFFER, Get_Bytesize(level), 0, GL_STREAM_DRAW);
-    return glMapBuffer(GL_PIXEL_UNPACK_BUFFER, (usage == X3D_LOCK_WRITE) ? GL_WRITE_ONLY : GL_READ_ONLY);
+    m_locked_levels[level] = new uint8_t[Get_Level_Bytesize(level)];
+    return m_locked_levels[level];
 }
 
 void X3D::X3DTextureGL::Unlock(int level)
 {
     assert(level < m_levels);
-    // Copy changes to texture
-    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, m_pbos[level]);
-    if (glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER) == GL_FALSE)
-    {
-        const GLchar *msg = "Failed to unmap array buffer";
-        glDebugMessageInsertARB(
-            GL_DEBUG_SOURCE_APPLICATION_ARB, GL_DEBUG_TYPE_ERROR_ARB, 0, GL_DEBUG_SEVERITY_HIGH_ARB, strlen(msg), msg);
-    }
-    Upload(nullptr, Get_Bytesize(level), level);
-    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
-    glDeleteBuffers(1, &m_pbos[level]);
+    assert(m_locked_levels[level] != nullptr);
+    Upload(m_locked_levels[level], Get_Level_Bytesize(level), level);
+    delete[] m_locked_levels[level];
+    m_locked_levels[level] = nullptr;
 }
 
 void X3D::X3DTextureGL::Bind(int slot)

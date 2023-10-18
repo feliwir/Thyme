@@ -14,12 +14,12 @@
  */
 #pragma once
 #include "always.h"
-#include "dx8polygonrenderer.h"
 #include "lightenv.h"
 #include "proto.h"
 #include "rendobj.h"
 #include "w3derr.h"
 #include "w3dmpo.h"
+#include "w3d_file.h"
 
 class MeshBuilderClass;
 class MaterialPassClass;

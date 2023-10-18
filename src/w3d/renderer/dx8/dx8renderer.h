@@ -15,6 +15,7 @@
 #pragma once
 #include "always.h"
 #include "autopool.h"
+#include "dx8polygonrenderer.h"
 #include "meshmatdesc.h"
 #include "meshmdl.h"
 #include "multilist.h"

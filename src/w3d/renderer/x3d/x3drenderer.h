@@ -24,6 +24,7 @@
 #include "vector.h"
 #include "vector3.h"
 #include "x3dpolygonrenderer.h"
+#include "x3dstate.h"
 
 class CameraClass;
 class DecalMeshClass;
@@ -42,6 +43,7 @@ class X3DFVFCategoryContainer;
 class X3DMeshRendererClass
 {
     friend class X3DRigidFVFCategoryContainer;
+
 public:
     X3DMeshRendererClass();
     ~X3DMeshRendererClass();
@@ -68,6 +70,8 @@ public:
 
     static void Request_Log_Statistics();
 
+    X3DState &Get_State() { return m_state; }
+
 protected:
     void Render_Decal_Meshes();
 
@@ -76,6 +80,7 @@ protected:
     SimpleDynVecClass<MultiListClass<X3DFVFCategoryContainer> *> m_textureCategoryContainerListsRigid;
     MultiListClass<X3DFVFCategoryContainer> *m_textureCategoryContainerListSkin;
     DecalMeshClass *m_visibleDecalMeshes;
+    X3DState m_state;
 };
 
 class X3DTextureCategoryClass : public TextureCategoryClass
@@ -95,7 +100,7 @@ public:
         return new X3DPolygonRendererClass(index_count, mmc, this, vertex_offset, index_offset, strip, pass);
     }
     void Render() override;
-    X3D::X3DShader* Get_X3D_Shader();
+    X3D::X3DShader *Get_X3D_Shader();
 };
 
 class X3DFVFCategoryContainer : public FVFCategoryContainer

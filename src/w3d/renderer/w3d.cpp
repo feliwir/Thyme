@@ -522,6 +522,7 @@ W3DErrorType W3D::Render(RenderObjClass &obj, RenderInfoClass &rinfo)
     rinfo.m_camera.On_Frame_Update();
     rinfo.m_camera.Apply();
 
+    g_theX3DMeshRenderer.Set_Light_Environment(rinfo.m_lightEnvironment);
     g_theX3DMeshRenderer.Set_Camera(&rinfo.m_camera);
     obj.Render(rinfo);
     Flush(rinfo);

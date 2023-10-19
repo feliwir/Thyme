@@ -8,10 +8,10 @@ namespace X3D
 class X3DShaderGL : public X3DShader
 {
 public:
-    int Build_VS_From_HLSL(const char *hlsl_src) override;
+    int Build_VS_From_HLSL(const char *hlsl_src, const char *entry) override;
     int Build_VS_From_DXBC(uint8_t *dxbc, size_t dxbc_size) override;
 
-    int Build_PS_From_HLSL(const char *src) override;
+    int Build_PS_From_HLSL(const char *hlsl_src, const char *entry) override;
     int Build_PS_From_DXBC(uint8_t *dxbc, size_t dxbc_size) override;
 
     int Link() override;

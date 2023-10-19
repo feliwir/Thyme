@@ -1,10 +1,6 @@
 #include "x3dshaders.h"
 
-const char *X3D_VS_XYZ_SHADER = R"(
-float4x4 world;
-float4x4 view;
-float4x4 proj;
-
+const char *X3D_XYZ_SHADER = R"(
 struct VS_INPUT
 {
     float3 vPosition : POSITION;
@@ -24,22 +20,15 @@ VS_OUTPUT vs_main(VS_INPUT v)
 
     return o;
 }
-)";
 
-const char *X3D_PS_XYZ_SHADER = R"(
-struct PS_INPUT
-{
-    float4 vPosition : VPOS;
-};
-
-float4 ps_main(PS_INPUT v) : COLOR0
+float4 ps_main(VS_OUTPUT v) : COLOR0
 {
     float4 c = v.vPosition;
 	return c;
 }
 )";
 
-const char *X3D_VS_XYZ_NORM_SHADER = R"(
+const char *X3D_XYZ_NORM_SHADER = R"(
 float4x4 world;
 float4x4 view;
 float4x4 proj;
@@ -66,23 +55,15 @@ VS_OUTPUT vs_main(VS_INPUT v)
 
     return o;
 }
-)";
 
-const char *X3D_PS_XYZ_NORM_SHADER = R"(
-struct PS_INPUT
-{
-    float4 vPosition : VPOS;
-    float4 vNormal : NORMAL;
-};
-
-float4 ps_main(PS_INPUT v) : COLOR0
+float4 ps_main(VS_OUTPUT v) : COLOR0
 {
     float4 c = v.vPosition;
 	return c;
 }
 )";
 
-const char *X3D_VS_XYZ_NORM_TX1_SHADER = R"(
+const char *X3D_XYZ_NORM_TX1_SHADER = R"(
 float4x4 world;
 float4x4 view;
 float4x4 proj;
@@ -112,19 +93,10 @@ VS_OUTPUT vs_main(VS_INPUT v)
 
     return o;
 }
-)";
-
-const char *X3D_PS_XYZ_NORM_TX1_SHADER = R"(
-struct PS_INPUT
-{
-    float4 vPosition : VPOS;
-    float4 vNormal : NORMAL;
-    float2 vTexCoord0  : TEXCOORD0;
-};
 
 uniform sampler2D Tex0 : register(s0); 
 
-float4 ps_main(PS_INPUT v) : COLOR0
+float4 ps_main(VS_OUTPUT v) : COLOR0
 {
     float4 c;
     c = tex2D(Tex0, v.vTexCoord0);

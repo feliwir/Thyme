@@ -4,8 +4,8 @@
 #undef max
 #include <Xsc/Xsc.h>
 #include <cstring>
-#include <sstream>
 #include <iostream>
+#include <sstream>
 
 int X3D::X3DShaderGL::Compile_Shader(GLenum type, const char *glsl_src, GLuint &result)
 {
@@ -42,13 +42,13 @@ int X3D::X3DShaderGL::Build_VS_From_DXBC(uint8_t *bc, size_t bc_size)
     return X3D_ERR_OK;
 }
 
-int X3D::X3DShaderGL::Build_VS_From_HLSL(const char *src)
+int X3D::X3DShaderGL::Build_VS_From_HLSL(const char *src, const char *entry)
 {
     auto input_stream = std::make_shared<std::istringstream>(src);
 
     Xsc::ShaderInput input_desc;
     input_desc.sourceCode = input_stream;
-    input_desc.entryPoint = "vs_main";
+    input_desc.entryPoint = entry;
     input_desc.shaderVersion = Xsc::InputShaderVersion::HLSL3;
     input_desc.shaderTarget = Xsc::ShaderTarget::VertexShader;
 
@@ -87,13 +87,13 @@ int X3D::X3DShaderGL::Build_PS_From_DXBC(uint8_t *bc, size_t bc_size)
     return X3D_ERR_OK;
 }
 
-int X3D::X3DShaderGL::Build_PS_From_HLSL(const char *src)
+int X3D::X3DShaderGL::Build_PS_From_HLSL(const char *src, const char *entry)
 {
     auto input_stream = std::make_shared<std::istringstream>(src);
 
     Xsc::ShaderInput input_desc;
     input_desc.sourceCode = input_stream;
-    input_desc.entryPoint = "ps_main";
+    input_desc.entryPoint = entry;
     input_desc.shaderVersion = Xsc::InputShaderVersion::HLSL3;
     input_desc.shaderTarget = Xsc::ShaderTarget::FragmentShader;
 

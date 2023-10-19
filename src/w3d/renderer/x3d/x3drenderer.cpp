@@ -446,16 +446,10 @@ void X3DTextureCategoryClass::Render()
     }
 }
 
-static std::map<unsigned int, const char *> FVF_VS_MAP = {
-    { X3D_VF_XYZ, X3D_VS_XYZ_SHADER },
-    { X3D_VF_XYZ | X3D_VF_NORMAL, X3D_VS_XYZ_NORM_SHADER },
-    { X3D_VF_XYZ | X3D_VF_NORMAL | X3D_VF_TEX1, X3D_VS_XYZ_NORM_TX1_SHADER },
-};
-
-static std::map<unsigned int, const char *> FVF_PS_MAP = {
-    { X3D_VF_XYZ, X3D_PS_XYZ_SHADER },
-    { X3D_VF_XYZ | X3D_VF_NORMAL, X3D_PS_XYZ_NORM_SHADER },
-    { X3D_VF_XYZ | X3D_VF_NORMAL | X3D_VF_TEX1, X3D_PS_XYZ_NORM_TX1_SHADER },
+static std::map<unsigned int, const char *> FVF_SHADER_MAP = {
+    { X3D_VF_XYZ, X3D_XYZ_SHADER },
+    { X3D_VF_XYZ | X3D_VF_NORMAL, X3D_XYZ_NORM_SHADER },
+    { X3D_VF_XYZ | X3D_VF_NORMAL | X3D_VF_TEX1, X3D_XYZ_NORM_TX1_SHADER },
 };
 
 X3DFVFCategoryContainer::X3DFVFCategoryContainer(unsigned int FVF, bool sorting) : FVFCategoryContainer(FVF, sorting)
@@ -485,12 +479,11 @@ X3DFVFCategoryContainer::X3DFVFCategoryContainer(unsigned int FVF, bool sorting)
         m_uvCoordinateChannels = 8;
     }
 
-    captainslog_assert(FVF_VS_MAP.count(FVF) > 0);
-    captainslog_assert(FVF_PS_MAP.count(FVF) > 0);
+    captainslog_assert(FVF_SHADER_MAP.count(FVF) > 0);
 
     m_shader = X3D::Create_Shader();
-    m_shader->Build_VS_From_HLSL(FVF_VS_MAP[FVF]);
-    m_shader->Build_PS_From_HLSL(FVF_PS_MAP[FVF]);
+    m_shader->Build_VS_From_HLSL(FVF_SHADER_MAP[FVF], "vs_main");
+    m_shader->Build_PS_From_HLSL(FVF_SHADER_MAP[FVF], "ps_main");
     m_shader->Link();
     m_layout = X3D::Create_Vertex_Layout();
 }

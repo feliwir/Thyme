@@ -59,6 +59,7 @@ public:
     void Register_Mesh_Type(MeshModelClass *mmc);
     void Unregister_Mesh_Type(MeshModelClass *mmc);
 
+    void Set_Light_Environment(LightEnvironmentClass *light_env) { m_light_env = light_env; }
     void Set_Camera(CameraClass *camera) { m_camera = camera; }
     CameraClass *Peek_Camera() { return m_camera; }
 
@@ -77,6 +78,7 @@ protected:
 
     bool m_enableLighting;
     CameraClass *m_camera;
+    LightEnvironmentClass *m_light_env;
     SimpleDynVecClass<MultiListClass<X3DFVFCategoryContainer> *> m_textureCategoryContainerListsRigid;
     MultiListClass<X3DFVFCategoryContainer> *m_textureCategoryContainerListSkin;
     DecalMeshClass *m_visibleDecalMeshes;

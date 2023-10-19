@@ -15,10 +15,12 @@
 #include <assetmgr.h>
 #include <camera.h>
 #include <ffactory.h>
+#include <hlod.h>
 #include <scene.h>
 #include <w3d.h>
 
 #include <SDL.h>
+#include <cctype>
 #include <cxxopts.hpp>
 #include <filesystem>
 
@@ -29,9 +31,12 @@ constexpr int DEFAULT_HEIGHT = 600;
     if ((S) != W3D_ERROR_OK) \
         return EXIT_FAILURE;
 
-static bool Is_LOD(int id)
+static void Update_Camera(CameraClass &camera, Vector3 &center, Vector3 &cam_dir, float distance)
 {
-    return id == RenderObjClass::CLASSID_HMODEL || id == RenderObjClass::CLASSID_HLOD;
+    Matrix3D tm(true);
+    cam_dir.Normalize();
+    tm.Look_At(cam_dir * distance, center, 0.0f);
+    camera.Set_Transform(tm);
 }
 
 int main(int argc, char **argv)
@@ -43,7 +48,6 @@ int main(int argc, char **argv)
     // clang-format off
     options.add_options()
     ("i,input", "input file", cxxopts::value<std::string>())
-    ("t,toplevel", "toplevel only", cxxopts::value<bool>()->default_value("false"))
     ("h,help", "print usage")
     ("v,verbose", "verbose output", cxxopts::value<bool>()->default_value("false"))
     ;
@@ -79,27 +83,34 @@ int main(int argc, char **argv)
     }
 
     // Set the camera params
+    float camera_distance = 150.0f;
     Matrix3D tm(true);
     Vector3 center(0.0f, 0.0f, 0.0f);
-    Vector3 cam_pos(-100.0f, 0.0f, 0.0f);
-    tm.Look_At(cam_pos, center, 0.0f);
-    camera->Set_Transform(tm);
+    Vector3 cam_dir(-1.0f, 1.0f, 1.0f);
+    Update_Camera(*camera, center, cam_dir, camera_distance);
 
     RenderObjIterator *iter = asset_mgr->Create_Render_Obj_Iterator();
+    const char* hierachy_name = nullptr;
 
     if (iter != nullptr) {
         for (iter->First(); !iter->Is_Done(); iter->Next()) {
             const char *name = iter->Current_Item_Name();
-            std::cout << name << std::endl;
-            RenderObjClass *robj = asset_mgr->Create_Render_Obj(name);
-            if (result["toplevel"].as<bool>() && Is_LOD(robj->Class_ID()))
-                scene->Add_Render_Object(robj);
-            else
-                scene->Add_Render_Object(robj);
+            const char* mesh_name = strchr(name, '.');
+            if (mesh_name != nullptr) {
+                hierachy_name = strndup(name, mesh_name - name);
+                break;
+            }
         }
 
         delete iter;
     }
+
+    if(hierachy_name == nullptr) {
+        std::cerr << "No hierarchy found" << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    scene->Add_Render_Object(asset_mgr->Create_Render_Obj(hierachy_name));
 
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         std::cerr << "Failed to initialize SDL2" << std::endl;
@@ -128,11 +139,25 @@ int main(int argc, char **argv)
     W3D_OK(W3D::Init(nullptr, nullptr, false));
     W3D_OK(W3D::Set_Render_Device(0, DEFAULT_WIDTH, DEFAULT_HEIGHT, 32, 1, true, false, true));
 
+    Vector2 prev_mouse_pos, mouse_pos, delta;
     bool running = true;
     while (running) {
         SDL_Event event;
         while (SDL_PollEvent(&event)) { // poll until all events are handled!
             switch (event.type) {
+                case SDL_MOUSEMOTION:
+                    mouse_pos = Vector2(event.motion.x, event.motion.y);
+                    // We're dragging. Rotate the camera
+                    if(event.motion.state & SDL_BUTTON_LMASK)
+                    {
+                        delta = mouse_pos - prev_mouse_pos;
+                    }
+                    prev_mouse_pos = mouse_pos;
+                    break;
+                case SDL_MOUSEWHEEL:
+                    camera_distance += event.wheel.y;
+                    Update_Camera(*camera, center, cam_dir, camera_distance);
+                    break;
                 case SDL_QUIT:
                     running = false;
                     break;

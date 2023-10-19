@@ -7,7 +7,7 @@ X3D::X3DTextureGL::X3DTextureGL(int width, int height, X3DTextureFormat fmt, int
 {
     glGenTextures(1, &m_texture);
     m_locked_levels = new uint8_t *[m_levels];
-    for (int i = 0; i < levels; i++)
+    for (int i = 0; i < m_levels; i++)
         m_locked_levels[i] = nullptr;
 }
 

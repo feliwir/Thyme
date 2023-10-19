@@ -151,6 +151,9 @@ int main(int argc, char **argv)
                     if(event.motion.state & SDL_BUTTON_LMASK)
                     {
                         delta = mouse_pos - prev_mouse_pos;
+                        cam_dir.Rotate_X(delta.X / 100.0);
+                        cam_dir.Rotate_Y(delta.Y / 100.0f);
+                        Update_Camera(*camera, center, cam_dir, camera_distance);
                     }
                     prev_mouse_pos = mouse_pos;
                     break;

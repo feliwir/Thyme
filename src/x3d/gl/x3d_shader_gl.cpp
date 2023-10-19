@@ -172,7 +172,7 @@ int X3D::X3DShaderGL::Bind()
     return X3D_ERR_OK;
 }
 
-int X3D::X3DShaderGL::Set_Matrix4x4(const char *name, const float *matrix)
+int X3D::X3DShaderGL::Set_Uniform_Matrix4x4(const char *name, const float *matrix)
 {
     if (m_program == 0) {
         return X3D_ERR_SHADER_NOT_LINKED;
@@ -182,5 +182,18 @@ int X3D::X3DShaderGL::Set_Matrix4x4(const char *name, const float *matrix)
         return X3D_ERR_UNIFORM_NOT_FOUND;
     }
     glUniformMatrix4fv(location, 1, GL_TRUE, matrix);
+    return X3D_ERR_OK;
+}
+
+int X3D::X3DShaderGL::Set_Uniform_Vector3(const char *name, const float *vector)
+{
+    if (m_program == 0) {
+        return X3D_ERR_SHADER_NOT_LINKED;
+    }
+    GLint location = glGetUniformLocation(m_program, name);
+    if (location == -1) {
+        return X3D_ERR_UNIFORM_NOT_FOUND;
+    }
+    glUniform3fv(location, 1, vector);
     return X3D_ERR_OK;
 }

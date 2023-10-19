@@ -259,7 +259,7 @@ bool TextureLoadTaskClass::Begin_Compressed_Load()
     mip_level_count = min(mip_level_count, mip_limit);
 #ifdef BUILD_WITH_X3D
     X3D::X3DTextureFormat x3d_fmt = WW3DFormat_To_X3DFormat(m_format);
-    m_d3dTexture = (intptr_t)X3D::Create_Texture(reduced_width, reduced_height, x3d_fmt, mip_level_count);
+    m_d3dTexture = X3D::Create_Texture(reduced_width, reduced_height, x3d_fmt, mip_level_count);
 #else
     m_d3dTexture = DX8Wrapper::Create_Texture(
         reduced_width, reduced_height, m_format, (MipCountType)mip_level_count, (w3dpool_t)1, false);
@@ -327,7 +327,7 @@ bool TextureLoadTaskClass::Begin_Uncompressed_Load()
 
 #ifdef BUILD_WITH_X3D
     X3D::X3DTextureFormat x3d_fmt = WW3DFormat_To_X3DFormat(m_format);
-    m_d3dTexture = (intptr_t)X3D::Create_Texture(reduced_width, reduced_height, x3d_fmt, mip_level_count);
+    m_d3dTexture = X3D::Create_Texture(reduced_width, reduced_height, x3d_fmt, mip_level_count);
 #else
     m_d3dTexture = DX8Wrapper::Create_Texture(
         reduced_width, reduced_height, m_format, (MipCountType)mip_level_count, (w3dpool_t)1, false);
@@ -514,7 +514,7 @@ bool TextureLoadTaskClass::Load_Uncompressed_Mipmap()
 void TextureLoadTaskClass::Lock_Surfaces()
 {
 #if defined BUILD_WITH_X3D
-    auto x3d_texture = reinterpret_cast<X3D::X3DTexture *>(m_d3dTexture);
+    auto x3d_texture = m_d3dTexture;
     m_mipLevelCount = x3d_texture->Get_Levels();
     captainslog_assert(m_mipLevelCount < MAX_MIPLEVEL_COUNT);
 
@@ -545,7 +545,7 @@ void TextureLoadTaskClass::Unlock_Surfaces()
 {
     captainslog_assert(m_mipLevelCount < MAX_MIPLEVEL_COUNT);
 #ifdef BUILD_WITH_X3D
-    auto x3d_texture = reinterpret_cast<X3D::X3DTexture *>(m_d3dTexture);
+    X3D::X3DTexture* x3d_texture = m_d3dTexture;
 
     for (unsigned i = 0; i < m_mipLevelCount; ++i) {
         captainslog_info("Unlocking level: %i from TID: %i", i, ThreadClass::Get_Current_Thread_ID());

@@ -42,7 +42,7 @@ void MissingTexture::Init()
 
 #if defined BUILD_WITH_X3D
     X3D::X3DTextureFormat x3d_fmt = WW3DFormat_To_X3DFormat(WW3D_FORMAT_A8R8G8B8);
-    X3D::X3DTexture* texture = X3D::Create_Texture(_missing_width, _missing_height, x3d_fmt, 0);
+    w3dtexture_t texture = X3D::Create_Texture(_missing_width, _missing_height, x3d_fmt, 0);
     uint32_t *pixels = (uint32_t *)texture->Lock(X3D::X3D_LOCK_WRITE);
 
     // Builds the texture, jut pink for now as original had.
@@ -54,7 +54,7 @@ void MissingTexture::Init()
 
     texture->Unlock();
 
-    s_missingTexture = (intptr_t)texture;
+    s_missingTexture = texture;
 #elif defined BUILD_WITH_D3D8
     captainslog_assert(s_missingTexture == W3D_TYPE_INVALID_TEXTURE);
     w3dsurface_t dest = W3D_TYPE_INVALID_SURFACE;

@@ -553,7 +553,7 @@ void ShaderClass::Apply()
 
         BOOL alpha_test = FALSE;
 
-        if ((m_shaderBits & 0x40000) == 0x40000) {
+        if ((m_shaderBits & MASK_ALPHATEST) == MASK_ALPHATEST) {
 
             if (src_blend == 6) {
                 DX8Wrapper::Set_DX8_Render_State(D3DRS_ALPHAREF, 0x9F);
@@ -654,7 +654,7 @@ void ShaderClass::Apply()
 
             unsigned int shader_bits_7 = m_shaderBits;
 
-            if ((m_shaderBits & 0x10000) == 0x10000) {
+            if ((m_shaderBits & MASK_TEXTURING) == MASK_TEXTURING) {
 
                 switch ((shader_bits_7 >> 0xA) & 7) {
                     case 0u:

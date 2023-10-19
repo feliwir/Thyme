@@ -16,7 +16,9 @@ public:
     virtual int Link() = 0;
     virtual int Bind() = 0;
 
-    virtual int Set_Matrix4x4(const char *name, const float *data) = 0;
+    // Uniform setters
+    virtual int Set_Uniform_Matrix4x4(const char *name, const float *data) = 0;
+    virtual int Set_Uniform_Vector3(const char *name, const float *data) = 0;
 };
 
 } // namespace X3D

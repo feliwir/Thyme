@@ -17,8 +17,8 @@ public:
     int Link() override;
     int Bind() override;
 
-    int Set_Matrix4x4(const char *name, const float *matrix) override;
-
+    int Set_Uniform_Matrix4x4(const char *name, const float *matrix) override;
+    int Set_Uniform_Vector3(const char *name, const float *vector) override;
 protected:
     int Compile_Shader(GLenum type, const char *glsl_src, GLuint &shader);
 

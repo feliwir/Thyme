@@ -276,7 +276,7 @@ TextureClass::TextureClass(unsigned width,
             break;
     }
 
-    m_d3dTexture = (intptr_t)X3D::Create_Texture(width, height, x3d_fmt, mip_count);
+    m_d3dTexture = X3D::Create_Texture(width, height, x3d_fmt, mip_count);
 #endif
 
     if (pool == POOL_DEFAULT) {
@@ -411,7 +411,6 @@ void TextureClass::Apply_New_Surface(w3dbasetexture_t d3d_texture, bool initiali
 {
 #if defined BUILD_WITH_X3D
     m_d3dTexture = d3d_texture;
-    X3D::X3DTexture *x3d_texture = reinterpret_cast<X3D::X3DTexture *>(m_d3dTexture);
 
     if (initialized) {
         m_initialized = true;
@@ -421,11 +420,11 @@ void TextureClass::Apply_New_Surface(w3dbasetexture_t d3d_texture, bool initiali
         m_inactivationTime = 0;
     }
 
-    captainslog_assert(d3d_texture != W3D_TYPE_INVALID_TEXTURE);
+    captainslog_assert(m_d3dTexture != W3D_TYPE_INVALID_TEXTURE);
 
     if (initialized) {
-        m_width = x3d_texture->Get_Width();
-        m_height = x3d_texture->Get_Height();
+        m_width = m_d3dTexture->Get_Width();
+        m_height = m_d3dTexture->Get_Height();
     }
 #elif defined BUILD_WITH_D3D8
     w3dbasetexture_t old = Peek_Platform_Base_Texture();
@@ -476,7 +475,7 @@ void TextureClass::Apply(unsigned stage)
     // Debug_Statistics::Record_Texture();
 #if defined BUILD_WITH_X3D
     if (W3D::Is_Texturing_Enabled()) {
-        X3D::X3DTexture *texture = reinterpret_cast<X3D::X3DTexture *>(Peek_Platform_Base_Texture());
+        X3D::X3DTexture *texture = Peek_Platform_Base_Texture();
         if (texture)
             texture->Bind(stage);
     }

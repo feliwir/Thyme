@@ -94,12 +94,26 @@ VS_OUTPUT vs_main(VS_INPUT v)
     return o;
 }
 
+struct LightSource
+{
+    float3 lPosition;
+    float3 lDirection;
+};
+
 uniform sampler2D Tex0 : register(s0); 
+uniform float3 AmbientColor;
+uniform float3 DiffuseColor;
+uniform LightSource Light0;
 
 float4 ps_main(VS_OUTPUT v) : COLOR0
 {
     float4 c;
     c = tex2D(Tex0, v.vTexCoord0);
+    if(c.a < 0.01) {
+        discard;
+    }
+    // Apply ambient material color
+    c *= float4(AmbientColor, 1.0);
 	return c;
 }
 )";

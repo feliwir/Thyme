@@ -39,11 +39,12 @@ struct DynD3DMATERIAL8 : public W3DMPO, public D3DMATERIAL8
 #endif
 class DX8Wrapper;
 class TextureMapperClass;
+class X3DState;
 class VertexMaterialClass : public W3DMPO, public RefCountClass
 {
     IMPLEMENT_W3D_POOL(VertexMaterialClass);
     friend DX8Wrapper;
-
+    friend X3DState;
 public:
     enum
     {
@@ -179,11 +180,7 @@ public:
 #endif
 
 protected:
-#ifdef BUILD_WITH_D3D8
-    DynD3DMATERIAL8 *m_material;
-#else
     w3dmat_t *m_material;
-#endif
     unsigned int m_flags;
     unsigned int m_ambientColorSource;
     unsigned int m_emissiveColorSource;

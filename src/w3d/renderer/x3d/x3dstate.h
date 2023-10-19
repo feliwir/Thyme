@@ -1,6 +1,11 @@
 #pragma once
 #include "shader.h"
 #include "texture.h"
+#include "vertmaterial.h"
+
+#ifdef BUILD_WITH_D3D8
+#error "X3D and D3D8 cannot be compiled together"
+#endif
 
 // Some constants to control numbers of things.
 enum
@@ -10,8 +15,7 @@ enum
     GFX_LIGHT_COUNT = 4,
 };
 
-template<typename T>
-struct X3DStateValue
+template<typename T> struct X3DStateValue
 {
     T value;
     bool dirty;
@@ -19,20 +23,38 @@ struct X3DStateValue
 
 class X3DState
 {
-    public:
-    void Apply_Changes();
+public:
+    static void Apply_Changes();
 
-    void Set_Texture(int stage, TextureClass *texture)
+    static void Set_Texture(int stage, TextureClass *texture)
     {
-        if(stage >= MAX_TEXTURE_STAGES)
+        if (stage >= MAX_TEXTURE_STAGES)
             return;
-        if(m_textures[stage].value == texture)
+        if (m_textures[stage].value == texture)
             return;
         m_textures[stage].value = texture;
         m_textures[stage].dirty = true;
     }
 
-    private:
-    X3DStateValue<ShaderClass> m_shader;
-    X3DStateValue<TextureClass*> m_textures[MAX_TEXTURE_STAGES];
+    static void Set_Material(VertexMaterialClass *material)
+    {
+        if (m_material.value == material)
+            return;
+        m_material.value = material;
+        m_material.dirty = true;
+    }
+
+    static void Set_Active_X3D_Shader(X3D::X3DShader *shader)
+    {
+        m_x3d_shader = shader;
+        m_x3d_shader->Bind();
+    }
+
+    static X3D::X3DShader *Get_Active_X3D_Shader() { return m_x3d_shader; }
+
+private:
+    static X3D::X3DShader *m_x3d_shader;
+    static X3DStateValue<ShaderClass> m_shader;
+    static X3DStateValue<TextureClass *> m_textures[MAX_TEXTURE_STAGES];
+    static X3DStateValue<VertexMaterialClass *> m_material;
 };

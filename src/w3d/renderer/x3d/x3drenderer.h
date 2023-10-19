@@ -70,9 +70,6 @@ public:
     void Invalidate(bool shutdown);
 
     static void Request_Log_Statistics();
-
-    X3DState &Get_State() { return m_state; }
-
 protected:
     void Render_Decal_Meshes();
 
@@ -82,7 +79,6 @@ protected:
     SimpleDynVecClass<MultiListClass<X3DFVFCategoryContainer> *> m_textureCategoryContainerListsRigid;
     MultiListClass<X3DFVFCategoryContainer> *m_textureCategoryContainerListSkin;
     DecalMeshClass *m_visibleDecalMeshes;
-    X3DState m_state;
 };
 
 class X3DTextureCategoryClass : public TextureCategoryClass

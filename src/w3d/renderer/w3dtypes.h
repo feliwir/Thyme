@@ -16,7 +16,7 @@
 
 #include "always.h"
 
-#ifdef BUILD_WITH_D3D8
+#if defined BUILD_WITH_D3D8
 #include <d3d8.h>
 #include <d3d8types.h>
 
@@ -32,6 +32,21 @@ typedef D3DMATERIAL8 w3dmat_t;
 
 #define W3D_TYPE_INVALID_TEXTURE nullptr
 #define W3D_TYPE_INVALID_SURFACE nullptr
+#elif defined BUILD_WITH_X3D
+#include <x3d.h>
+#include "x3dutil.h"
+typedef X3D::X3DTexture *w3dtexture_t;
+typedef X3D::X3DTexture *w3dbasetexture_t;
+typedef intptr_t w3dsurface_t;
+typedef intptr_t w3dcaps_t;
+typedef intptr_t w3dhandle_t;
+typedef intptr_t w3dadapterid_t;
+typedef intptr_t w3ddevice_t;
+typedef intptr_t w3dpool_t;
+typedef X3DMaterial w3dmat_t;
+
+#define W3D_TYPE_INVALID_TEXTURE nullptr
+#define W3D_TYPE_INVALID_SURFACE 0
 #else
 // TODO for alternate 3D frameworks such as OpenGL or later D3D
 typedef intptr_t w3dtexture_t;

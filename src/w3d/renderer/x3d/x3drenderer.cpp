@@ -266,17 +266,17 @@ X3D::X3DShader *X3DTextureCategoryClass::Get_X3D_Shader()
 void X3DTextureCategoryClass::Render()
 {
     for (int i = 0; i < 2; i++) {
-        g_theX3DMeshRenderer.Get_State().Set_Texture(i, Peek_Texture(i));
+        X3DState::Set_Texture(i, Peek_Texture(i));
     }
 
-    g_theX3DMeshRenderer.Get_State().Apply_Changes();
-
-    // DX8Wrapper::Set_Material(Peek_Material());
+    X3DState::Set_Material(Peek_Material());
     ShaderClass shader = Get_Shader();
     ShaderClass shader2 = shader;
     shader2.Set_Src_Blend_Func(ShaderClass::SRCBLEND_SRC_ALPHA);
     shader2.Set_Dst_Blend_Func(ShaderClass::DSTBLEND_ONE_MINUS_SRC_ALPHA);
     // DX8Wrapper::Set_Shader(shader);
+
+    X3DState::Apply_Changes();
 
     if (s_forceMultiply) {
         if (shader.Get_Dst_Blend_Func() == ShaderClass::DSTBLEND_ZERO) {
@@ -337,16 +337,16 @@ void X3DTextureCategoryClass::Render()
             }
 
             if (identity && !world_is_identity) {
-                Get_X3D_Shader()->Set_Matrix4x4("world", &Matrix4::IDENTITY[0].X);
+                Get_X3D_Shader()->Set_Uniform_Matrix4x4("world", &Matrix4::IDENTITY[0].X);
                 world_is_identity = true;
             } else {
                 Matrix4 tm4x4(tm);
                 bool is_identity = (tm4x4 == Matrix4::IDENTITY);
                 if (is_identity && !world_is_identity) {
-                    Get_X3D_Shader()->Set_Matrix4x4("world", &tm4x4[0].X);
+                    Get_X3D_Shader()->Set_Uniform_Matrix4x4("world", &tm4x4[0].X);
                     world_is_identity = true;
                 } else if (!is_identity) {
-                    Get_X3D_Shader()->Set_Matrix4x4("world", &tm4x4[0].X);
+                    Get_X3D_Shader()->Set_Uniform_Matrix4x4("world", &tm4x4[0].X);
                     world_is_identity = false;
                 }
             }
@@ -688,11 +688,11 @@ void X3DRigidFVFCategoryContainer::Render()
 {
     if (Anything_To_Render()) {
         m_anythingToRender = false;
-        m_shader->Bind();
+        X3DState::Set_Active_X3D_Shader(m_shader);
         Matrix4 view(g_theX3DMeshRenderer.m_camera->Get_View_Matrix());
-        m_shader->Set_Matrix4x4("view", &view[0].X);
+        m_shader->Set_Uniform_Matrix4x4("view", &view[0].X);
         Matrix4 proj(g_theX3DMeshRenderer.m_camera->Get_Projection_Matrix());
-        m_shader->Set_Matrix4x4("proj", &proj[0].X);
+        m_shader->Set_Uniform_Matrix4x4("proj", &proj[0].X);
         static_cast<X3DVertexBufferClass *>(m_vertexBuffer)->Get_X3D_Vertex_Buffer()->Bind();
         // Build vertex layout
         FVFInfoClass f = m_vertexBuffer->FVF_Info();

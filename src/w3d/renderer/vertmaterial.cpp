@@ -14,12 +14,17 @@
  */
 #include "vertmaterial.h"
 #include "chunkio.h"
-#include "dx8wrapper.h"
 #include "iniclass.h"
 #include "realcrc.h"
 #include "w3d_util.h"
 #include "xstraw.h"
 #include <cstdio>
+#ifdef BUILD_WITH_D3D8
+#include "dx8wrapper.h"
+#endif
+#ifdef BUILD_WITH_X3D
+#include "x3dstate.h"
+#endif
 
 #ifndef GAME_DLL
 VertexMaterialClass *VertexMaterialClass::s_presets[VertexMaterialClass::PRESET_COUNT];
@@ -66,6 +71,9 @@ void VertexMaterialClass::Apply() const
             DX8Wrapper::Set_DX8_Texture_Stage_State(i, D3DTSS_TEXTURETRANSFORMFLAGS, 0);
         }
     }
+#elif defined BUILD_WITH_X3D
+    X3DState::Get_Active_X3D_Shader()->Set_Uniform_Vector3("AmbientColor", &m_material->ambient[0]);
+    X3DState::Get_Active_X3D_Shader()->Set_Uniform_Vector3("DiffuseColor", &m_material->diffuse[0]);
 #endif
 }
 
@@ -354,13 +362,16 @@ VertexMaterialClass::VertexMaterialClass() :
         m_UVSource[i] = 0;
     }
 
-#ifdef BUILD_WITH_D3D8
+#if defined BUILD_WITH_D3D8
     m_material = new DynD3DMATERIAL8;
     memset(static_cast<D3DMATERIAL8 *>(m_material), 0, sizeof(D3DMATERIAL8));
+#elif defined BUILD_WITH_X3D
+    m_material = new X3DMaterial();
+    memset(static_cast<X3DMaterial *>(m_material), 0, sizeof(X3DMaterial));
+#endif
     Set_Ambient(1.0f, 1.0f, 1.0f);
     Set_Diffuse(1.0f, 1.0f, 1.0f);
     Set_Opacity(1.0f);
-#endif
 }
 
 VertexMaterialClass::VertexMaterialClass(const VertexMaterialClass &src) :
@@ -459,45 +470,59 @@ void VertexMaterialClass::Get_Ambient(Vector3 *set_color) const
     set_color->X = m_material->Ambient.r;
     set_color->Y = m_material->Ambient.g;
     set_color->Z = m_material->Ambient.b;
+#elif defined BUILD_WITH_X3D
+    set_color->X = m_material->ambient.X;
+    set_color->Y = m_material->ambient.Y;
+    set_color->Z = m_material->ambient.Z;
 #endif
 }
 
 void VertexMaterialClass::Set_Ambient(const Vector3 &color)
 {
     m_CRCDirty = true;
-#ifdef BUILD_WITH_D3D8
+#if defined BUILD_WITH_D3D8
     m_material->Ambient.r = color.X;
     m_material->Ambient.g = color.Y;
     m_material->Ambient.b = color.Z;
+#elif defined BUILD_WITH_X3D
+    m_material->ambient = color;
 #endif
 }
 
 void VertexMaterialClass::Set_Ambient(float r, float g, float b)
 {
     m_CRCDirty = true;
-#ifdef BUILD_WITH_D3D8
+#if defined BUILD_WITH_D3D8
     m_material->Ambient.r = r;
     m_material->Ambient.g = g;
     m_material->Ambient.b = b;
+#elif defined BUILD_WITH_X3D
+    m_material->ambient.Set(r, g, b);
 #endif
 }
 
 void VertexMaterialClass::Set_Diffuse(const Vector3 &color)
 {
     m_CRCDirty = true;
-#ifdef BUILD_WITH_D3D8
+#if defined BUILD_WITH_D3D8
     m_material->Diffuse.r = color.X;
     m_material->Diffuse.g = color.Y;
     m_material->Diffuse.b = color.Z;
+#elif defined BUILD_WITH_X3D
+    m_material->diffuse = color;
 #endif
 }
 
 void VertexMaterialClass::Get_Specular(Vector3 *set_color) const
 {
-#ifdef BUILD_WITH_D3D8
+#if defined BUILD_WITH_D3D8
     set_color->X = m_material->Specular.r;
     set_color->Y = m_material->Specular.g;
     set_color->Z = m_material->Specular.b;
+#elif defined BUILD_WITH_X3D
+    set_color->X = m_material->specular.X;
+    set_color->Y = m_material->specular.Y;
+    set_color->Z = m_material->specular.Z;
 #endif
 }
 
@@ -508,16 +533,20 @@ void VertexMaterialClass::Set_Specular(const Vector3 &color)
     m_material->Specular.r = color.X;
     m_material->Specular.g = color.Y;
     m_material->Specular.b = color.Z;
+#elif defined BUILD_WITH_X3D
+    m_material->specular = color;
 #endif
 }
 
 void VertexMaterialClass::Set_Specular(float r, float g, float b)
 {
     m_CRCDirty = true;
-#ifdef BUILD_WITH_D3D8
+#if defined BUILD_WITH_D3D8
     m_material->Specular.r = r;
     m_material->Specular.g = g;
     m_material->Specular.b = b;
+#elif defined BUILD_WITH_X3D
+    m_material->specular.Set(r, g, b);
 #endif
 }
 

@@ -27,6 +27,10 @@ void X3DState::Apply_Changes()
                 m_x3d_shader->Set_Uniform_Int(light_index_name + ".lType", light_env->Is_Point_Light(light_count) ? 2 : 1);
                 m_x3d_shader->Set_Uniform_Vector3(
                     light_index_name + ".lDirection", &light_env->Get_Light_Direction(light_count)[0]);
+                m_x3d_shader->Set_Uniform_Vector3(
+                    light_index_name + ".lPosition", &light_env->Get_Point_Center(light_count)[0]);
+                m_x3d_shader->Set_Uniform_Vector3(
+                    light_index_name + ".lDiffuseColor", &light_env->Get_Light_Diffuse(light_count)[0]);
             }
         }
     }

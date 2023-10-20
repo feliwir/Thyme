@@ -100,6 +100,8 @@ struct LightSource
     int lType;
     float3 lPosition;
     float3 lDirection;
+    float3 lDiffuseColor;
+    float3 lSpecularColor;
 };
 
 // Material
@@ -111,13 +113,14 @@ uniform float3 MaterialSpecularColor;
 
 // Light
 uniform LightSource Lights[4];
+// This contains the sum of ambient color for all lights + the scene ambient color
 uniform float3 LightAmbientColor;
 
 float4 ps_main(VS_OUTPUT v) : COLOR0
 {
     float4 c;
     c = tex2D(Tex0, v.vTexCoord0);
-    if(c.a < 0.01) {
+    if(c.a < 0.4) {
         discard;
     }
     // Apply ambient material color
@@ -142,9 +145,10 @@ float4 ps_main(VS_OUTPUT v) : COLOR0
         if(light.lType == 2) {
             lightDir = light.lPosition - v.vPosition.xyz;
         }
-        float lightIntensity = 0.5 * max(dot(normalize(lightDir), normalize(v.vNormal.xyz)), 0.0);
-        lightColor += float3(lightIntensity);;
+        float lightIntensity = max(dot(normalize(lightDir), normalize(v.vNormal.xyz)), 0.0);
+        lightColor += light.lDiffuseColor * lightIntensity;
     }
+    lightColor = clamp(lightColor, 0.0, 1.0);
 	return float4(lightColor, 1.0) * c;
 }
 )";

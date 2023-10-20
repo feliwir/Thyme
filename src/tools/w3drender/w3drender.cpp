@@ -16,6 +16,7 @@
 #include <camera.h>
 #include <ffactory.h>
 #include <hlod.h>
+#include <light.h>
 #include <scene.h>
 #include <w3d.h>
 
@@ -82,6 +83,11 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
+    // Set the lighting
+    LightClass *light = new LightClass(LightClass::DIRECTIONAL);
+    light->Set_Ambient(Vector3(0.0f, 0.0f, 0.0f));
+    scene->Add_Render_Object(light);
+
     // Set the camera params
     float camera_distance = 150.0f;
     Matrix3D tm(true);
@@ -90,12 +96,12 @@ int main(int argc, char **argv)
     Update_Camera(*camera, center, cam_dir, camera_distance);
 
     RenderObjIterator *iter = asset_mgr->Create_Render_Obj_Iterator();
-    const char* hierachy_name = nullptr;
+    const char *hierachy_name = nullptr;
 
     if (iter != nullptr) {
         for (iter->First(); !iter->Is_Done(); iter->Next()) {
             const char *name = iter->Current_Item_Name();
-            const char* mesh_name = strchr(name, '.');
+            const char *mesh_name = strchr(name, '.');
             if (mesh_name != nullptr) {
                 hierachy_name = strndup(name, mesh_name - name);
                 break;
@@ -105,7 +111,7 @@ int main(int argc, char **argv)
         delete iter;
     }
 
-    if(hierachy_name == nullptr) {
+    if (hierachy_name == nullptr) {
         std::cerr << "No hierarchy found" << std::endl;
         return EXIT_FAILURE;
     }
@@ -117,6 +123,8 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 2);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
@@ -148,8 +156,7 @@ int main(int argc, char **argv)
                 case SDL_MOUSEMOTION:
                     mouse_pos = Vector2(event.motion.x, event.motion.y);
                     // We're dragging. Rotate the camera
-                    if(event.motion.state & SDL_BUTTON_LMASK)
-                    {
+                    if (event.motion.state & SDL_BUTTON_LMASK) {
                         delta = mouse_pos - prev_mouse_pos;
                         cam_dir.Rotate_X(delta.X / 100.0);
                         cam_dir.Rotate_Y(delta.Y / 100.0f);
@@ -178,6 +185,7 @@ int main(int argc, char **argv)
 
     W3D::Shutdown();
     delete camera;
+    delete light;
     delete scene;
 
     SDL_GL_DeleteContext(gl_ctx);

@@ -305,7 +305,7 @@ void X3DTextureCategoryClass::Render()
             b = true;
         } else {
             if (mesh->Get_Lighting_Environment() != nullptr) {
-                // DX8Wrapper::Set_Light_Environment(mesh->Get_Lighting_Environment());
+                X3DState::Set_Light_Environment(mesh->Get_Lighting_Environment());
             }
 
             Matrix3D tm = mesh->Get_Transform();
@@ -689,6 +689,7 @@ void X3DRigidFVFCategoryContainer::Render()
     if (Anything_To_Render()) {
         m_anythingToRender = false;
         X3DState::Set_Active_X3D_Shader(m_shader);
+        X3DState::Set_Light_Environment(g_theX3DMeshRenderer.m_light_env);
         Matrix4 view(g_theX3DMeshRenderer.m_camera->Get_View_Matrix());
         m_shader->Set_Uniform_Matrix4x4("view", &view[0].X);
         Matrix4 proj(g_theX3DMeshRenderer.m_camera->Get_Projection_Matrix());

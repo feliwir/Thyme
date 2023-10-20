@@ -72,8 +72,10 @@ void VertexMaterialClass::Apply() const
         }
     }
 #elif defined BUILD_WITH_X3D
-    X3DState::Get_Active_X3D_Shader()->Set_Uniform_Vector3("AmbientColor", &m_material->ambient[0]);
-    X3DState::Get_Active_X3D_Shader()->Set_Uniform_Vector3("DiffuseColor", &m_material->diffuse[0]);
+    X3DState::Get_Active_X3D_Shader()->Set_Uniform_Vector3("MaterialAmbientColor", &m_material->ambient[0]);
+    X3DState::Get_Active_X3D_Shader()->Set_Uniform_Vector3("MaterialDiffuseColor", &m_material->diffuse[0]);
+    X3DState::Get_Active_X3D_Shader()->Set_Uniform_Vector3("MaterialEmissiveColor", &m_material->emissive[0]);
+    X3DState::Get_Active_X3D_Shader()->Set_Uniform_Vector3("MaterialSpecularColor", &m_material->specular[0]);
 #endif
 }
 

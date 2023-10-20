@@ -19,6 +19,7 @@ public:
     // Uniform setters
     virtual int Set_Uniform_Matrix4x4(const char *name, const float *data) = 0;
     virtual int Set_Uniform_Vector3(const char *name, const float *data) = 0;
+    virtual int Set_Uniform_Int(const char *name, int data) = 0;
 };
 
 } // namespace X3D

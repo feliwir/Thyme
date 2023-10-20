@@ -8,6 +8,7 @@ struct X3DMaterial
     Vector3 diffuse;
     Vector3 ambient;
     Vector3 specular;
+    Vector3 emissive;
     float opacity;
 };
 

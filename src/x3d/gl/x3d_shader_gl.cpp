@@ -197,3 +197,16 @@ int X3D::X3DShaderGL::Set_Uniform_Vector3(const char *name, const float *vector)
     glUniform3fv(location, 1, vector);
     return X3D_ERR_OK;
 }
+
+int X3D::X3DShaderGL::Set_Uniform_Int(const char *name, int data)
+{
+    if (m_program == 0) {
+        return X3D_ERR_SHADER_NOT_LINKED;
+    }
+    GLint location = glGetUniformLocation(m_program, name);
+    if (location == -1) {
+        return X3D_ERR_UNIFORM_NOT_FOUND;
+    }
+    glUniform1i(location, data);
+    return X3D_ERR_OK;
+}

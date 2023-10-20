@@ -1,4 +1,5 @@
 #pragma once
+#include "lightenv.h"
 #include "shader.h"
 #include "texture.h"
 #include "vertmaterial.h"
@@ -44,6 +45,14 @@ public:
         m_material.dirty = true;
     }
 
+    static void Set_Light_Environment(LightEnvironmentClass *light_env)
+    {
+        if (m_light_environment.value == light_env)
+            return;
+        m_light_environment.value = light_env;
+        m_light_environment.dirty = true;
+    }
+
     static void Set_Active_X3D_Shader(X3D::X3DShader *shader)
     {
         m_x3d_shader = shader;
@@ -55,6 +64,7 @@ public:
 private:
     static X3D::X3DShader *m_x3d_shader;
     static X3DStateValue<ShaderClass> m_shader;
+    static X3DStateValue<LightEnvironmentClass *> m_light_environment;
     static X3DStateValue<TextureClass *> m_textures[MAX_TEXTURE_STAGES];
     static X3DStateValue<VertexMaterialClass *> m_material;
 };

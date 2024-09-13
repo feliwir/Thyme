@@ -279,11 +279,11 @@ void GameEngine::Real_Init(int argc, char *argv[])
     //}
 
     // We don't support most after this
-#ifndef GAME_DLL
-#pragma message("SKIPPING NOT YET SUPPORTED SUBSYSTEMS !!!")
-    captainslog_info("Skipping not yet supported subsystems");
-    return;
-#endif
+// #ifndef GAME_DLL
+// #pragma message("SKIPPING NOT YET SUPPORTED SUBSYSTEMS !!!")
+//     captainslog_info("Skipping not yet supported subsystems");
+//     return;
+// #endif
 
     ini.Load("Data/INI/Default/Water.ini", INI_LOAD_OVERWRITE, &xfer);
     ini.Load("Data/INI/Water.ini", INI_LOAD_OVERWRITE, &xfer);

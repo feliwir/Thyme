@@ -19,6 +19,8 @@
 #include "sdl2keybd.h"
 #include "sdl2mouse.h"
 #include "w3dfunctionlexicon.h"
+#include "w3dgameclient.h"
+#include "w3dgamelogic.h"
 #include "w3dmodulefactory.h"
 #include "w3dparticlesys.h"
 #include "win32bigfilesystem.h"
@@ -128,12 +130,12 @@ ArchiveFileSystem *SDL2GameEngine::Create_Archive_File_System()
 
 GameLogic *SDL2GameEngine::Create_Game_Logic()
 {
-    return nullptr;
+    return new W3DGameLogic;
 }
 
 GameClient *SDL2GameEngine::Create_Game_Client()
 {
-    return nullptr;
+    return new W3DGameClient();
 }
 
 ModuleFactory *SDL2GameEngine::Create_Module_Factory()
